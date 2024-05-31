@@ -3,7 +3,7 @@
     <v-col cols="3" class="d-none d-lg-block head-left">
       <v-container
         style="
-          height: 250px;
+          height: 200px;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -44,7 +44,7 @@
       style="display: flex; justify-content: center; align-items:center"
     >
       <v-container>
-          <v-btn class="mr-4 bg-black text-white py-2 px-4 rounded-xl border w-32 h-14sad" to="/register" >สมัครสมาชิก</v-btn>
+          <v-btn class="mr-4 bg-black text-white py-2 px-4 rounded-xl border w-32 h-14" to="/register" >สมัครสมาชิก</v-btn>
           <v-btn class="py-2 px-4 text-black rounded-xl border border-black w-32 h-14" to="/login">เข้าสู่ระบบ</v-btn>
       </v-container>
     </v-col>
