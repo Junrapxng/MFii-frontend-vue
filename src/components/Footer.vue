@@ -77,13 +77,13 @@
         <v-col cols="6" md="4">
           <h4 class="footer-heading">เว็บไซต์ที่เกี่ยวข้อง</h4>
           <p>
-            <a href="https://www.mfu.ac.th" style="color: #fff"
+            <a href="https://www.mfu.ac.th" style="color: #fff" class="hover:underline"
               >มหาวิทยาลัยแม่ฟ้าหลวง</a
             ><br />
-            <a href="https://mrii.mfu.ac.th" style="color: #fff"
+            <a href="https://mrii.mfu.ac.th" style="color: #fff" class="hover:underline"
               >สถาบันวิจัยและนวัตกรรม</a
             ><br />
-            <a href="https://research.mfu.ac.th" style="color: #fff"
+            <a href="https://research.mfu.ac.th" style="color: #fff" class="hover:underline"
               >ส่วนบริหารงานวิจัย</a
             >
           </p>
