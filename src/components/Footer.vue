@@ -3,8 +3,9 @@
   <!-- เนื้อหาอื่นๆ ของแอป -->
 
   <!-- Footer -->
+  <div class="mt-72"></div>
   <v-footer app>
-    <v-container fluid class="footer font-noto-sans-thai">
+    <v-container fluid class="footer font-noto-sans-thai ">
       <v-row justify="center">
         <v-col cols="12" md="4">
           <h3>
