@@ -87,7 +87,7 @@
             >
           </p>
           <div class="clear-fix"></div>
-          <div class="counter">
+          <div class="counter mt-2">
             <img
               src="https://counter9.stat.ovh/private/freecounterstat.php?c=csh7xeuzux2wc62g9a2hwgyxhdmh4gdw"
               border="0"
