@@ -45,10 +45,12 @@
               ></iframe>
             </div>
           </v-col>
+          
           <!-- <v-col col="9" md="9" lg="9"> </v-col> -->
           <v-col col="3" md="3"></v-col>
         </v-row>
       </v-container>
+      
     </v-main>
 
     <Footer></Footer>
