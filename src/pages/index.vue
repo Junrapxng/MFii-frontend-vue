@@ -2,11 +2,12 @@
 <v-app>
     <NavBar />
     <v-main>
-        <!-- Carousel Slide -->
-        <Carousel :autoplay="4000" :wrap-around="true">
+    <main>
+         <!-- Carousel Slide -->
+         <Carousel :autoplay="4000" :wrap-around="true">
             <Slide v-for="img in images" :key="img.id">
                 <div class="carousel__item">
-                  <img :src="`${img.image}`" alt="test">
+                    <img :src="`${img.image}`" alt="test">
                 </div>
             </Slide>
             <template #addons>
@@ -17,10 +18,18 @@
         <!-- Carousel Slide -->
 
         <!-- Content -->
-        <div v-for="data in info">
-            {{ data.plant_name }}
+        <div class="inputSearch">
+            <input type="text" >
+        
         </div>
-
+        <div class="grid-container">
+            <div class="item" v-for="data in info">
+                <img :src="`${data.img}`" alt="">
+                <h4>{{ data.plant_name }}</h4>
+                <p>{{ data.avatar }}</p>
+            </div>
+        </div>
+    </main>
     </v-main>
     <Footer></Footer>
     <router-view></router-view>
@@ -46,36 +55,30 @@ export default defineComponent({
         return {
             info: [],
             images: [],
-             // Define info property here
+            // Define info property here
         }
     },
     mounted() {
-      this.fetchData();
+        this.fetchData();
     },
-    methods:{
-      fetchData() {
-      // Fetch data from both APIs
-      const api1Promise = axios.get('https://65fb5ab714650eb21009db19.mockapi.io/plant');
-      const api2Promise = axios.get('https://65fb5ab714650eb21009db19.mockapi.io/todos');
+    methods: {
+        fetchData() {
+            // Fetch data from both APIs
+            const api1Promise = axios.get('https://65fb5ab714650eb21009db19.mockapi.io/plant'); // data
+            const api2Promise = axios.get('https://65fb5ab714650eb21009db19.mockapi.io/todos'); // image banner
 
-      // Handle both responses simultaneously using Promise.all
-      Promise.all([api1Promise, api2Promise])
-        .then(([api1Response, api2Response]) => {
-          this.info = api1Response.data;
-          this.images = api2Response.data;
-        })
-        .catch(error => {
-          this.error = error; // Handle errors
-        });
+            // Handle both responses simultaneously using Promise.all
+            Promise.all([api1Promise, api2Promise])
+                .then(([api1Response, api2Response]) => {
+                    this.info = api1Response.data;
+                    this.images = api2Response.data;
+                })
+                .catch(error => {
+                    this.error = error; // Handle errors
+                });
+        },
     },
-  },
 
-
-
-
-
-
-  
     components: {
         Pagination,
         Carousel,
@@ -106,4 +109,17 @@ export default defineComponent({
 
 <style>
 
+.grid-container{
+    display: flex;
+  flex-direction: row;
+  max-width: 100%; /* Set your desired maximum width */
+  overflow: auto;
+  max-height: 100%;
+}
+img{
+    min-width: 15rem;
+}
+.item{
+    margin: 10px
+}
 </style>
