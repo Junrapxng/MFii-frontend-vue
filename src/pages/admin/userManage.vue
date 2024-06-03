@@ -88,10 +88,10 @@
 
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="red-darken-1" variant="outlined" @click="close">
+                    <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300" @click="close">
                       Cancel
                     </v-btn>
-                    <v-btn color="green-darken-1" variant="outlined" @click="save">
+                    <v-btn color="green-darken-1" variant="outlined" class=" hover:bg-green-200" @click="save">
                       Save
                     </v-btn>
                   </v-card-actions>
@@ -107,14 +107,16 @@
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                      color="blue-grey-darken-1"
+                      color="'blue-grey-darken-1"
                       variant="outlined"
+                      class="hover:bg-gray-500"
                       @click="closeDelete"
                       >Cancel</v-btn
                     >
                     <v-btn
                       color="red-darken-1"
                       variant="outlined"
+                      class="hover:bg-red-300"
                       @click="deleteItemConfirm"
                       >OK</v-btn
                     >
