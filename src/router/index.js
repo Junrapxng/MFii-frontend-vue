@@ -12,6 +12,9 @@ import Contact from '../pages/contact.vue'
 import Register from '../pages/register.vue'
 import Login from '../pages/login.vue'
 import Innovation from '@/pages/user/innovation.vue'
+import Admin from '@/pages/admin/index.vue'
+import Dashboard from '@/pages/admin/dashboard.vue'
+import UserManage from '@/pages/admin/userManage.vue'
 
 const routes = [
     {
@@ -38,6 +41,21 @@ const routes = [
     path: '/user/innovation',
     name: 'Innovation',
     component: Innovation
+  },
+  {
+    path: '/admin/',
+    name: 'Admin',
+    component: Admin
+  },
+  {
+    path: '/admin/dashboard',
+    name: 'Dashboard',
+    component: Dashboard
+  },
+  {
+    path: '/admin/userManage',
+    name: 'UserManage',
+    component: UserManage
   },
 ]
 
