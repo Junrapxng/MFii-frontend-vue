@@ -11,6 +11,7 @@ import Home from '../pages/index.vue'
 import Contact from '../pages/contact.vue'
 import Register from '../pages/register.vue'
 import Login from '../pages/login.vue'
+import Innovation from '@/pages/user/innovation.vue'
 
 const routes = [
     {
@@ -32,6 +33,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/user/innovation',
+    name: 'Innovation',
+    component: Innovation
   },
 ]
 
