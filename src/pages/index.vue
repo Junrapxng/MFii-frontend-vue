@@ -19,15 +19,17 @@
 
         <!-- Content -->
         <div class="inputSearch">
-            <input type="text" >
-        
+            <input type="text" placeholder="Search something...">
+            <button class="button" type="submit">Search</button>
         </div>
-        <div class="grid-container">
+        <div class="wrap">
+            <div class="grid-container">
             <div class="item" v-for="data in info">
-                <img :src="`${data.img}`" alt="">
+                <img :src="`${data.img}`" alt="Cannot load Image">
                 <h4>{{ data.plant_name }}</h4>
                 <p>{{ data.avatar }}</p>
             </div>
+        </div>
         </div>
     </main>
     </v-main>
@@ -58,6 +60,7 @@ export default defineComponent({
             // Define info property here
         }
     },
+    // Fetch data from API =================================================================
     mounted() {
         this.fetchData();
     },
@@ -78,7 +81,7 @@ export default defineComponent({
                 });
         },
     },
-
+// ======================================================================================
     components: {
         Pagination,
         Carousel,
@@ -108,11 +111,14 @@ export default defineComponent({
 </script>
 
 <style>
-
+.wrap{
+    display: flex;
+    justify-content: center;
+}
 .grid-container{
     display: flex;
   flex-direction: row;
-  max-width: 100%; /* Set your desired maximum width */
+  max-width: 90%; /* Set your desired maximum width */
   overflow: auto;
   max-height: 100%;
 }
@@ -121,5 +127,31 @@ img{
 }
 .item{
     margin: 10px
+}
+.item:hover{
+    cursor: pointer;
+    background-color: gainsboro;
+}
+input[type=text] {
+  border: none;
+  border-bottom: 2px solid red;
+  margin-left: 2%
+ 
+}
+input:focus{
+    outline: none;
+}
+.button {
+    margin-left: 2%;
+  background-color: white;
+  color: black;
+  border: 2px solid #3c8af1; /* Green */
+  transition-duration: 0.4s;
+  padding: 6px;
+  border-radius: 20%;
+}
+.button:hover {
+  background-color: #3c8af1; /* Green */
+  color: white;
 }
 </style>
