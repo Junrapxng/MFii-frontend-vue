@@ -15,6 +15,8 @@ import Innovation from '@/pages/user/innovation.vue'
 import Admin from '@/pages/admin/index.vue'
 import Dashboard from '@/pages/admin/dashboard.vue'
 import UserManage from '@/pages/admin/userManage.vue'
+import Notfound from '../pages/NotFound.vue'
+
 
 const routes = [
     {
@@ -38,9 +40,10 @@ const routes = [
     component: Login
   },
   {
-    path: '/user/innovation',
+    path: '/user/innovation/:id',
     name: 'Innovation',
-    component: Innovation
+    component: Innovation,
+    props: true
   },
   {
     path: '/admin/',
@@ -57,6 +60,12 @@ const routes = [
     name: 'UserManage',
     component: UserManage
   },
+  // catch all 404
+ {
+  path: '/:catchAll(.*)',
+  name: 'NotFound',
+  component: Notfound
+ }
 ]
 
 

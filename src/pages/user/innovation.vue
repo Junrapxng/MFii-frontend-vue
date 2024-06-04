@@ -11,7 +11,7 @@
                 class="font-noto-sans-thai py-3"
                 style="font-weight: 500; font-size: 26px"
               >
-                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. {{ id }}
               </h2>
             </header>
           </div>
@@ -127,6 +127,12 @@
 <script>
 export default {
   name: "innovation-page",
+  props: ['id'],
+  // data(){
+  //   return{
+  //     id: this.$route.params.id
+  //   }
+  // },
 
   setup() {
     return {};
