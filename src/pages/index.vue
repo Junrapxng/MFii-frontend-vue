@@ -5,7 +5,7 @@
         <main>
             <!-- Carousel Slide -->
             <v-carousel show-arrows="hover" cycle>
-                <v-carousel-item v-for="img in images" :src="img.image"  cover></v-carousel-item>
+                <v-carousel-item v-for="img in images" :src="img.image" cover></v-carousel-item>
             </v-carousel>
             <!-- Carousel Slide -->
 
@@ -60,13 +60,18 @@ import {
 } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
 import axios from "axios";
+import {
+    ref
+} from 'vue'
+const page = ref(1)
+
 export default defineComponent({
     name: "index-page",
     data() {
         return {
             info: [],
             images: [],
-            loading: true, 
+            loading: true,
             // Define info property here
         };
     },
@@ -155,8 +160,9 @@ img {
 .item {
     margin: 0.5rem;
 }
-.card:hover{
-  cursor: pointer;
+
+.card:hover {
+    cursor: pointer;
     background-color: gainsboro;
 }
 
