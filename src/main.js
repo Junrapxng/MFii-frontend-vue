@@ -20,6 +20,6 @@ import router from './router';
 const app = createApp(App)
 
 registerPlugins(app)
-
-app.mount('#app')
 app.use(router)
+app.mount('#app')
+
