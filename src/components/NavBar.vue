@@ -24,10 +24,10 @@
             <div>
               
               <h1 class="text-3xl">
-                ผลงานทรัพย์สินทางปัญญา มหาวิทยาลัยแม่ฟ้าหลวง
+                ฝ่ายจัดการทรัพย์สินทางปัญญา มหาวิทยาลัยแม่ฟ้าหลวง
               </h1>
               <h2 class="text-2xl">
-                MFU IP PORTFOLIO / MFU Licensing | technology transfers
+                MFU Intellectual Property Management and Technology Transfer
               </h2>
             </div>
           </v-container>
