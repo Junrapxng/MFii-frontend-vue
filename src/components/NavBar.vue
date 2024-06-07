@@ -67,7 +67,7 @@
         justify-content: center;
         align-items: center;
       "
-      class="font-noto-sans-thai mt-48"
+      class="font-noto-sans-thai mt-40 h-fit w-fit"
     >
       <v-spacer></v-spacer>
 
