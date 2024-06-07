@@ -331,4 +331,21 @@ export default {
 .font-noto-sans-thai {
   font-family: "Noto Sans Thai", sans-serif;
 }
+
+@media (max-width: 768px) {
+  .head-logo {
+    width: 100%;
+    text-align: center;
+  }
+  .text-3xl {
+    font-size: 1.5rem;
+  }
+  .text-2xl {
+    font-size: 1.25rem;
+  }
+  .head-left,
+  .head-right {
+    text-align: center;
+  }
+}
 </style>
