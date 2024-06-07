@@ -4,44 +4,32 @@
       <!-- Logo, Title, and Buttons Section -->
       <v-row>
         <!-- Logo column -->
-        <v-col cols="3" class="d-none d-lg-block head-left">
-          <v-container
-            style="
-              height: 250px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            "
-          >
+        <v-col cols="9">
+          <v-container class="d-flex justify-start align-center font-noto-sans-thai">
             <div class="head-logo">
               <a
                 href="https://mfu.ac.th"
                 title="มหาวิทยาลัยแม่ฟ้าหลวง Mae Fah Luang University"
               >
                 <v-img
-                  :width="300"
+                  :width="130"
                   cover
-                  src="https://www.mfu.ac.th/fileadmin/MFUTemplateStandard/Assets/images/logo/thai-mfu_logo.png"
+                  src="../assets/mfu_logo.png"
                   alt="มหาวิทยาลัยแม่ฟ้าหลวง Mae Fah Luang University"
                 ></v-img>
               </a>
             </div>
-          </v-container>
-        </v-col>
-
-        <!-- Title and subtitle column -->
-        <v-col
-          cols="6"
-          class="font-noto-sans-thai head-right"
-          style="display: flex; justify-content: center; align-items: center"
-        >
-          <v-container>
-            <h1 class="text-3xl">
-              ผลงานทรัพย์สินทางปัญญา มหาวิทยาลัยแม่ฟ้าหลวง
-            </h1>
-            <h2 class="text-2xl">
-              MFU IP PORTFOLIO / MFU Licensing | technology transfers
-            </h2>
+            <v-divider :thickness="10" vertical color="#ff0000" class="border-opacity-100 mx-4 my-2"></v-divider>
+            <!-- Title and subtitle column -->
+            <div>
+              
+              <h1 class="text-3xl">
+                ผลงานทรัพย์สินทางปัญญา มหาวิทยาลัยแม่ฟ้าหลวง
+              </h1>
+              <h2 class="text-2xl">
+                MFU IP PORTFOLIO / MFU Licensing | technology transfers
+              </h2>
+            </div>
           </v-container>
         </v-col>
 
