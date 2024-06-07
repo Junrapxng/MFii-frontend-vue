@@ -1,8 +1,7 @@
 <template>
 <v-app>
     <NavBar />
-    <v-main>
-        <main>
+    <v-main class="mt-10">
             <!-- Carousel Slide -->
             <v-carousel show-arrows="hover" cycle>
                 <v-carousel-item v-for="img in images" :src="img.image" cover></v-carousel-item>
@@ -41,7 +40,6 @@
                     </router-link>
                 </div>
             </div>
-        </main>
     </v-main>
     <Footer></Footer>
     <router-view></router-view>
