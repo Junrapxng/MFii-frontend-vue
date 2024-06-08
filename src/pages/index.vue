@@ -1,7 +1,7 @@
 <template>
 <v-app>
     <NavBar />
-    <v-main class="mt-10">
+    <v-main>
             <!-- Carousel Slide -->
             <v-carousel show-arrows="hover" cycle>
                 <v-carousel-item v-for="img in images" :src="img.image" cover></v-carousel-item>
