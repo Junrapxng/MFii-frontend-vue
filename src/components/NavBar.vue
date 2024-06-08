@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-10">
     <div class="header">
       <!-- Logo, Title, and Buttons Section -->
       <v-row>
@@ -67,7 +67,7 @@
         justify-content: center;
         align-items: center;
       "
-      class="font-noto-sans-thai mt-40 h-fit w-fit"
+      class="font-noto-sans-thai mt-40 h-fit w-fit Navbar"
     >
       <v-spacer></v-spacer>
 
@@ -316,6 +316,8 @@ export default {
 </script>
 
 <style scoped>
+
+
 .font-noto-sans-thai {
   font-family: "Noto Sans Thai", sans-serif;
 }
