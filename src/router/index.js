@@ -11,6 +11,7 @@ import Home from '../pages/index.vue'
 import Contact from '../pages/contact.vue'
 import Register from '../pages/register.vue'
 import Login from '../pages/login.vue'
+import All_Catagories from '@/pages/all_catagories.vue'
 import Innovation from '@/pages/user/innovation.vue'
 import Admin from '@/pages/admin/index.vue'
 import Dashboard from '@/pages/admin/dashboard.vue'
@@ -38,6 +39,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/tt/all-categories',
+    name: 'All_Catagories',
+    component: All_Catagories,
   },
   {
     path: '/user/innovation/:id',
