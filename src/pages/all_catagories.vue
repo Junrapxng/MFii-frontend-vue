@@ -28,6 +28,7 @@
             style="max-width: 300px;"
             variant="solo"
             clearable
+            @click:clear="clearSearch"
             hide-details
             class="pb-6"
           ></v-text-field>
@@ -114,7 +115,10 @@
     methods: {
       paginate(page) {
         this.currentPage = page;
-      }
+      },
+      clearSearch() {
+        this.search = '';
+  },
     },
     async mounted() {
       try {
