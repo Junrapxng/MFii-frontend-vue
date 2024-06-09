@@ -1,170 +1,118 @@
 <template>
-  <!-- <v-app>
+  <v-app>
     <NavBar />
     <v-main>
-        <!-- Carousel Slide -->
-        <v-carousel show-arrows="hover" cycle>
-          <v-carousel-item
-            v-for="img in images"
-            :src="img.image"
-            cover
-          ></v-carousel-item>
-        </v-carousel>
-        <!-- Carousel Slide -->
+      <!-- Carousel Slide -->
+      <v-carousel show-arrows="hover" cycle>
+        <v-corousel-item v-if="loading" src="/src/assets/mfu_logo.png"></v-corousel-item>
+        <v-carousel-item v-else v-for="img in images" :src="img.image" :key="img.id" cover></v-carousel-item>
+      </v-carousel>
+      <!-- Carousel Slide -->
 
-        <!-- Youtube video -->
-        <div class="youtube">
-          <iframe
-            class="videos"
-            height="260"
-            width="450"
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-            title=" &amp; Pagination part 5/7"
-            frameborder="0"
-            allow="autoplay"
-            allowFullScreen
-          ></iframe>
-          <iframe
-            class="videos"
-            height="260"
-            width="450"
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-            title=" &amp; Pagination part 5/7"
-            frameborder="0"
-            allow="autoplay"
-            allowFullScreen
-          ></iframe>
-          <iframe
-            class="videos"
-            height="260"
-            width="450"
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-            title=" &amp; Pagination part 5/7"
-            frameborder="0"
-            allow="autoplay"
-            allowFullScreen
-          ></iframe>
+      <!-- Youtube video -->
+        <div class="txt flex justify-center mt-5">
+          <p class="text-2xl font-bold mb-3"> Success Case</p>
         </div>
+      <div class="youtube">
+        <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+          title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe>
+        <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+          title=" &amp; Pagination part 5/7" frameborder="0"  allowFullScreen></iframe>
+        <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+          title=" &amp; Pagination part 5/7" frameborder="0"  allowFullScreen></iframe>
+      </div>
 
-        <!-- Content -->
-        <div class="inputSearch ml-10">
-          <v-text-field
-            v-model="search"
-            density="comfortable"
-            placeholder="Search"
-            prepend-inner-icon="mdi-magnify"
-            style="max-width: 300px"
-            variant="solo"
-            clearable
-            @click:clear="clearSearch"
-            hide-details
-            class="pb-6"
-          ></v-text-field>
+      <!-- Content -->
+      
+      <div class="inputSearch ml-10">
+        <p class="text-2xl font-bold mb-3">นวัตกรรมทั้งหมด</p>
+        <v-text-field v-model="search" density="comfortable" placeholder="Search" prepend-inner-icon="mdi-magnify"
+          style="max-width: 300px" variant="solo" clearable @click:clear="clearSearch" hide-details
+          class="pb-6"></v-text-field>
+      </div>
+      <div class="wrap">
+        <div class="card-container">
+          <v-skeleton-loader v-if="loading" v-for="i in 10" class="item mx-1 border" min-width="344"
+            type="image, article"></v-skeleton-loader>
+          <router-link v-else v-for="data in filteredItems" :key="data.id || data.plant_name"
+            :to="{ name: 'Innovation', params: { id: data.id } }" class="item mx-1">
+            <v-card class="hover:shadow-lg transition-shadow rounded-xl">
+              <v-img :src="data.img" cover height="200px" width="400px"></v-img>
+              <v-card-title class="text-lg">{{ data.plant_name }}</v-card-title>
+              <v-card-subtitle class="text-sm">{{ data.avatar }}</v-card-subtitle>
+              <v-card-actions>
+                <v-chip class="ml-4" outlined>{{ data.scale }}</v-chip>
+              </v-card-actions>
+            </v-card>
+          </router-link>
         </div>
-        <div class="wrap">
-          <div class="card-container">
-            <v-skeleton-loader
-              v-if="loading"
-              v-for="i in 10"
-              class="item mx-1 border"
-              min-width="344"
-              type="image, article"
-            ></v-skeleton-loader>
-            <router-link
-              v-else
-              v-for="data in filteredItems"
-              :key="data.id || data.plant_name"
-              :to="{ name: 'Innovation', params: { id: data.id } }"
-              class="item mx-1"
-            >
-              <v-card class="card" min-width="344">
-                <v-img height="200px" :src="data.img" cover />
-                <v-card-title>
-                  {{ data.plant_name }}
-                </v-card-title>
-                <v-card-subtitle>
-                  {{ data.avatar }}
-                </v-card-subtitle>
-
-                <v-card-actions>
-                  <v-btn color="orange lighten-2" text>Explore</v-btn>
-                </v-card-actions>
-              </v-card>
-            </router-link>
-          </div>
-        </div>
+      </div>
     </v-main>
     <Footer></Footer>
     <router-view></router-view>
-  </v-app> -->
+  </v-app>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 import { Carousel, Navigation, Slide, Pagination } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
-import axios from "axios";
-import { ref } from "vue";
-const page = ref(1);
+import { ref, onMounted  } from "vue";
+import { fetchProducts } from "@/components/scripts/fetchAllProducts";
 
 export default defineComponent({
   name: "index-page",
+
+// fetch API ======================================================================
+setup() {
+    const info = ref(null);
+    const images = ref(null);
+    const error = ref(null);
+    const loading = ref(true);
+
+    onMounted(async () => {
+      const result = await fetchProducts();
+      info.value = result.info || [];
+      images.value = result.images || [];
+      error.value = result.error;
+      loading.value = false;
+    });
+    return {
+      info,
+      images,
+      error,
+      loading,
+    };
+  },
+  // ====================================================================================
   data() {
     return {
       search: '',
-      info: [],
-      images: [],
-      loading: true,
       // Define info property here
     };
   },
   computed: {
-      // กรองรายการโดยใช้การค้นหา
-      filteredItems() {
-        return this.info.filter(item => {
-          return item.plant_name.toLowerCase().includes(this.search.toLowerCase());
-        });
-      }
-    },
-    methods: {
-      clearSearch() {
-        this.search = '';
-      },
-    },
-  // Fetch data from API =================================================================
-  async mounted() {
-    try {
-      const [api1Response, api2Response] = await Promise.all([
-        axios.get("https://65fb5ab714650eb21009db19.mockapi.io/plant"),
-        axios.get("https://65fb5ab714650eb21009db19.mockapi.io/todos"),
-      ]);
-
-      if (api1Response.status === 200 && api2Response.status === 200) {
-        this.info = api1Response.data;
-        this.images = api2Response.data;
-        // Assuming images are also part of the info data, otherwise handle separately
-      } else {
-        this.error = new Error("One or both API responses are not OK");
-        console.error(
-          "API responses:",
-          api1Response.status,
-          api2Response.status
-        );
-      }
-    } catch (error) {
-      this.error = error;
-      console.error("Error fetching data:", error);
-    } finally {
-      this.loading = false; // Set loading to false after data fetching is done
+    // กรองรายการโดยใช้การค้นหา
+    filteredItems() {
+      return this.info.filter(item => {
+        return item.plant_name.toLowerCase().includes(this.search.toLowerCase());
+      });
     }
   },
-  // ======================================================================================
+  methods: {
+    clearSearch() {
+      this.search = '';
+    },
+  },
   components: {
     Pagination,
     Carousel,
     Slide,
     Navigation,
   },
+
+
+
   // Remove the duplicate data declaration here
   // settings and breakpoints can go outside of data
   // settings: {
@@ -183,6 +131,9 @@ export default defineComponent({
       snapAlign: "start",
     },
   },
+
+
+
 });
 </script>
 
@@ -195,7 +146,7 @@ export default defineComponent({
 .youtube {
   display: flex;
   justify-content: center;
-  margin: 5%;
+  margin: 1% 0% 5% 0 ;
   overflow: auto;
 }
 
@@ -250,5 +201,14 @@ input:focus {
   background-color: #3c8af1;
   /* Green */
   color: white;
+}
+
+.hover\\:shadow-lg:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.transition-shadow {
+  transition: box-shadow 0.3s ease;
 }
 </style>
