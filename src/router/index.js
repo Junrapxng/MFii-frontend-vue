@@ -17,6 +17,7 @@ import Admin from '@/pages/admin/index.vue'
 import Dashboard from '@/pages/admin/dashboard.vue'
 import UserManage from '@/pages/admin/userManage.vue'
 import Notfound from '../pages/NotFound.vue'
+import UserEditProfile from '../pages/user/userEditProfile.vue'
 
 
 const routes = [
@@ -66,6 +67,13 @@ const routes = [
     name: 'UserManage',
     component: UserManage
   },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: UserEditProfile
+  },
+
+
   // catch all 404
  {
   path: '/:catchAll(.*)',
