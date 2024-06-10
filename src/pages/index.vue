@@ -8,9 +8,16 @@
             <v-carousel-item v-else v-for="img in images" :src="img.image" :key="img.id" cover></v-carousel-item>
         </v-carousel> -->
 
-        <Carousel  :autoplay="4000" :wrap-around="true">
+        <Carousel class="carousel" :autoplay="4000" :wrap-around="true" >
             <Slide v-for="img in images" :key="img.id">
-                <div class="carousel__item"><img :src="`${img.image}`" alt=""></div>
+                <v-img class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`${img.image}`" cover>
+                    <template v-slot:placeholder>
+                        <div class="d-flex align-center justify-center fill-height">
+                            <v-progress-circular color="pink" indeterminate></v-progress-circular>
+                        </div>
+                    </template>
+                </v-img>
+                <!-- <div class="carousel__item"><img :src="`${img.image}`" alt=""></div> -->
             </Slide>
             <template #addons>
                 <Pagination />
@@ -23,8 +30,8 @@
         <div class="txt flex justify-center mt-5">
             <p class="text-2xl font-bold mb-3"> Success Case</p>
         </div>
+
         <div class="youtube">
-            <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe>
             <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe>
             <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe>
         </div>
@@ -40,7 +47,13 @@
                 <v-skeleton-loader v-if="loading" v-for="i in 10" class="item mx-1 border" min-width="344" type="image, article"></v-skeleton-loader>
                 <router-link v-else v-for="data in filteredItems" :key="data.id || data.plant_name" :to="{ name: 'Innovation', params: { id: data.id } }" class="item mx-1">
                     <v-card class="hover:shadow-lg transition-shadow rounded-xl">
-                        <v-img :src="data.img" cover height="200px" width="400px"></v-img>
+                        <v-img :src="data.img" cover height="200px" width="400px">
+                            <template v-slot:placeholder>
+                                <div class="d-flex align-center justify-center fill-height">
+                                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+                                </div>
+                            </template>
+                        </v-img>
                         <v-card-title class="text-lg">{{ data.plant_name }}</v-card-title>
                         <v-card-subtitle class="text-sm">{{ data.avatar }}</v-card-subtitle>
                         <v-card-actions>
@@ -74,6 +87,7 @@ import {
 import {
     fetchProducts
 } from "@/components/scripts/fetchAllProducts";
+
 
 export default defineComponent({
     name: "index-page",
@@ -149,13 +163,22 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.carousel__item{
- height: 100%;
+.carousel{
+  min-height: 500px;
+}
+
+
+
+.carousel__item {
+    height: 100%;
 }
 
 .wrap {
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
+    margin-left: 5%;
+    margin-right: 5%;
+
 }
 
 .youtube {
@@ -172,10 +195,11 @@ export default defineComponent({
 .card-container {
     display: flex;
     flex-direction: row;
-    max-width: 95%;
+    max-width: 100%;
     /* Set your desired maximum width */
     overflow: auto;
     min-height: 100%;
+    border-radius: 5%;
 }
 
 /* img {
@@ -226,4 +250,6 @@ input:focus {
 .transition-shadow {
     transition: box-shadow 0.3s ease;
 }
+
+
 </style>
