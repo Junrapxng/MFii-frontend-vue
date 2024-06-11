@@ -1,0 +1,39 @@
+<template>
+    <v-container>
+      <v-card>
+        <v-card-title>จำนวนผู้ใช้งานเว็บไซต์</v-card-title>
+        <v-card-text>
+          <v-row>
+            <v-col>
+              <v-card>
+                <v-card-title>จำนวนผู้ใช้งานทั้งหมด</v-card-title>
+                <v-card-text>{{ totalUsers }}</v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-card-text>
+      </v-card>
+    </v-container>
+  </template>
+  
+  <script>
+  export default {
+    data() {
+      return {
+        totalUsers: 0,
+      }
+    },
+    created() {
+      this.fetchUserStatistics();
+    },
+    methods: {
+      fetchUserStatistics() {
+        // logic to fetch user statistics
+      }
+    }
+  }
+  </script>
+  
+  <style scoped>
+  </style>
+  
