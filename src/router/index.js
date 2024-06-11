@@ -19,6 +19,10 @@ import Admin from '@/pages/admin/index.vue'
 import Dashboard from '@/pages/admin/dashboard.vue'
 import UserManage from '@/pages/admin/userManage.vue'
 import Documents from '@/pages/admin/documents.vue'
+import Staff from '@/pages/staff/index.vue'
+import newPost from '@/pages/staff/NewsPost.vue'
+import ResearchManagement from '@/pages/staff/ResearchManagement.vue'
+import MessageReply from '@/pages/staff/MessageReply.vue'
 import Notfound from '../pages/NotFound.vue'
 import UserEditProfile from '../pages/user/userEditProfile.vue'
 
@@ -85,6 +89,26 @@ const routes = [
     path: '/admin/documents',
     name: 'Documents',
     component: Documents
+  },
+  {
+    path: '/staff/',
+    name: 'Staff',
+    component: Staff
+  },
+  {
+    path: '/staff/newPost',
+    name: 'newPost',
+    component: newPost
+  },
+  {
+    path: '/staff/researchManagement',
+    name: 'ResearchManagement',
+    component: ResearchManagement
+  },
+  {
+    path: '/staff/messageReply',
+    name: 'MessageReply',
+    component: MessageReply
   },
   {
     path: '/profile',
