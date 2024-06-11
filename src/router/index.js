@@ -16,8 +16,10 @@ import Innovation from '@/pages/user/innovation.vue'
 import Admin from '@/pages/admin/index.vue'
 import Dashboard from '@/pages/admin/dashboard.vue'
 import UserManage from '@/pages/admin/userManage.vue'
+import Documents from '@/pages/admin/documents.vue'
 import Notfound from '../pages/NotFound.vue'
 import UserEditProfile from '../pages/user/userEditProfile.vue'
+
 
 
 const routes = [
@@ -66,6 +68,11 @@ const routes = [
     path: '/admin/userManage',
     name: 'UserManage',
     component: UserManage
+  },
+  {
+    path: '/admin/documents',
+    name: 'Documents',
+    component: Documents
   },
   {
     path: '/profile',
