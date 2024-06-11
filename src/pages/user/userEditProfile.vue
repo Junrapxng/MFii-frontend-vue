@@ -69,7 +69,7 @@
 
 <script>
 export default {
-  name: 'Profile',
+  name: 'user-profile-page',
   data() {
     return {
       profile: {
