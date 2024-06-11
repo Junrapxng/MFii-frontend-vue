@@ -11,6 +11,7 @@ import Home from '../pages/index.vue'
 import Contact from '../pages/contact.vue'
 import Register from '../pages/register.vue'
 import Login from '../pages/login.vue'
+import UPS from '@/pages/ups.vue'
 import All_Catagories from '@/pages/all_catagories.vue'
 import Innovation from '@/pages/user/innovation.vue'
 import Admin from '@/pages/admin/index.vue'
@@ -42,6 +43,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/services/ups',
+    name: 'UPS',
+    component: UPS,
   },
   {
     path: '/tt/all-categories',
