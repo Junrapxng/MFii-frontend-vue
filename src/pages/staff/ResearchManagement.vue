@@ -17,13 +17,14 @@
       </v-card-text>
     </v-card>
     <v-dialog v-model="dialog" max-width="600px">
-      <v-card class="rounded-3xl">
+      <v-card class="rounded-xl">
         <v-card-title>{{ isEdit ? 'แก้ไขผลงานวิจัย' : 'สร้างผลงานวิจัย' }}</v-card-title>
         <v-card-text>
           <v-form>
-            <v-text-field label="ชื่อผลงาน" v-model="currentResearch.title"></v-text-field>
-            <v-textarea label="เนื้อหา" v-model="currentResearch.content"></v-textarea>
-            <v-file-input label="อัปโหลดรูปภาพ" v-model="currentResearch.image" @change="uploadImage"></v-file-input>
+            <v-text-field label="ชื่อผลงาน" variant="solo-filled" v-model="currentResearch.title"></v-text-field>
+            <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.category" :items="['เกษตรกรรม/การแปรรูป', 'วัสดุ/บรรจุภัณฑ์', 'การท่องเที่ยว/การศึกษา', 'อาหาร/เครื่องดื่ม']"></v-autocomplete>
+            <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.content"></v-textarea>
+            <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled" v-model="currentResearch.image" @change="uploadImage"></v-file-input>
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -58,6 +59,7 @@ export default {
       researches: [],
       currentResearch: {
         title: '',
+        category: '',
         content: '',
         image: null,
         visible: true
