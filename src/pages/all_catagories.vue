@@ -1,12 +1,14 @@
 <template>
     <v-app>
       <NavBar></NavBar>
-      <v-main class="bg-gray-100">
+      <v-main class="bg-gray-100 font-noto-sans-thai">
         <v-container class="pt-4">
   
+          <h1 class="pb-4" style="font-weight: 600; font-size: 35px">ผลงานพร้อมถ่ายทอด (จำนวน ... รายการ)</h1>
           <!-- Filters Section -->
           <v-row class="mb-4">
             <v-col>
+              <v-card class="rounded-lg p-4">
               <v-btn
                 v-for="filter in filters"
                 :key="filter.text"
@@ -18,6 +20,7 @@
                 <v-icon left class="px-4 ">{{ filter.icon }}</v-icon>
                 {{ filter.text }}
               </v-btn>
+            </v-card>
             </v-col>
           </v-row>
           <v-text-field
