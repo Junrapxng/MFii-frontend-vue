@@ -6,6 +6,24 @@
           <v-row>
             <v-col>
               <v-card>
+                <v-card-title>จำนวนผู้ใช้งานวันนี้</v-card-title>
+                <v-card-text>{{ todayUsers }}</v-card-text>
+              </v-card>
+            </v-col>
+            <v-col>
+              <v-card>
+                <v-card-title>จำนวนผู้ใช้งานสัปหาห์นี้</v-card-title>
+                <v-card-text>{{ weeklyUsers }}</v-card-text>
+              </v-card>
+            </v-col>
+            <v-col>
+              <v-card>
+                <v-card-title>จำนวนผู้ใช้งานเดือนนี้</v-card-title>
+                <v-card-text>{{ monthlyUsers }}</v-card-text>
+              </v-card>
+            </v-col>
+            <v-col>
+              <v-card>
                 <v-card-title>จำนวนผู้ใช้งานทั้งหมด</v-card-title>
                 <v-card-text>{{ totalUsers }}</v-card-text>
               </v-card>
@@ -21,6 +39,10 @@
     data() {
       return {
         totalUsers: 0,
+        todayUsers: 0,
+        weeklyUsers: 0,
+        monthlyUsers: 0,
+        
       }
     },
     created() {
