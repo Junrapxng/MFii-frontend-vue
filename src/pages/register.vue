@@ -59,7 +59,7 @@
                     ]" required class="mb-4"></v-text-field>
                 </v-col>
               </v-row>
-              <v-btn class="rounded-xl" @click="register" color="#BA984C" s block>สมัครสมาชิก</v-btn>
+              <v-btn class="rounded-xl" type="submit" color="#BA984C" s block>สมัครสมาชิก</v-btn>
               <div class="text-center justify-center pt-5 flex text-base">
                 <p>
                   <a class="px-2 hover:underline" style="color: #ba984c" href="/login">เข้าสู่ระบบ</a>
