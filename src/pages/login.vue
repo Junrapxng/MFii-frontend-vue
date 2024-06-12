@@ -68,8 +68,9 @@ export default {
   },
   methods: {
     async login() {
+      const { valid } = await this.$refs.form.validate()
       const form = this.$refs.form;
-      if (form.validate()) {
+      if (valid) {
         try {
           const response = await axios.post("http://localhost:7770/login", {
             email: this.form.email,
@@ -79,9 +80,10 @@ export default {
           console.log(response.data.result.token);
           this.$router.push('/');
         } catch (error) {
-          console.error('Error logging in:', error);
-          this.responseMessage = 'Login failed. Please check your credentials and try again.'; // Set error message
-        }
+          console.error('Error registering:', error);
+          if (error.response && error.response.data && error.response.data.description) {
+            this.responseMessage = error.response.data.description.description;
+          }}
       } else {
         console.log("Form is not valid");
         this.responseMessage = 'Form is not valid. Please fill out all required fields.'; // Set form validation message
