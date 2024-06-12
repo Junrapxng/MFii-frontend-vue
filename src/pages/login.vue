@@ -81,10 +81,14 @@ export default {
           this.$router.push('/');
         } catch (error) {
           console.error('Error registering:', error);
+          this.responseMessage = error
           if (error.response && error.response.data && error.response.data.description) {
             this.responseMessage = error.response.data.description.description;
           }}
-      } else {
+        
+      }
+      
+      else {
         console.log("Form is not valid");
         this.responseMessage = 'Form is not valid. Please fill out all required fields.'; // Set form validation message
       }

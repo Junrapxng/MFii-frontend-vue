@@ -109,6 +109,7 @@ export default {
           this.$router.push('/');
         } catch (error) {
           console.error('Error registering:', error);
+          this.responseMessage = error
           if (error.response && error.response.data && error.response.data.description) {
             this.responseMessage = error.response.data.description.description;
           }
