@@ -1,72 +1,79 @@
 <template>
-<v-app>
-    <NavBar />
-    <v-main>
-        <!-- Carousel Slide -->
-        <!-- <v-carousel show-arrows="hover" cycle>
+    <v-app>
+        <NavBar />
+        <v-main>
+            <!-- Carousel Slide -->
+            <!-- <v-carousel show-arrows="hover" cycle>
             <v-corousel-item v-if="loading" src="/src/assets/mfu_logo.png"></v-corousel-item>
             <v-carousel-item v-else v-for="img in images" :src="img.image" :key="img.id" cover></v-carousel-item>
         </v-carousel> -->
 
-        <Carousel class="carousel" :autoplay="4000" :wrap-around="true" >
-            <Slide v-for="img in images" :key="img.id">
-                <v-img class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`${img.image}`" cover>
-                    <template v-slot:placeholder>
-                        <div class="d-flex align-center justify-center fill-height">
-                            <v-progress-circular color="pink" indeterminate></v-progress-circular>
-                        </div>
-                    </template>
-                </v-img>
-                <!-- <div class="carousel__item"><img :src="`${img.image}`" alt=""></div> -->
-            </Slide>
-            <template #addons>
-                <Pagination />
-                <Navigation />
-            </template>
-        </Carousel>
-        <!-- Carousel Slide -->
+            <Carousel class="carousel" :autoplay="4000" :wrap-around="true">
+                <Slide v-for="img in images" :key="img.id">
+                    <v-img class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`${img.image}`" cover>
+                        <template v-slot:placeholder>
+                            <div class="d-flex align-center justify-center fill-height">
+                                <v-progress-circular color="pink" indeterminate></v-progress-circular>
+                            </div>
+                        </template>
+                    </v-img>
+                    <!-- <div class="carousel__item"><img :src="`${img.image}`" alt=""></div> -->
+                </Slide>
+                <template #addons>
+                    <Pagination />
+                    <Navigation />
+                </template>
+            </Carousel>
+            <!-- Carousel Slide -->
 
-        <!-- Youtube video -->
-        <div class="txt flex justify-center mt-5">
-            <p class="text-2xl font-bold mb-3"> Success Case</p>
-        </div>
-
-        <div class="youtube">
-            <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe>
-            <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe>
-        </div>
-
-        <!-- Content -->
-
-        <div class="inputSearch ml-10">
-            <p class="text-2xl font-bold mb-3">นวัตกรรมทั้งหมด</p>
-            <v-text-field v-model="search" density="comfortable" placeholder="Search" prepend-inner-icon="mdi-magnify" style="max-width: 300px" variant="solo" clearable @click:clear="clearSearch" hide-details class="pb-6"></v-text-field>
-        </div>
-        <div class="wrap">
-            <div class="card-container">
-                <v-skeleton-loader v-if="loading" v-for="i in 10" class="item mx-1 border" min-width="344" type="image, article"></v-skeleton-loader>
-                <router-link v-else v-for="data in filteredItems" :key="data.id || data.plant_name" :to="{ name: 'Innovation', params: { id: data.id } }" class="item mx-1">
-                    <v-card class="hover:shadow-lg transition-shadow rounded-xl">
-                        <v-img :src="data.img" cover height="200px" width="400px">
-                            <template v-slot:placeholder>
-                                <div class="d-flex align-center justify-center fill-height">
-                                    <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
-                                </div>
-                            </template>
-                        </v-img>
-                        <v-card-title class="text-lg">{{ data.plant_name }}</v-card-title>
-                        <v-card-subtitle class="text-sm">{{ data.avatar }}</v-card-subtitle>
-                        <v-card-actions>
-                            <v-chip class="ml-4" outlined>{{ data.scale }}</v-chip>
-                        </v-card-actions>
-                    </v-card>
-                </router-link>
+            <!-- Youtube video -->
+            <div class="txt flex justify-center mt-5">
+                <p class="text-2xl font-bold mb-3"> Success Case</p>
             </div>
-        </div>
-    </v-main>
-    <Footer></Footer>
-    <router-view></router-view>
-</v-app>
+
+            <div class="youtube">
+                <div>
+                    <h1 v-if="userinfo">Hello, {{ userinfo.data.resutl.email }}</h1>
+                </div>
+                <!-- <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe>
+            <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe> -->
+            </div>
+
+            <!-- Content -->
+
+            <div class="inputSearch ml-10">
+                <p class="text-2xl font-bold mb-3">นวัตกรรมทั้งหมด</p>
+                <v-text-field v-model="search" density="comfortable" placeholder="Search"
+                    prepend-inner-icon="mdi-magnify" style="max-width: 300px" variant="solo" clearable
+                    @click:clear="clearSearch" hide-details class="pb-6"></v-text-field>
+            </div>
+            <div class="wrap">
+                <div class="card-container">
+                    <v-skeleton-loader v-if="loading" v-for="i in 10" class="item mx-1 border" min-width="344"
+                        type="image, article"></v-skeleton-loader>
+                    <router-link v-else v-for="data in filteredItems" :key="data.id || data.plant_name"
+                        :to="{ name: 'Innovation', params: { id: data.id } }" class="item mx-1">
+                        <v-card class="hover:shadow-lg transition-shadow rounded-xl">
+                            <v-img :src="data.img" cover height="200px" width="400px">
+                                <template v-slot:placeholder>
+                                    <div class="d-flex align-center justify-center fill-height">
+                                        <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+                                    </div>
+                                </template>
+                            </v-img>
+                            <v-card-title class="text-lg">{{ data.plant_name }}</v-card-title>
+                            <v-card-subtitle class="text-sm">{{ data.avatar }}</v-card-subtitle>
+                            <v-card-actions>
+                                <v-chip class="ml-4" outlined>{{ data.scale }}</v-chip>
+                            </v-card-actions>
+                        </v-card>
+                    </router-link>
+                </div>
+            </div>
+        </v-main>
+        <Footer></Footer>
+        <router-view></router-view>
+    </v-app>
 </template>
 
 <script>
@@ -87,11 +94,37 @@ import {
 import {
     fetchProducts
 } from "@/components/scripts/fetchAllProducts";
-
+import axios from "axios";
 
 export default defineComponent({
     name: "index-page",
+    data() {
+        return {
+            search: '',
+            userId: ref(null),
+            userinfo: ref(null)
+            // Define info property here
+        };
+    },
+    async created() {
+        try {
+            const response = await axios.get('http://localhost:7770/verify', {
+                headers: {
+                    Authorization: localStorage.getItem('token')
+                }
+            })
+            console.log('Full response:', response);
+            this.userId = response.data.result.userId,
+            console.log(this.userId) // Log the full response to inspect it
+            // Adjust the following line based on the actual structure of your response
+           this.userinfo = await axios.get(`http://localhost:7770/getUser/${this.userId}`)
+            console.log(this.userinfo)
 
+            // await this.fetchAdditionalData();
+        } catch (error) {
+            console.error('Error fetching user data:', error);
+        }
+    },
     // fetch API ======================================================================
     setup() {
         const info = ref(null);
@@ -114,12 +147,7 @@ export default defineComponent({
         };
     },
     // ====================================================================================
-    data() {
-        return {
-            search: '',
-            // Define info property here
-        };
-    },
+
     computed: {
         // กรองรายการโดยใช้การค้นหา
         filteredItems() {
@@ -163,8 +191,8 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.carousel{
-  min-height: 500px;
+.carousel {
+    min-height: 500px;
 }
 
 
@@ -250,6 +278,4 @@ input:focus {
 .transition-shadow {
     transition: box-shadow 0.3s ease;
 }
-
-
 </style>

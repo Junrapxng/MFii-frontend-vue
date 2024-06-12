@@ -3,6 +3,7 @@
     <NavBar></NavBar>
 
     <v-main>
+      <v-alert v-if="responseMessage" type="error">{{ responseMessage }}</v-alert>
       <v-container
         class="font-noto-sans-thai rounded-xl flex justify-center items-center min-h-screen bg-gray-100"
       >
@@ -139,6 +140,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: "register-page",
   data() {
@@ -152,20 +154,32 @@ export default {
         password: "",
       },
       showPassword: false, // เพิ่มตรงนี้
+      responseMessage: ''
     };
   },
   methods: {
-    register() {
+    async register() {
       const form = this.$refs.form;
-      if (form.validate()) {
-        // Handle the registration logic
-        console.log(this.form);
+      if (form.validate() && this.form.email != '' && this.form.password != '') {
+        try {
+          const response = await axios.post("http://localhost:7770/register", {
+            email: this.form.email,
+            password: this.form.password
+          });
+          localStorage.setItem('token', response.data.result.token);
+          this.responseMessage = 'Registration successful!'; // Set success message
+          this.$router.push('/');
+        } catch (error) {
+          console.error('Error registering:', error);
+          this.responseMessage = 'Registration failed. Please try again.'; // Set error message
+        }
       } else {
         console.log("Form is not valid");
+        this.responseMessage = 'Form is not valid. Please fill out all required fields.'; // Set form validation message
       }
-
       this.showPassword = false;
-    },
+    }
+  
   },
 };
 </script>
