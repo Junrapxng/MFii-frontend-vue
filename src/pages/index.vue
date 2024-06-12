@@ -32,9 +32,9 @@
             </div>
 
             <div class="youtube">
-                <div>
+               
                     <h1 v-if="userinfo">Hello, {{ userinfo.data.resutl.email }}</h1>
-                </div>
+                
                 <!-- <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe>
             <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe> -->
             </div>
