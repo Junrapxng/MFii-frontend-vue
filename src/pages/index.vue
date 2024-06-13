@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <NavBar />
-        <v-main>
+        <v-main class="font-noto-sans-thai">
             <!-- Carousel Slide -->
             <!-- <v-carousel show-arrows="hover" cycle>
             <v-corousel-item v-if="loading" src="/src/assets/mfu_logo.png"></v-corousel-item>
