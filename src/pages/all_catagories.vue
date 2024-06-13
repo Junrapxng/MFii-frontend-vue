@@ -47,7 +47,13 @@
             >
               <router-link :to="{ name: 'Innovation', params: { id: item.id } }">
                 <v-card class="hover:shadow-lg transition-shadow rounded-xl">
-                  <v-img :src="item.img" cover height="200px"></v-img>
+                  <v-img :src="item.img" cover height="200px">
+                    <template v-slot:placeholder>
+                      <div class="d-flex align-center justify-center fill-height">
+                        <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
+                      </div>
+                    </template>
+                  </v-img>
                   <v-card-title class="text-lg">{{ item.plant_name }}</v-card-title>
                   <v-card-subtitle class="text-sm">{{ item.avatar }}</v-card-subtitle>
                   <v-card-actions>
