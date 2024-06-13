@@ -19,6 +19,7 @@
             prepend-inner-icon="mdi-magnify"
             variant="solo-filled"
             flat
+            clearable
             hide-details
             single-line
           ></v-text-field>
@@ -228,6 +229,7 @@ export default {
 
   methods: {
     initialize() {
+      this.search = '';
       this.desserts = [
         {
           userId: '001',
