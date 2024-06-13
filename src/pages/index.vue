@@ -42,7 +42,7 @@
             <!-- Content -->
 
             <div class="inputSearch ml-10">
-                <p class="text-2xl font-bold mb-3">นวัตกรรมทั้งหมด</p>
+                <p class="text-3xl font-semibold mb-3">นวัตกรรมทั้งหมด</p>
                 <v-text-field v-model="search" density="comfortable" placeholder="Search"
                     prepend-inner-icon="mdi-magnify" style="max-width: 300px" variant="solo" clearable
                     @click:clear="clearSearch" hide-details class="pb-6"></v-text-field>
