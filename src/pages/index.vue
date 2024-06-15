@@ -2,11 +2,6 @@
     <v-app>
         <NavBar />
         <v-main>
-            <!-- Carousel Slide -->
-            <!-- <v-carousel show-arrows="hover" cycle>
-            <v-corousel-item v-if="loading" src="/src/assets/mfu_logo.png"></v-corousel-item>
-            <v-carousel-item v-else v-for="img in images" :src="img.image" :key="img.id" cover></v-carousel-item>
-        </v-carousel> -->
 
             <Carousel class="carousel" :autoplay="4000" :wrap-around="true">
                 <Slide v-for="img in images" :key="img.id">
@@ -17,7 +12,6 @@
                             </div>
                         </template>
                     </v-img>
-                    <!-- <div class="carousel__item"><img :src="`${img.image}`" alt=""></div> -->
                 </Slide>
                 <template #addons>
                     <Pagination />
@@ -27,18 +21,21 @@
             <!-- Carousel Slide -->
 
             <!-- Youtube video -->
-            <div class="txt flex justify-center mt-5">
-                <p class="text-2xl font-bold mb-3"> Success Case</p>
+            <div class="txt flex justify-center mt-5 ">
+                <p class="text-2xl font-bold mb-3"> Success Case
+                <h1 v-if="userinfo">Hello, {{ userinfo.data.resutl.email }}</h1>
+                </p>
             </div>
-
-            <div class="youtube">
-               
-                    <h1 v-if="userinfo">Hello, {{ userinfo.data.resutl.email }}</h1>
-                
-                <!-- <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe>
-            <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe> -->
-            </div>
-
+            <v-container>
+                <v-carousel cycle hide-delimiters height="400">
+                    <v-carousel-item v-for="(video, index) in videos" :key="index">
+                        <v-sheet class="d-flex align-center justify-center" height="100%" elevation="10">
+                            <iframe class="video-iframe" :src="video.src" :title="video.title" frameborder="0"
+                                allowfullscreen></iframe>
+                        </v-sheet>
+                    </v-carousel-item>
+                </v-carousel>
+            </v-container>
             <!-- Content -->
 
             <div class="inputSearch ml-10">
@@ -78,7 +75,8 @@
 
 <script>
 import {
-    defineComponent
+    defineComponent, ref,
+    onMounted
 } from "vue";
 import {
     Carousel,
@@ -87,10 +85,6 @@ import {
     Pagination
 } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
-import {
-    ref,
-    onMounted
-} from "vue";
 import {
     fetchProducts
 } from "@/components/scripts/fetchAllProducts";
@@ -102,7 +96,17 @@ export default defineComponent({
         return {
             search: '',
             userId: ref(null),
-            userinfo: ref(null)
+            userinfo: ref(null),
+            videos: [
+                {
+                    src: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                    title: '1',
+                },
+                {
+                    src: 'https://www.youtube.com/embed/pz-BkqRVrQ8',
+                    title: '2',
+                },
+            ],
             // Define info property here
         };
     },
@@ -113,11 +117,11 @@ export default defineComponent({
                     Authorization: localStorage.getItem('token')
                 }
             })
-            console.log('Full response:', response);
+            // console.log('Full response:', response);
             this.userId = response.data.result.userId,
-            console.log(this.userId) // Log the full response to inspect it
+                console.log(this.userId) // Log the full response to inspect it
             // Adjust the following line based on the actual structure of your response
-           this.userinfo = await axios.get(`http://localhost:7770/getUser/${this.userId}`)
+            this.userinfo = await axios.get(`http://localhost:7770/getUser/${this.userId}`)
             console.log(this.userinfo)
 
             // await this.fetchAdditionalData();
@@ -159,7 +163,7 @@ export default defineComponent({
     methods: {
         clearSearch() {
             this.search = '';
-        },
+        },  
     },
     components: {
         Pagination,
@@ -191,91 +195,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.carousel {
-    min-height: 500px;
-}
+@import '../styles/index.css';
 
-
-
-.carousel__item {
-    height: 100%;
-}
-
-.wrap {
-    display: flex;
-    /* justify-content: center; */
-    margin-left: 5%;
-    margin-right: 5%;
-
-}
-
-.youtube {
-    display: flex;
-    justify-content: center;
-    margin: 1% 0% 5% 0;
-    overflow: auto;
-}
-
-.videos {
-    margin: 10px;
-}
-
-.card-container {
-    display: flex;
-    flex-direction: row;
-    max-width: 100%;
-    /* Set your desired maximum width */
-    overflow: auto;
-    min-height: 100%;
-    border-radius: 5%;
-}
-
-/* img {
-    min-width: 15rem;
-} */
-
-.item {
-    margin: 0.5rem;
-}
-
-.card:hover {
-    cursor: pointer;
-    background-color: gainsboro;
-}
-
-input[type="text"] {
-    border: none;
-    border-bottom: 2px solid red;
-    margin-left: 2%;
-}
-
-input:focus {
-    outline: none;
-}
-
-.button {
-    margin-left: 2%;
-    background-color: white;
-    color: black;
-    border: 2px solid #3c8af1;
-    /* Green */
-    transition-duration: 0.4s;
-    padding: 6px;
-    border-radius: 20%;
-}
-
-.button:hover {
-    background-color: #3c8af1;
-    /* Green */
-    color: white;
-}
-
-.hover\\:shadow-lg:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.transition-shadow {
-    transition: box-shadow 0.3s ease;
-}
 </style>
