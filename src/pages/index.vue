@@ -1,8 +1,8 @@
 <template>
     <v-app>
         <NavBar />
-        <v-main>
-
+        <v-main class="bg-gray-100 font-noto-sans-thai">
+            <!-- Carousel Slide -->
             <Carousel class="carousel" :autoplay="4000" :wrap-around="true">
                 <Slide v-for="img in images" :key="img.id">
                     <v-img class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`${img.image}`" cover>
@@ -18,7 +18,9 @@
                     <Navigation />
                 </template>
             </Carousel>
-            <!-- Carousel Slide -->
+
+
+
 
             <!-- Youtube video -->
             <div class="txt flex justify-center mt-5 ">
@@ -36,37 +38,55 @@
                     </v-carousel-item>
                 </v-carousel>
             </v-container>
+
+
+
+
             <!-- Content -->
 
-            <div class="inputSearch ml-10">
-                <p class="text-2xl font-bold mb-3">นวัตกรรมทั้งหมด</p>
-                <v-text-field v-model="search" density="comfortable" placeholder="Search"
-                    prepend-inner-icon="mdi-magnify" style="max-width: 300px" variant="solo" clearable
-                    @click:clear="clearSearch" hide-details class="pb-6"></v-text-field>
-            </div>
-            <div class="wrap">
-                <div class="card-container">
-                    <v-skeleton-loader v-if="loading" v-for="i in 10" class="item mx-1 border" min-width="344"
-                        type="image, article"></v-skeleton-loader>
-                    <router-link v-else v-for="data in filteredItems" :key="data.id || data.plant_name"
-                        :to="{ name: 'Innovation', params: { id: data.id } }" class="item mx-1">
-                        <v-card class="hover:shadow-lg transition-shadow rounded-xl">
-                            <v-img :src="data.img" cover height="200px" width="400px">
-                                <template v-slot:placeholder>
-                                    <div class="d-flex align-center justify-center fill-height">
-                                        <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
-                                    </div>
-                                </template>
-                            </v-img>
-                            <v-card-title class="text-lg">{{ data.plant_name }}</v-card-title>
-                            <v-card-subtitle class="text-sm">{{ data.avatar }}</v-card-subtitle>
-                            <v-card-actions>
-                                <v-chip class="ml-4" outlined>{{ data.scale }}</v-chip>
-                            </v-card-actions>
+            <v-container class="pt-4">
+                <h1 class="pb-4" style="font-weight: 600; font-size: 35px">ผลงานทั้งหมด</h1>
+                <!-- Filters Section -->
+                <v-row class="mb-4">
+                    <v-col>
+                        <v-card class="rounded-lg p-4">
+                            <v-btn v-for="filter in filters" :key="filter.text"
+                                class="m-2 rounded-s-xl rounded-e-md text-white justify-start items-center" outlined
+                                :color="filter.color" style="height: 45px; width: 220px;">
+                                <v-icon left class="px-4 ">{{ filter.icon }}</v-icon>
+                                {{ filter.text }}
+                            </v-btn>
                         </v-card>
-                    </router-link>
-                </div>
-            </div>
+                    </v-col>
+                </v-row>
+                <v-text-field v-model="search" density="comfortable" placeholder="Search"
+                    prepend-inner-icon="mdi-magnify" style="max-width: 300px;" variant="solo" clearable
+                    @click:clear="clearSearch" hide-details class="pb-6"></v-text-field>
+
+                <!-- Cards Section -->
+                <v-row>
+                    <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
+                        <router-link :to="{ name: 'Innovation', params: { id: item.id } }">
+                            <v-card class="hover:shadow-lg transition-shadow rounded-xl">
+                                <v-img :src="item.img" cover height="200px"><template v-slot:placeholder>
+                                        <div class="d-flex align-center justify-center fill-height">
+                                            <v-progress-circular color="pink" indeterminate></v-progress-circular>
+                                        </div>
+                                    </template></v-img>
+                                <v-card-title class="text-lg">{{ item.plant_name }}</v-card-title>
+                                <v-card-subtitle class="text-sm">{{ item.avatar }}</v-card-subtitle>
+                                <v-card-actions>
+                                    <v-chip class="ml-4" outlined>{{ item.scale }}</v-chip>
+                                </v-card-actions>
+                            </v-card>
+                        </router-link>
+                    </v-col>
+                </v-row>
+
+                <!-- Pagination -->
+                <v-pagination v-model="currentPage" :length="totalPages" class="pt-6" @input="paginate"></v-pagination>
+
+            </v-container>
         </v-main>
         <Footer></Footer>
         <router-view></router-view>
@@ -97,6 +117,9 @@ export default defineComponent({
             search: '',
             userId: ref(null),
             userinfo: ref(null),
+            info: [],
+            images: [],
+            loading: true,
             videos: [
                 {
                     src: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
@@ -107,6 +130,18 @@ export default defineComponent({
                     title: '2',
                 },
             ],
+            filters: [
+                { text: 'ดูทั้งหมด', color: 'primary', icon: 'mdi-menu' },
+                { text: 'IOT', color: 'blue', icon: 'mdi-earth' },
+                { text: 'Rubber', color: 'green', icon: 'mdi-leaf' },
+                { text: 'Health', color: 'red', icon: 'mdi-hospital-box' },
+                { text: 'Food', color: 'yellow', icon: 'mdi-food' },
+                { text: 'Energy', color: 'cyan', icon: 'mdi-flash' },
+                { text: 'other', color: 'purple', icon: 'mdi-dots-horizontal' },
+                { text: 'Agri', color: 'orange', icon: 'mdi-sprout' }
+            ],
+            currentPage: 1,
+            itemsPerPage: 8
             // Define info property here
         };
     },
@@ -130,29 +165,59 @@ export default defineComponent({
         }
     },
     // fetch API ======================================================================
-    setup() {
-        const info = ref(null);
-        const images = ref(null);
-        const error = ref(null);
-        const loading = ref(true);
+    // setup() {
+    //     const info = ref(null);
+    //     const images = ref(null);
+    //     const error = ref(null);
+    //     const loading = ref(true);
 
-        onMounted(async () => {
-            const result = await fetchProducts();
-            info.value = result.info || [];
-            images.value = result.images || [];
-            error.value = result.error;
-            loading.value = false;
-        });
-        return {
-            info,
-            images,
-            error,
-            loading,
-        };
-    },
+    //     onMounted(async () => {
+    //         const result = await fetchProducts();
+    //         info.value = result.info || [];
+    //         images.value = result.images || [];
+    //         error.value = result.error;
+    //         loading.value = false;
+    //     });
+    //     return {
+    //         info,
+    //         images,
+    //         error,
+    //         loading,
+    //     };
+    // },
     // ====================================================================================
+    async mounted() {
+        try {
+            const [api1Response, api2Response] = await Promise.all([
+                axios.get("https://65fb5ab714650eb21009db19.mockapi.io/plant"),
+                axios.get("https://65fb5ab714650eb21009db19.mockapi.io/todos"),
+            ]);
 
+            if (api1Response.status === 200 && api2Response.status === 200) {
+                this.info = api1Response.data;
+                this.images = api2Response.data;
+            } else {
+                this.error = new Error("One or both API responses are not OK");
+                console.error("API responses:", api1Response.status, api2Response.status);
+            }
+        } catch (error) {
+            this.error = error;
+            console.error("Error fetching data:", error);
+        } finally {
+            this.loading = false;
+        }
+    },
     computed: {
+        // คำนวณจำนวนหน้าทั้งหมด
+        totalPages() {
+            return Math.ceil(this.filteredItems.length / this.itemsPerPage);
+        },
+        // กรองรายการโดยใช้การค้นหาและหน้าที่กำหนด
+        paginatedItems() {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+            const endIndex = startIndex + this.itemsPerPage;
+            return this.filteredItems.slice(startIndex, endIndex);
+        },
         // กรองรายการโดยใช้การค้นหา
         filteredItems() {
             return this.info.filter(item => {
@@ -161,9 +226,12 @@ export default defineComponent({
         }
     },
     methods: {
+        paginate(page) {
+            this.currentPage = page;
+        },
         clearSearch() {
             this.search = '';
-        },  
+        },
     },
     components: {
         Pagination,
@@ -196,5 +264,4 @@ export default defineComponent({
 
 <style scoped>
 @import '../styles/index.css';
-
 </style>
