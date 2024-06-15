@@ -23,15 +23,19 @@
 
 
             <!-- Youtube video -->
-            <div class="txt flex justify-center mt-5 ">
-                <p class="text-2xl font-bold mb-3"> Success Case
+            <div class="txt flex justify-center">
                 <h1 v-if="userinfo">Hello, {{ userinfo.data.resutl.email }}</h1>
-                </p>
+                <h1 v-if="!userinfo">You are not logged in</h1>
             </div>
+            <div class="txt flex justify-center">
+                <h1 class="text-2xl font-bold mb-3"> Success Case
+                </h1>
+            </div>
+
             <v-container>
-                <v-carousel cycle hide-delimiters height="400">
-                    <v-carousel-item v-for="(video, index) in videos" :key="index">
-                        <v-sheet class="d-flex align-center justify-center" height="100%" elevation="10">
+                <v-carousel class="myCarousel" cycle hide-delimiters height="400">
+                    <v-carousel-item v-for="(video, index) in videos" :key="index" >
+                        <v-sheet class="d-flex align-center justify-center bg-gray-100" height="100%" elevation="10">
                             <iframe class="video-iframe" :src="video.src" :title="video.title" frameborder="0"
                                 allowfullscreen></iframe>
                         </v-sheet>
@@ -66,11 +70,12 @@
                 <!-- Cards Section -->
                 <v-row>
                     <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
+                      
                         <router-link :to="{ name: 'Innovation', params: { id: item.id } }">
                             <v-card class="hover:shadow-lg transition-shadow rounded-xl">
                                 <v-img :src="item.img" cover height="200px"><template v-slot:placeholder>
                                         <div class="d-flex align-center justify-center fill-height">
-                                            <v-progress-circular color="pink" indeterminate></v-progress-circular>
+                                            <v-progress-circular color="grey" indeterminate></v-progress-circular>
                                         </div>
                                     </template></v-img>
                                 <v-card-title class="text-lg">{{ item.plant_name }}</v-card-title>
@@ -264,4 +269,5 @@ export default defineComponent({
 
 <style scoped>
 @import '../styles/index.css';
+
 </style>
