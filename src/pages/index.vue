@@ -131,9 +131,14 @@ export default defineComponent({
                     title: '1',
                 },
                 {
-                    src: 'https://www.youtube.com/embed/pz-BkqRVrQ8',
+                    src: 'https://www.youtube.com/embed/8O1Vr3ro6mM',
                     title: '2',
                 },
+                {
+                    src: 'https://www.youtube.com/embed/Qe8WHg410t0',
+                    title: '2',
+                },
+                
             ],
             filters: [
                 { text: 'ดูทั้งหมด', color: 'primary', icon: 'mdi-menu' },
