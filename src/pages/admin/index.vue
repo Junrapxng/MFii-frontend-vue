@@ -3,33 +3,33 @@
 <template>
     <admin-layout>
       <!-- Content for admin page goes here -->
-      <v-container>
-        <h1>Dashboard</h1>
+      <v-container class="font-noto-sans-thai">
+        <!-- <h1 class="text-5xl text-gray-600 font-weight-bold my-4">Dashboard</h1> -->
            <!-- Dashboard Cards -->
            <v-row>
           <v-col cols="12" md="4">
             <v-card class="mb-4">
-              <v-card-title>Today's Visitors</v-card-title>
-              <v-card-subtitle>{{ visitorsToday }}</v-card-subtitle>
+              <v-card-title class="text-3xl">จำนวนผู้เยี่ยมชมวันนี้</v-card-title>
+              <v-card-subtitle class="text-2xl text-red-950 font-bold">{{ visitorsToday }} คน</v-card-subtitle>
             </v-card>
           </v-col>
           <v-col cols="12" md="4">
             <v-card class="mb-4">
-              <v-card-title>Yesterday's Visitors</v-card-title>
-              <v-card-subtitle>{{ visitorsYesterday }}</v-card-subtitle>
+              <v-card-title class="text-3xl">จำนวนผู้เยี่ยมชมเมื่อวาน</v-card-title>
+              <v-card-subtitle class="text-2xl text-red-950 font-bold">{{ visitorsYesterday }} คน</v-card-subtitle>
             </v-card>
           </v-col>
           <v-col cols="12" md="4">
             <v-card class="mb-4">
-              <v-card-title>Total Downloads</v-card-title>
-              <v-card-subtitle>{{ totalDownloads }}</v-card-subtitle>
+              <v-card-title class="text-3xl">จำนวนดาวน์โหลดทั้งหมด</v-card-title>
+              <v-card-subtitle class="text-2xl text-red-950 font-bold">{{ totalDownloads }} คน</v-card-subtitle>
             </v-card>
           </v-col>
         </v-row>
 
         <!-- Research Access Table -->
         <v-card class="mb-4">
-          <v-card-title>Research Access</v-card-title>
+          <v-card-title class="text-3xl">การเข้าถึงการวิจัย</v-card-title>
           <v-data-table :headers="headers" :items="researchAccess"></v-data-table>
         </v-card>
 
@@ -39,7 +39,7 @@
             <v-card class="mb-4">
               <v-card-title>Visitors and Downloads</v-card-title>
               <v-card-text>
-                <line-chart :chart-data="chartData"></line-chart>
+                <!-- <line-chart :chart-data="chartData"></line-chart> -->
               </v-card-text>
             </v-card>
           </v-col>
@@ -52,24 +52,23 @@
   
   <script>
   import AdminLayout from "@/layouts/admin.vue";
-  import LineChart from '@/components/LineChart.vue';
   
   export default {
-    name: "Dashboard-Admin",
+    name: "Index-Admin-Page",
     components: {
     AdminLayout,
-    LineChart,
   },
   data() {
     return {
-      todayVisitors: 123,
-      yesterdayVisitors: 98,
+        visitorsToday: 123,
+        visitorsYesterday: 98,
+        totalDownloads: 67,
       researchAccess: [
         { title: 'Research Paper 1', accesses: 45 },
         { title: 'Research Paper 2', accesses: 30 },
         { title: 'Research Paper 3', accesses: 75 },
       ],
-      downloads: 67,
+      
       chartData: {
         labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
         datasets: [
