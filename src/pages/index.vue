@@ -48,7 +48,7 @@
 
             <!-- Content -->
 
-            <div class="inputSearch ml-10">
+            <v-container class="inputSearch ml-10">
                 <p class="text-2xl font-bold mb-3">นวัตกรรมทั้งหมด</p>
                 <v-text-field v-model="search" density="comfortable" placeholder="Search"
                     prepend-inner-icon="mdi-magnify" style="max-width: 300px;" variant="solo" clearable
@@ -77,7 +77,6 @@
 
                 <!-- Pagination -->
                 <v-pagination v-model="currentPage" :length="totalPages" class="pt-6" @input="paginate"></v-pagination>
-
             </v-container>
         </v-main>
         <Footer></Footer>
