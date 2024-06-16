@@ -137,7 +137,7 @@ export default defineComponent({
                 { text: 'Agri', color: 'orange', icon: 'mdi-sprout' }
             ],
             currentPage: 1,
-            itemsPerPage: 8
+            itemsPerPage: 4
             // Define info property here
         };
     },
