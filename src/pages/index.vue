@@ -126,16 +126,6 @@ export default defineComponent({
                 },
                 
             ],
-            filters: [
-                { text: 'ดูทั้งหมด', color: 'primary', icon: 'mdi-menu' },
-                { text: 'IOT', color: 'blue', icon: 'mdi-earth' },
-                { text: 'Rubber', color: 'green', icon: 'mdi-leaf' },
-                { text: 'Health', color: 'red', icon: 'mdi-hospital-box' },
-                { text: 'Food', color: 'yellow', icon: 'mdi-food' },
-                { text: 'Energy', color: 'cyan', icon: 'mdi-flash' },
-                { text: 'other', color: 'purple', icon: 'mdi-dots-horizontal' },
-                { text: 'Agri', color: 'orange', icon: 'mdi-sprout' }
-            ],
             currentPage: 1,
             itemsPerPage: 4
             // Define info property here
