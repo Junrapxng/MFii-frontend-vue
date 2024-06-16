@@ -16,7 +16,6 @@ import LAP from '@/pages/lap.vue'
 import All_Catagories from '@/pages/all_catagories.vue'
 import Innovation from '@/pages/user/innovation.vue'
 import Admin from '@/pages/admin/index.vue'
-import Dashboard from '@/pages/admin/dashboard.vue'
 import UserManage from '@/pages/admin/userManage.vue'
 import Documents from '@/pages/admin/documents.vue'
 import Staff from '@/pages/staff/index.vue'
@@ -74,11 +73,6 @@ const routes = [
     path: '/admin/',
     name: 'Admin',
     component: Admin
-  },
-  {
-    path: '/admin/dashboard',
-    name: 'Dashboard',
-    component: Dashboard
   },
   {
     path: '/admin/userManage',
