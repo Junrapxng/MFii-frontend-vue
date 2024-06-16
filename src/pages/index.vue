@@ -1,7 +1,7 @@
 <template>
     <v-app>
         <NavBar />
-        <v-main class="bg-gray-100 font-noto-sans-thai">
+        <v-main>
             <!-- Carousel Slide -->
             <Carousel class="carousel" :autoplay="4000" :wrap-around="true">
                 <Slide v-for="img in images" :key="img.id">
@@ -48,21 +48,8 @@
 
             <!-- Content -->
 
-            <v-container class="pt-4">
-                <h1 class="pb-4" style="font-weight: 600; font-size: 35px">ผลงานทั้งหมด</h1>
-                <!-- Filters Section -->
-                <v-row class="mb-4">
-                    <v-col>
-                        <v-card class="rounded-lg p-4">
-                            <v-btn v-for="filter in filters" :key="filter.text"
-                                class="m-2 rounded-s-xl rounded-e-md text-white justify-start items-center" outlined
-                                :color="filter.color" style="height: 45px; width: 220px;">
-                                <v-icon left class="px-4 ">{{ filter.icon }}</v-icon>
-                                {{ filter.text }}
-                            </v-btn>
-                        </v-card>
-                    </v-col>
-                </v-row>
+            <div class="inputSearch ml-10">
+                <p class="text-2xl font-bold mb-3">นวัตกรรมทั้งหมด</p>
                 <v-text-field v-model="search" density="comfortable" placeholder="Search"
                     prepend-inner-icon="mdi-magnify" style="max-width: 300px;" variant="solo" clearable
                     @click:clear="clearSearch" hide-details class="pb-6"></v-text-field>
