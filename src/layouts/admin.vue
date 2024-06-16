@@ -3,10 +3,12 @@
     <!-- sidebar -->
     <v-navigation-drawer app class="bg-stone-200">
       <div class="d-flex justify-center mt-4 mb-4">
-        <v-img src="../assets/mfu_logo.png" width="180px"></v-img>
+        <a href="/admin">
+        <v-img src="../assets/mfu_logo.png" width="240px"></v-img>
+        </a>
       </div>
       <v-list dense>
-        <v-list-item link to="/admin/dashboard">
+        <v-list-item link to="/admin">
           <v-list-item-icon>
             <v-icon class="mr-2">mdi-view-dashboard</v-icon>
           </v-list-item-icon>
