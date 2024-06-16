@@ -1,13 +1,8 @@
 <template>
     <v-app>
         <NavBar />
-        <v-main class="font-noto-sans-thai">
+        <v-main>
             <!-- Carousel Slide -->
-            <!-- <v-carousel show-arrows="hover" cycle>
-            <v-corousel-item v-if="loading" src="/src/assets/mfu_logo.png"></v-corousel-item>
-            <v-carousel-item v-else v-for="img in images" :src="img.image" :key="img.id" cover></v-carousel-item>
-        </v-carousel> -->
-
             <Carousel class="carousel" :autoplay="4000" :wrap-around="true">
                 <Slide v-for="img in images" :key="img.id">
                     <v-img class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`${img.image}`" cover>
@@ -17,59 +12,73 @@
                             </div>
                         </template>
                     </v-img>
-                    <!-- <div class="carousel__item"><img :src="`${img.image}`" alt=""></div> -->
                 </Slide>
                 <template #addons>
                     <Pagination />
                     <Navigation />
                 </template>
             </Carousel>
-            <!-- Carousel Slide -->
+
+
+
 
             <!-- Youtube video -->
-            <div class="txt flex justify-center mt-5">
-                <p class="text-2xl font-bold mb-3"> Success Case</p>
+            <div class="txt flex justify-center">
+                <h1 v-if="userinfo">Hello, {{ userinfo.data.resutl.email }}</h1>
+                <h1 v-if="!userinfo">You are not logged in</h1>
+            </div>
+            <div class="txt flex justify-center">
+                <h1 class="text-2xl font-bold mb-3"> Success Case
+                </h1>
             </div>
 
-            <div class="youtube">
-               
-                    <h1 v-if="userinfo">Hello, {{ userinfo.data.resutl.email }}</h1>
-                
-                <!-- <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe>
-            <iframe class="videos" height="260" width="450" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title=" &amp; Pagination part 5/7" frameborder="0" allowFullScreen></iframe> -->
-            </div>
+            <v-container>
+                <v-carousel class="myCarousel" cycle hide-delimiters height="400">
+                    <v-carousel-item v-for="(video, index) in videos" :key="index" >
+                        <v-sheet class="d-flex align-center justify-center bg-gray-100" height="100%" elevation="10">
+                            <iframe class="video-iframe" :src="video.src" :title="video.title" frameborder="0"
+                                allowfullscreen></iframe>
+                        </v-sheet>
+                    </v-carousel-item>
+                </v-carousel>
+            </v-container>
+
+
+
 
             <!-- Content -->
 
             <div class="inputSearch ml-10">
-                <p class="text-3xl font-semibold mb-3">นวัตกรรมทั้งหมด</p>
+                <p class="text-2xl font-bold mb-3">นวัตกรรมทั้งหมด</p>
                 <v-text-field v-model="search" density="comfortable" placeholder="Search"
-                    prepend-inner-icon="mdi-magnify" style="max-width: 300px" variant="solo" clearable
+                    prepend-inner-icon="mdi-magnify" style="max-width: 300px;" variant="solo" clearable
                     @click:clear="clearSearch" hide-details class="pb-6"></v-text-field>
-            </div>
-            <div class="wrap">
-                <div class="card-container">
-                    <v-skeleton-loader v-if="loading" v-for="i in 10" class="item mx-1 border" min-width="344"
-                        type="image, article"></v-skeleton-loader>
-                    <router-link v-else v-for="data in filteredItems" :key="data.id || data.plant_name"
-                        :to="{ name: 'Innovation', params: { id: data.id } }" class="item mx-1">
-                        <v-card class="hover:shadow-lg transition-shadow rounded-xl">
-                            <v-img :src="data.img" cover height="200px" width="400px">
-                                <template v-slot:placeholder>
-                                    <div class="d-flex align-center justify-center fill-height">
-                                        <v-progress-circular color="grey-lighten-4" indeterminate></v-progress-circular>
-                                    </div>
-                                </template>
-                            </v-img>
-                            <v-card-title class="text-lg">{{ data.plant_name }}</v-card-title>
-                            <v-card-subtitle class="text-sm">{{ data.avatar }}</v-card-subtitle>
-                            <v-card-actions>
-                                <v-chip class="ml-4" outlined>{{ data.scale }}</v-chip>
-                            </v-card-actions>
-                        </v-card>
-                    </router-link>
-                </div>
-            </div>
+
+                <!-- Cards Section -->
+                <v-row>
+                    <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
+                      
+                        <router-link :to="{ name: 'Innovation', params: { id: item.id } }">
+                            <v-card class="hover:shadow-lg transition-shadow rounded-xl">
+                                <v-img :src="item.img" cover height="200px"><template v-slot:placeholder>
+                                        <div class="d-flex align-center justify-center fill-height">
+                                            <v-progress-circular color="grey" indeterminate></v-progress-circular>
+                                        </div>
+                                    </template></v-img>
+                                <v-card-title class="text-lg">{{ item.plant_name }}</v-card-title>
+                                <v-card-subtitle class="text-sm">{{ item.avatar }}</v-card-subtitle>
+                                <v-card-actions>
+                                    <v-chip class="ml-4" outlined>{{ item.scale }}</v-chip>
+                                </v-card-actions>
+                            </v-card>
+                        </router-link>
+                    </v-col>
+                </v-row>
+
+                <!-- Pagination -->
+                <v-pagination v-model="currentPage" :length="totalPages" class="pt-6" @input="paginate"></v-pagination>
+
+            </v-container>
         </v-main>
         <Footer></Footer>
         <router-view></router-view>
@@ -78,7 +87,8 @@
 
 <script>
 import {
-    defineComponent
+    defineComponent, ref,
+    onMounted
 } from "vue";
 import {
     Carousel,
@@ -87,10 +97,6 @@ import {
     Pagination
 } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
-import {
-    ref,
-    onMounted
-} from "vue";
 import {
     fetchProducts
 } from "@/components/scripts/fetchAllProducts";
@@ -102,7 +108,37 @@ export default defineComponent({
         return {
             search: '',
             userId: ref(null),
-            userinfo: ref(null)
+            userinfo: ref(null),
+            info: [],
+            images: [],
+            loading: true,
+            videos: [
+                {
+                    src: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                    title: '1',
+                },
+                {
+                    src: 'https://www.youtube.com/embed/8O1Vr3ro6mM',
+                    title: '2',
+                },
+                {
+                    src: 'https://www.youtube.com/embed/Qe8WHg410t0',
+                    title: '2',
+                },
+                
+            ],
+            filters: [
+                { text: 'ดูทั้งหมด', color: 'primary', icon: 'mdi-menu' },
+                { text: 'IOT', color: 'blue', icon: 'mdi-earth' },
+                { text: 'Rubber', color: 'green', icon: 'mdi-leaf' },
+                { text: 'Health', color: 'red', icon: 'mdi-hospital-box' },
+                { text: 'Food', color: 'yellow', icon: 'mdi-food' },
+                { text: 'Energy', color: 'cyan', icon: 'mdi-flash' },
+                { text: 'other', color: 'purple', icon: 'mdi-dots-horizontal' },
+                { text: 'Agri', color: 'orange', icon: 'mdi-sprout' }
+            ],
+            currentPage: 1,
+            itemsPerPage: 8
             // Define info property here
         };
     },
@@ -113,11 +149,11 @@ export default defineComponent({
                     Authorization: localStorage.getItem('token')
                 }
             })
-            console.log('Full response:', response);
+            // console.log('Full response:', response);
             this.userId = response.data.result.userId,
-            console.log(this.userId) // Log the full response to inspect it
+                console.log(this.userId) // Log the full response to inspect it
             // Adjust the following line based on the actual structure of your response
-           this.userinfo = await axios.get(`http://localhost:7770/getUser/${this.userId}`)
+            this.userinfo = await axios.get(`http://localhost:7770/getUser/${this.userId}`)
             console.log(this.userinfo)
 
             // await this.fetchAdditionalData();
@@ -126,29 +162,59 @@ export default defineComponent({
         }
     },
     // fetch API ======================================================================
-    setup() {
-        const info = ref(null);
-        const images = ref(null);
-        const error = ref(null);
-        const loading = ref(true);
+    // setup() {
+    //     const info = ref(null);
+    //     const images = ref(null);
+    //     const error = ref(null);
+    //     const loading = ref(true);
 
-        onMounted(async () => {
-            const result = await fetchProducts();
-            info.value = result.info || [];
-            images.value = result.images || [];
-            error.value = result.error;
-            loading.value = false;
-        });
-        return {
-            info,
-            images,
-            error,
-            loading,
-        };
-    },
+    //     onMounted(async () => {
+    //         const result = await fetchProducts();
+    //         info.value = result.info || [];
+    //         images.value = result.images || [];
+    //         error.value = result.error;
+    //         loading.value = false;
+    //     });
+    //     return {
+    //         info,
+    //         images,
+    //         error,
+    //         loading,
+    //     };
+    // },
     // ====================================================================================
+    async mounted() {
+        try {
+            const [api1Response, api2Response] = await Promise.all([
+                axios.get("https://65fb5ab714650eb21009db19.mockapi.io/plant"),
+                axios.get("https://65fb5ab714650eb21009db19.mockapi.io/todos"),
+            ]);
 
+            if (api1Response.status === 200 && api2Response.status === 200) {
+                this.info = api1Response.data;
+                this.images = api2Response.data;
+            } else {
+                this.error = new Error("One or both API responses are not OK");
+                console.error("API responses:", api1Response.status, api2Response.status);
+            }
+        } catch (error) {
+            this.error = error;
+            console.error("Error fetching data:", error);
+        } finally {
+            this.loading = false;
+        }
+    },
     computed: {
+        // คำนวณจำนวนหน้าทั้งหมด
+        totalPages() {
+            return Math.ceil(this.filteredItems.length / this.itemsPerPage);
+        },
+        // กรองรายการโดยใช้การค้นหาและหน้าที่กำหนด
+        paginatedItems() {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+            const endIndex = startIndex + this.itemsPerPage;
+            return this.filteredItems.slice(startIndex, endIndex);
+        },
         // กรองรายการโดยใช้การค้นหา
         filteredItems() {
             return this.info.filter(item => {
@@ -157,6 +223,9 @@ export default defineComponent({
         }
     },
     methods: {
+        paginate(page) {
+            this.currentPage = page;
+        },
         clearSearch() {
             this.search = '';
         },
@@ -191,91 +260,6 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.carousel {
-    min-height: 500px;
-}
+@import '../styles/index.css';
 
-
-
-.carousel__item {
-    height: 100%;
-}
-
-.wrap {
-    display: flex;
-    /* justify-content: center; */
-    margin-left: 5%;
-    margin-right: 5%;
-
-}
-
-.youtube {
-    display: flex;
-    justify-content: center;
-    margin: 1% 0% 5% 0;
-    overflow: auto;
-}
-
-.videos {
-    margin: 10px;
-}
-
-.card-container {
-    display: flex;
-    flex-direction: row;
-    max-width: 100%;
-    /* Set your desired maximum width */
-    overflow: auto;
-    min-height: 100%;
-    border-radius: 5%;
-}
-
-/* img {
-    min-width: 15rem;
-} */
-
-.item {
-    margin: 0.5rem;
-}
-
-.card:hover {
-    cursor: pointer;
-    background-color: gainsboro;
-}
-
-input[type="text"] {
-    border: none;
-    border-bottom: 2px solid red;
-    margin-left: 2%;
-}
-
-input:focus {
-    outline: none;
-}
-
-.button {
-    margin-left: 2%;
-    background-color: white;
-    color: black;
-    border: 2px solid #3c8af1;
-    /* Green */
-    transition-duration: 0.4s;
-    padding: 6px;
-    border-radius: 20%;
-}
-
-.button:hover {
-    background-color: #3c8af1;
-    /* Green */
-    color: white;
-}
-
-.hover\\:shadow-lg:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.transition-shadow {
-    transition: box-shadow 0.3s ease;
-}
 </style>
