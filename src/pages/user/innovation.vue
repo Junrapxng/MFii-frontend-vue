@@ -9,23 +9,23 @@
            
               <div class="contents">
                 <ul class="py-3 font-bold text-xl">
-                  ชื่อผลงาน  {{ research.plant_name }}
+                  ชื่อผลงาน  {{ research.nameOnMedia }}
                 </ul>
-                <li>ผู้ประดิษฐ์ {{ research.avatar }}</li>
-                <li>สังกัด {{ research.City }}</li>
-                <li>ทรัพย์สินทางปัญญา  {{ research.plant_name }}</li>
-                <li>ประเภทอุตสาหกรรม   <span class="text-green-600">{{ research.plant_name }}</span></li>
-                <li>รายละเอียดผลงาน (ประมาณ 200 คำ) 
+                <li>ผู้ประดิษฐ์</li>
+                <li v-for="( inventor, index ) in research.inventor" :key="index" class="pl-10" >{{ inventor }}</li>
+                <li>สังกัด {{ research.major }}</li>
+                <li>ทรัพย์สินทางปัญญา  {{ research.intelProp }}</li>
+                <li>ประเภทอุตสาหกรรม   <span class="text-green-600">{{ research.industryType }}</span></li>
+                <li>รายละเอียดผลงาน
                   <dd class="pl-10">
-                    {{ research.img }}
+                    {{  research.descripton  }}
                   </dd>
                 </li>
                 <li>จุดเด่น</li>
-                <li v-for="(name, index) in research" :key="index" class="pl-10">{{ research.avatar }}</li>
-                <li>ความพร้อมของเทคโนโลยี  <span class="text-pink-600">{{ research.avatar }}</span></li>
+                <li class="pl-10">{{ research.hilight }}</li>
+                <li>ความพร้อมของเทคโนโลยี  <span class="text-pink-600">{{ research.techReadiness }}</span></li>
                 <li>ความร่วมมือที่เสาะหา </li>
-                <li v-for="(name, index) in research" :key="index" class="pl-10">{{ research.avatar }}</li>
-                <li class="pl-10">{{ research.avatar }}</li>
+                <li class="pl-10">{{ research.coop }}</li>
               </div>
             </v-card>
           </v-col>
@@ -36,7 +36,7 @@
                 cycle
                 hide-delimiter-background
               >
-                <v-carousel-item :src="research.img" cover></v-carousel-item>
+                <v-carousel-item v-for="( pic, index ) in research.filePath" :key="index" :src="`http://localhost:7770/${pic}`" fit ></v-carousel-item>
               </v-carousel>
             </div>
           </v-col>
@@ -82,15 +82,17 @@ export default {
     };
   },
   mounted() {
+    console.log(this.id)
+    console.log(typeof(this.id))
     this.fetchData();
   },
   methods: {
     async fetchData() {
       try {
         const response = await axios.get(
-          "https://65fb5ab714650eb21009db19.mockapi.io/plant/" + this.id
+          "http://localhost:7770/getResearch/" + this.id
         ); // Replace with your API endpoint
-        this.research = response.data;
+        this.research = response.data.result;
         console.log(this.research);
       } catch (error) {
         console.error("Error fetching data:", error);

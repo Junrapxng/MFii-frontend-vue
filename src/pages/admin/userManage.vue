@@ -71,7 +71,7 @@
                             flat
                             label="Role"
                             v-model="editedItem.role"
-                            :items="['User', 'Staff', 'Admin']"
+                            :items="['Staff', 'Admin']"
                           ></v-autocomplete>
                         </v-col>
                         <v-col cols="12" md="6" sm="6">
@@ -236,7 +236,7 @@ export default {
           name: "Sarah Moore",
           email: '643150xxxx@lamduan.mfu.ac.th',
           create_date: '03/06/2024',
-          role: 'user',
+          role: 'staff',
           status: 'active',
         },
         {
@@ -244,7 +244,7 @@ export default {
           name: "Jennifer Blaese",
           email: '643150xxxx@lamduan.mfu.ac.th',
           create_date: '02/06/2024',
-          role: 'user',
+          role: 'staff',
           status: 'active',
         },
         {
@@ -260,7 +260,7 @@ export default {
           name: "Nicole Brown",
           email: 'Nicole Brown@gmail.com',
           create_date: '03/06/2024',
-          role: 'user',
+          role: 'staff',
           status: 'active',
         },
         {
