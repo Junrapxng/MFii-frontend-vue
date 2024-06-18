@@ -84,8 +84,8 @@ input:focus {
 }
 
 .video-iframe {
-    width: 40%;
-    height: 90%;
+    width: 60%;
+    height: 96%;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease-in-out;

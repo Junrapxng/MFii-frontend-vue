@@ -3,6 +3,8 @@
         <NavBar />
         <v-main>
             <!-- Carousel Slide -->
+      <v-container class="flex">
+        <v-container luid style="width: 90%" >
             <Carousel class="carousel" :autoplay="4000" :wrap-around="true">
                 <Slide v-for="img in images" :key="img.id">
                     <v-img class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`${img.image}`" cover>
@@ -18,6 +20,8 @@
                     <Navigation />
                 </template>
             </Carousel>
+          </v-container>
+      </v-container>
 
 
             <!-- Youtube video -->
@@ -30,15 +34,17 @@
                 </h1>
             </div>
 
-            <v-container>
-                <v-carousel class="myCarousel" cycle hide-delimiters height="400">
+            <v-container class="flex">
+            <v-container fluid style="width: 70%" >
+                <v-carousel class="myCarousel"  hide-delimiter-background height="400">
                     <v-carousel-item v-for="(video, index) in videos" :key="index" >
-                        <v-sheet class="d-flex align-center justify-center bg-gray-100" height="100%" elevation="10">
+                        <v-sheet class="d-flex align-center justify-center" height="100%" elevation="10">
                             <iframe class="video-iframe" :src="video.src" :title="video.title" frameborder="0"
                                 allowfullscreen></iframe>
                         </v-sheet>
                     </v-carousel-item>
                 </v-carousel>
+            </v-container>
             </v-container>
 
 
@@ -145,11 +151,11 @@ export default defineComponent({
                 }
             })
             // console.log('Full response:', response);
-            this.userId = response.data.result.userId,
-                console.log(this.userId) // Log the full response to inspect it
+            // this.userId = response.data.result.userId,
+                // console.log(this.userId) // Log the full response to inspect it
             // Adjust the following line based on the actual structure of your response
-            this.userinfo = await axios.get(`http://localhost:7770/getUser/${this.userId}`)
-            console.log(this.userinfo)
+            // this.userinfo = await axios.get(`http://localhost:7770/getUser/${this.userId}`)
+            // console.log(this.userinfo)
 
             // await this.fetchAdditionalData();
         } catch (error) {
