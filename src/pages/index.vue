@@ -144,12 +144,12 @@ export default defineComponent({
         };
     },
     async created() {
-        try {
-            const response = await axios.get('http://localhost:7770/verify', {
-                headers: {
-                    Authorization: localStorage.getItem('token')
-                }
-            })
+        // try {
+        //     const response = await axios.get('http://localhost:7770/verify', {
+        //         headers: {
+        //             Authorization: localStorage.getItem('token')
+        //         }
+        //     })
             // console.log('Full response:', response);
             // this.userId = response.data.result.userId,
                 // console.log(this.userId) // Log the full response to inspect it
@@ -158,9 +158,9 @@ export default defineComponent({
             // console.log(this.userinfo)
 
             // await this.fetchAdditionalData();
-        } catch (error) {
-            console.error('Error fetching user data:', error);
-        }
+        // } catch (error) {
+        //     console.error('Error fetching user data:', error);
+        // }
     },
     // fetch API ======================================================================
     // setup() {
