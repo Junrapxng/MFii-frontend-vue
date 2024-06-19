@@ -98,10 +98,8 @@
                 <v-icon>mdi-menu-down</v-icon>
               </router-link>
             </v-btn>
-            <v-btn dark v-bind="props" class="mx-2 rounded-lg hover:bg-white hover:text-red-500" v-else>
-              <router-link :to="item.route">
+            <v-btn dark v-bind="props" class="mx-2 rounded-lg hover:bg-white hover:text-red-500" :to="item.route" v-else>
                 {{ item.title }}
-              </router-link>
             </v-btn>
           </template>
 
