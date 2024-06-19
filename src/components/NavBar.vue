@@ -65,52 +65,78 @@
               >
             </v-container>
             <!-- if user loggedin -->
-            <v-container
-              v-if="!userStore.loading && !userStore.error"
-              class="p-0 flex justify-center items-center"
-            >
-              <h1 class="px-3">Hello, {{ userStore.user.resutl.email }}</h1>
-              <v-btn @click="logoutBtn">Logout</v-btn>
+            <v-container v-if="!userStore.loading && !userStore.error" 
+              ><v-row>
+                <v-col cols="12">
+                  <h1>Hello, {{ userStore.user.resutl.email }}</h1>
+                </v-col>
+                <v-col cols="12">
+                  <v-btn @click="logoutBtn">Logout</v-btn>
+                </v-col>
+              </v-row>
             </v-container>
           </v-container>
         </v-col>
       </v-row>
     </div>
-    
 
     <!-- Header Menu Bar -->
     <v-app-bar
-    :elevation="2"
-    app
-    color="#D02630"
-    class="font-noto-sans-thai mt-36"
-  >
-    <v-spacer></v-spacer>
-    
-    <div class="text-center">
-        <v-menu v-for="item in menuItems" :key="item.title" :location="bottom" :to="item.route">
+      :elevation="2"
+      app
+      color="#D02630"
+      class="font-noto-sans-thai mt-36"
+    >
+      <v-spacer></v-spacer>
+
+      <div class="text-center">
+        <v-menu
+          v-for="item in menuItems"
+          :key="item.title"
+          :location="bottom"
+          :to="item.route"
+        >
           <template v-slot:activator="{ props }">
-            <v-btn dark v-bind="props" class="mx-2 rounded-lg hover:bg-white hover:text-red-500" v-if="
-              item.title !== 'หน้าหลัก' && item.title !== 'ผลงานพร้อมถ่ายทอด'
-            ">
+            <v-btn
+              dark
+              v-bind="props"
+              class="mx-2 rounded-lg hover:bg-white hover:text-red-500"
+              v-if="
+                item.title !== 'หน้าหลัก' && item.title !== 'ผลงานพร้อมถ่ายทอด'
+              "
+            >
               <router-link :to="item.route">
                 {{ item.title }}
                 <v-icon>mdi-menu-down</v-icon>
               </router-link>
             </v-btn>
-            <v-btn dark v-bind="props" class="mx-2 rounded-lg hover:bg-white hover:text-red-500" :to="item.route" v-else>
-                {{ item.title }}
+            <v-btn
+              dark
+              v-bind="props"
+              class="mx-2 rounded-lg hover:bg-white hover:text-red-500"
+              :to="item.route"
+              v-else
+            >
+              {{ item.title }}
             </v-btn>
           </template>
 
-          <v-list v-if="
-            item.title !== 'หน้าหลัก' && item.title !== 'ผลงานพร้อมถ่ายทอด'
-          ">
+          <v-list
+            v-if="
+              item.title !== 'หน้าหลัก' && item.title !== 'ผลงานพร้อมถ่ายทอด'
+            "
+          >
             <template v-for="subItem in item.subItems">
-              <v-menu v-if="subItem.subItems && subItem.subItems.length" :key="subItem.title" :location="bottom">
+              <v-menu
+                v-if="subItem.subItems && subItem.subItems.length"
+                :key="subItem.title"
+                :location="bottom"
+              >
                 <template v-slot:activator="{ props }">
                   <v-list-item v-bind="props">
-                    <v-list-item-title :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }">
+                    <v-list-item-title
+                      :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }"
+                    >
                       {{ subItem.title }} <v-icon>mdi-chevron-right</v-icon>
                     </v-list-item-title>
                   </v-list-item>
@@ -118,13 +144,18 @@
 
                 <v-list>
                   <template v-for="nestedItem in subItem.subItems">
-                    <v-menu v-if="nestedItem.subItems && nestedItem.subItems.length" :key="nestedItem.title"
-                      :location="bottom">
+                    <v-menu
+                      v-if="nestedItem.subItems && nestedItem.subItems.length"
+                      :key="nestedItem.title"
+                      :location="bottom"
+                    >
                       <template v-slot:activator="{ props }">
                         <v-list-item v-bind="props">
-                          <v-list-item-title :style="{
-                            fontFamily: 'Noto Sans Thai, sans-serif',
-                          }">
+                          <v-list-item-title
+                            :style="{
+                              fontFamily: 'Noto Sans Thai, sans-serif',
+                            }"
+                          >
                             {{ nestedItem.title }}
                             <v-icon>mdi-chevron-right</v-icon>
                           </v-list-item-title>
@@ -133,15 +164,21 @@
                       <!-- เพิ่มโค้ดสำหรับ nestedItem ที่อยู่ใน nestedItem ที่นี่ -->
                       <v-list>
                         <template v-for="subNestedItem in nestedItem.subItems">
-                          <v-menu v-if="
-                            subNestedItem.subItems &&
-                            subNestedItem.subItems.length
-                          " :key="subNestedItem.title" :location="bottom">
+                          <v-menu
+                            v-if="
+                              subNestedItem.subItems &&
+                              subNestedItem.subItems.length
+                            "
+                            :key="subNestedItem.title"
+                            :location="bottom"
+                          >
                             <template v-slot:activator="{ props }">
                               <v-list-item v-bind="props">
-                                <v-list-item-title :style="{
-                                  fontFamily: 'Noto Sans Thai, sans-serif',
-                                }">
+                                <v-list-item-title
+                                  :style="{
+                                    fontFamily: 'Noto Sans Thai, sans-serif',
+                                  }"
+                                >
                                   {{ subNestedItem.title }}
                                   <v-icon>mdi-chevron-right</v-icon>
                                 </v-list-item-title>
@@ -149,11 +186,17 @@
                             </template>
                             <!-- เพิ่มโค้ดสำหรับ subNestedItem ที่อยู่ใน subNestedItem ที่นี่ -->
                           </v-menu>
-                          <router-link v-else :key="subNestedItem" :to="subNestedItem.route">
+                          <router-link
+                            v-else
+                            :key="subNestedItem"
+                            :to="subNestedItem.route"
+                          >
                             <v-list-item>
-                              <v-list-item-title :style="{
-                                fontFamily: 'Noto Sans Thai, sans-serif',
-                              }">
+                              <v-list-item-title
+                                :style="{
+                                  fontFamily: 'Noto Sans Thai, sans-serif',
+                                }"
+                              >
                                 {{ subNestedItem.title }}
                               </v-list-item-title>
                             </v-list-item>
@@ -161,9 +204,15 @@
                         </template>
                       </v-list>
                     </v-menu>
-                    <router-link v-else :key="nestedItem" :to="nestedItem.route">
+                    <router-link
+                      v-else
+                      :key="nestedItem"
+                      :to="nestedItem.route"
+                    >
                       <v-list-item>
-                        <v-list-item-title :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }">
+                        <v-list-item-title
+                          :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }"
+                        >
                           {{ nestedItem.title }}
                         </v-list-item-title>
                       </v-list-item>
@@ -173,7 +222,9 @@
               </v-menu>
               <router-link v-else :key="subItem" :to="subItem.route">
                 <v-list-item>
-                  <v-list-item-title :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }">
+                  <v-list-item-title
+                    :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }"
+                  >
                     {{ subItem.title }}
                   </v-list-item-title>
                 </v-list-item>
@@ -183,8 +234,8 @@
         </v-menu>
       </div>
 
-    <v-spacer></v-spacer>
-  </v-app-bar>
+      <v-spacer></v-spacer>
+    </v-app-bar>
   </div>
 </template>
 <script>
@@ -306,7 +357,7 @@ export default {
   .text-2xl {
     font-size: 24px;
   }
-  .text-xl{
+  .text-xl {
     font-size: 16px;
   }
   .v-app-bar {
@@ -321,10 +372,10 @@ export default {
   .text-2xl {
     font-size: 20px;
   }
-  .text-xl{
+  .text-xl {
     font-size: 14px;
   }
-  .header{
+  .header {
     display: block;
   }
   .head-logo {
@@ -332,7 +383,7 @@ export default {
     display: flex;
     margin-bottom: 10px;
   }
-  .btn-top{
+  .btn-top {
     display: block;
     justify-content: center; /* จัดให้อยู่ตรงกลางแนวนอน */
     align-items: center; /* จัดให้อยู่ตรงกลางแนวตั้ง */
@@ -340,7 +391,7 @@ export default {
   .v-app-bar {
     margin-top: 15%;
   }
-/* 
+  /* 
   .header-title{
     display: block;
   } */
@@ -353,12 +404,12 @@ export default {
 @media (max-width: 600px) {
   .text-3xl {
     font-size: 20px;
-    margin-bottom: 10px; 
+    margin-bottom: 10px;
   }
 
   .text-2xl {
     font-size: 16px;
-    margin-bottom: 4px; 
+    margin-bottom: 4px;
   }
 
   .text-xl {
@@ -372,7 +423,7 @@ export default {
     margin-bottom: 5px;
   }
 
-  .header-title{
+  .header-title {
     display: block;
   }
 
@@ -381,7 +432,7 @@ export default {
   }
 }
 
-  /* .v-app-bar {
+/* .v-app-bar {
     margin-top: 10%;
   } */
 </style>
