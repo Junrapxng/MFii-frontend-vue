@@ -136,7 +136,7 @@
         <v-data-table
         v-model:search="search" 
           :headers="headers"
-          :items="desserts"
+          :items="users.resutl"
           :items-per-page="-1"
           :sort-by="[{ key: 'userId', order: 'asc' }]"
           :fixed-header="true"
@@ -174,17 +174,18 @@
 
 <script>
 import AdminLayout from "@/layouts/admin.vue";
-
+import axios from "axios";
 export default {
   components: {
     AdminLayout,
   },
   data: () => ({
     search: '',
+    users: [],
     dialog: false,
     dialogDelete: false,
     headers: [
-      { title: 'ID',align: 'center',key: 'userId',},
+      { title: 'ID',align: 'center',key: '_id',},
       { title: "Name",align: "start",sortable: false,key: "name",},
       { title: "Email",sortable: false, key: "email" },
       { title: "Create Date", key: "create_date" },
@@ -223,8 +224,22 @@ export default {
     },
   },
 
-  created() {
+ async created() {
     this.initialize();
+
+    try {
+     const response = await axios.get('http://localhost:7770/admin/getsUser',{
+      headers: {
+            Authorization: localStorage.getItem('token'),
+          },
+      });
+      this.users = response.data;
+      console.log(this.users)
+    } catch (error) {
+      alert("Error" + error)
+    }
+    
+
   },
 
   methods: {

@@ -52,7 +52,7 @@
 
 <script>
 import axios from 'axios';
-
+import { useUserStore } from '@/store/user';
 export default {
   name: "login-page",
   data() {
@@ -70,6 +70,7 @@ export default {
     async login() {
       const { valid } = await this.$refs.form.validate()
       const form = this.$refs.form;
+      const userStore = useUserStore();
       if (valid) {
         try {
           const response = await axios.post("http://localhost:7770/login", {
@@ -78,7 +79,20 @@ export default {
           });
           localStorage.setItem('token', response.data.result.token);
           console.log(response.data.result.token);
-          this.$router.push('/');
+          if(!userStore.user){
+            await userStore.fetchUser();
+          } if(userStore.user){
+            if(userStore.user.resutl.role === 'admin'){
+              this.$router.push('/admin'); 
+            } else if (userStore.user.resutl.role === 'staff'){
+              this.$router.push('/staff'); 
+            } else {
+              this.$router.push('/');  
+            }
+          }
+         
+          
+         
         } catch (error) {
           console.error('Error registering:', error);
           this.responseMessage = error
