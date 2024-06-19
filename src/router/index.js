@@ -116,7 +116,7 @@ const routes = [
     path: '/profile',
     name: 'Profile',
     component: UserEditProfile,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true , role: 'user'},
   },
 
 
