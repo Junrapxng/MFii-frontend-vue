@@ -69,7 +69,7 @@
               v-if="!userStore.loading && !userStore.error"
               class="p-0 flex justify-center items-center"
             >
-              <h1>Hello, {{ userStore.user.resutl.email }}</h1>
+              <h1 class="px-3">Hello, {{ userStore.user.resutl.email }}</h1>
               <v-btn @click="logoutBtn">Logout</v-btn>
             </v-container>
           </v-container>
