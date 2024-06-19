@@ -26,10 +26,6 @@
 
             <!-- Youtube video -->
             <div class="txt flex justify-center">
-                <h1 v-if="userinfo">Hello, {{ userinfo.data.resutl.email }}</h1>
-                <h1 v-if="!userinfo">You are not logged in</h1>
-            </div>
-            <div class="txt flex justify-center">
                 <h1 class="text-2xl font-bold mb-3"> Success Case
                 </h1>
             </div>
@@ -112,7 +108,6 @@ import {
     fetchProducts
 } from "@/components/scripts/fetchAllProducts";
 import axios from "axios";
-
 export default defineComponent({
     name: "index-page",
     data() {
@@ -161,6 +156,8 @@ export default defineComponent({
         // } catch (error) {
         //     console.error('Error fetching user data:', error);
         // }
+
+      
     },
     // fetch API ======================================================================
     // setup() {

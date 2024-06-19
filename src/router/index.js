@@ -6,7 +6,7 @@
  */
 
 // Composables
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory,} from 'vue-router'
 import Home from '../pages/index.vue'
 import Contact from '../pages/contact.vue'
 import Register from '../pages/register.vue'
@@ -24,7 +24,7 @@ import ResearchManagement from '@/pages/staff/ResearchManagement.vue'
 import MessageReply from '@/pages/staff/MessageReply.vue'
 import Notfound from '../pages/NotFound.vue'
 import UserEditProfile from '../pages/user/userEditProfile.vue'
-
+import { useUserStore } from '@/store/user'
 
 
 const routes = [
@@ -62,6 +62,7 @@ const routes = [
     path: '/tt/all-categories',
     name: 'All_Catagories',
     component: All_Catagories,
+    
   },
   {
     path: '/user/innovation/:id',
@@ -72,42 +73,50 @@ const routes = [
   {
     path: '/admin/',
     name: 'Admin',
-    component: Admin
+    component: Admin,
+    meta: { requiresAuth: true, role: 'admin' },
   },
   {
     path: '/admin/userManage',
     name: 'UserManage',
-    component: UserManage
+    component: UserManage,
+    meta: { requiresAuth: true, role: 'admin' },
   },
   {
     path: '/admin/documents',
     name: 'Documents',
-    component: Documents
+    component: Documents,
+    meta: { requiresAuth: true, role: 'admin' },
   },
   {
     path: '/staff/',
     name: 'Staff',
-    component: Staff
+    component: Staff,
+    meta: { requiresAuth: true, role: 'staff' },
   },
   {
     path: '/staff/newPost',
     name: 'newPost',
-    component: newPost
+    component: newPost,
+    meta: { requiresAuth: true, role: 'staff' },
   },
   {
     path: '/staff/researchManagement',
     name: 'ResearchManagement',
-    component: ResearchManagement
+    component: ResearchManagement,
+    meta: { requiresAuth: true, role: 'staff' },
   },
   {
     path: '/staff/messageReply',
     name: 'MessageReply',
-    component: MessageReply
+    component: MessageReply,
+    meta: { requiresAuth: true, role: 'staff' },
   },
   {
     path: '/profile',
     name: 'Profile',
-    component: UserEditProfile
+    component: UserEditProfile,
+    meta: { requiresAuth: true },
   },
 
 
@@ -120,8 +129,32 @@ const routes = [
 ]
 
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),routes
-})
+});
+// navigation path check role
+router.beforeEach(async (to, from, next) => {
+  const userStore = useUserStore();
+
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!userStore.user) {
+      await userStore.fetchUser();
+    }
+
+    if (userStore.user) {
+      if (to.meta.role && userStore.user.resutl.role !== to.meta.role) {
+        next({ name: 'Home' }); // Redirect to home if the user doesn't have the required role
+      } else {
+        next();
+      }
+    } else {
+      next({ name: 'Login' }); // Redirect to login if the user is not authenticated
+    }
+  } else {
+    next(); // Make sure to always call next()!
+  }
+});
+
 
 export default router
