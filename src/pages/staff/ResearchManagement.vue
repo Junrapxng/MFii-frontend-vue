@@ -6,7 +6,7 @@
     <v-card class="rounded-3xl">
       <v-card-title>จัดการผลงานวิจัย</v-card-title>
       <v-card-text>
-        <v-data-table :headers="headers" :items="researches" class="elevation-1">
+        <v-data-table :headers="headers" :items="researches.result" class="elevation-1">
           <template v-slot:[`item.actions`]="{ item }">
             <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
             <v-icon small class="mr-2" @click="toggleVisibility(item)">{{ item.visible ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
@@ -52,8 +52,8 @@ export default {
       dialog: false,
       isEdit: false,
       headers: [
-        { text: 'ชื่อผลงาน', value: 'title' },
-        { text: 'ผู้จัดทำ', value: 'author' },
+        { text: 'ชื่อผลงาน', value: 'nameOnMedia' },
+        { text: 'ผู้จัดทำ', value: 'inventor' },
         { text: 'Actions', value: 'actions', sortable: false }
       ],
       researches: [],
@@ -109,55 +109,61 @@ export default {
     },
 
     // Fetch API ในการเชื่อมต่อกับ backend API เพื่อดึงข้อมูล
-    // async fetchResearches() {
-    //   try {
-    //     const response = await axios.get('/api/researches');
-    //     this.researches = response.data;
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // },
-    // async saveResearch() {
-    //   try {
-    //     if (this.isEdit) {
-    //       await axios.put(`/api/researches/${this.currentResearch.id}`, this.currentResearch);
-    //     } else {
-    //       await axios.post('/api/researches', this.currentResearch);
-    //     }
-    //     this.fetchResearches();
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // },
-    // async deleteResearch(item) {
-    //   try {
-    //     await axios.delete(`/api/researches/${item.id}`);
-    //     this.fetchResearches();
-    //   } catch (error) {
-    //     console.error(error);
-    //   }
-    // },
-    // async uploadImage(event) {
-    //   const file = event.target.files[0];
-    //   if (file) {
-    //     const formData = new FormData();
-    //     formData.append('image', file);
-    //     try {
-    //       const response = await axios.post('/api/upload', formData, {
-    //         headers: {
-    //           'Content-Type': 'multipart/form-data'
-    //         }
-    //       });
-    //       this.currentResearch.image = response.data.url;
-    //     } catch (error) {
-    //       console.error(error);
-    //     }
-    //   }
-    // }
+    async fetchResearches() {
+      try {
+        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
+        this.researches = response.data;
+        console.log(this.researches)
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async saveResearch() {
+      try {
+        if (this.isEdit) {
+          await axios.put(`/api/researches/${this.currentResearch.id}`, this.currentResearch);
+        } else {
+          await axios.post('/api/researches', this.currentResearch);
+        }
+        this.fetchResearches();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async deleteResearch(item) {
+      try {
+       await axios.delete(`http://localhost:7770/staff/deleteResearch/research/${item._id}`, {
+        headers: {
+            Authorization: localStorage.getItem('token'),
+          },
+       });
+      
+        this.fetchResearches();
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    async uploadImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const formData = new FormData();
+        formData.append('image', file);
+        try {
+          const response = await axios.post('/api/upload', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+          this.currentResearch.image = response.data.url;
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
   },
-  // created() {
-  //   this.fetchResearches();
-  // }
+  created() {
+   this.fetchResearches();
+  }
 }
 
 </script>
