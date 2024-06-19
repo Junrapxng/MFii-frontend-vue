@@ -179,7 +179,7 @@
                         </div>
                         <div class="text-center">
                           <v-btn class="bg-red-600 text-white" type="submit"
-                            >ส่ง/สมัครสมาชิก</v-btn
+                            >ส่ง</v-btn
                           >
                         </div>
                       </v-col>
