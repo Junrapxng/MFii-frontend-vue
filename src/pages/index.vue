@@ -45,44 +45,60 @@
 
 
             <!-- Content -->
-            <v-container class="inputSearch ml-10">
-                <p class="text-2xl font-bold mb-3">นวัตกรรมทั้งหมด</p>
-                <v-text-field v-model="search" density="comfortable" placeholder="Search"
-                    prepend-inner-icon="mdi-magnify" style="max-width: 300px;" variant="solo" clearable
-                    @click:clear="clearSearch" hide-details class="pb-6"></v-text-field>
+            <v-container class="inputSearch">
+    <p class="text-2xl font-bold mb-3">นวัตกรรมทั้งหมด</p>
+    <v-text-field 
+        v-model="search" 
+        density="comfortable" 
+        placeholder="Search"
+        prepend-inner-icon="mdi-magnify" 
+        style="max-width: 300px;" 
+        variant="solo" 
+        clearable
+        @click:clear="clearSearch" 
+        hide-details 
+        class="pb-6"
+    ></v-text-field>
 
-                <!-- Cards Section -->
-              <v-container class="flex justify-center align-center"> 
-                 <!-- Cards Section -->
-                <v-row>
-                <v-col v-for="(item ,index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
-                    <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
-                    <v-card class="hover:shadow-lg transition-shadow rounded-xl">
+    <!-- Cards Section -->
+    <v-container class="flex justify-center items-center"> 
+        <v-row class="flex flex-wrap justify-center">
+            <v-col 
+                v-for="(item, index) in paginatedItems" 
+                :key="index" 
+                cols="12" 
+                sm="6" 
+                md="4" 
+                lg="3" 
+                class="p-2"
+            >
+                <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
+                    <v-card class="hover:shadow-lg transition-shadow rounded-xl"   style="max-width: 400px;">
                         <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
-                        <template v-slot:placeholder>
-                            <div class="d-flex align-center justify-center fill-height">
-                            <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="">
-                            </div>
-                        </template>
+                            <template v-slot:placeholder>
+                                <div class="flex items-center justify-center h-full">
+                                    <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="">
+                                </div>
+                            </template>
                         </v-img>
                         <v-card-title class="text-lg">{{ item.nameOnMedia }}</v-card-title>
                         <v-card-subtitle class="text-sm">{{ item.industryType }}</v-card-subtitle>
                         <v-card-actions>
-                        <v-chip
-                            outlined
-                            :color="item.techReadiness === 'ระดับการทดลอง' ? 'purple' : 
-                                    item.techReadiness === 'ระดับต้นแบบ' ? 'blue' : 
-                                    item.techReadiness === 'ระดับถ่ายทอด' ? 'orange' : 
-                                    'default'">
-                            {{ item.techReadiness }}
-                        </v-chip>
+                            <v-chip
+                                outlined
+                                :color="item.techReadiness === 'ระดับการทดลอง' ? 'purple' : 
+                                        item.techReadiness === 'ระดับต้นแบบ' ? 'blue' : 
+                                        item.techReadiness === 'ระดับถ่ายทอด' ? 'orange' : 
+                                        'default'"
+                            >
+                                {{ item.techReadiness }}
+                            </v-chip>
                         </v-card-actions>
                     </v-card>
-                    </router-link>
-                </v-col>
-                </v-row>
-              </v-container>
-
+                </router-link>
+            </v-col>
+        </v-row>
+    </v-container>
                 <!-- Pagination -->
                 <v-pagination v-model="currentPage" :length="totalPages" class="pt-6" @input="paginate"></v-pagination>
             </v-container>
@@ -94,9 +110,7 @@
 
 <script>
 import {
-    defineComponent, ref,
-    onMounted
-} from "vue";
+    defineComponent, ref} from "vue";
 import {
     Carousel,
     Navigation,
@@ -104,9 +118,6 @@ import {
     Pagination
 } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
-import {
-    fetchProducts
-} from "@/components/scripts/fetchAllProducts";
 import axios from "axios";
 export default defineComponent({
     name: "index-page",
@@ -262,5 +273,18 @@ export default defineComponent({
 
 <style scoped>
 @import '../styles/index.css';
+
+@media (max-width: 640px) {
+    .inputSearch p {
+        font-size: 1.25rem; /* Change text size for mobile */
+    }
+}
+
+/* Adjust card padding for smaller devices */
+@media (max-width: 640px) {
+    .v-card {
+        padding: 1rem; /* Adjust padding for mobile */
+    }
+}
 
 </style>

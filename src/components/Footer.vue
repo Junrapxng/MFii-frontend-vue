@@ -1,11 +1,7 @@
 <template>
-  <!-- <v-app> -->
-  <v-main class="main-content">
-    <!-- เนื้อหาอื่นๆ ของแอป -->
-  </v-main>
   <!-- Footer -->
-  <v-footer app>
-    <v-container fluid class="footer font-noto-sans-thai ">
+  <footer app>
+    <v-container fluid class="footer font-noto-sans-thai">
       <v-row justify="center">
         <v-col cols="12" md="4">
           <h3>
@@ -99,7 +95,7 @@
         </v-col>
       </v-row>
     </v-container>
-  </v-footer>
+  </footer>
   <!-- </v-app> -->
 </template>
 
@@ -110,17 +106,9 @@ export default {
 </script>
 
 <style>
-.main-content {
-  margin-bottom: 12rem; 
-  padding-bottom: 100px;
-}
-
 .footer {
   background-color: #252422;
-  padding-top: 30px;
-  padding-bottom: 20px;
   width: 100%;
-  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;

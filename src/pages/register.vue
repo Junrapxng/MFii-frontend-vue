@@ -4,7 +4,7 @@
 
     <v-main>
       <v-alert v-if="responseMessage" type="error">{{ responseMessage }}</v-alert>
-      <v-container class="font-noto-sans-thai rounded-xl flex justify-center items-center min-h-screen bg-gray-100">
+      <v-container class="font-noto-sans-thai rounded-xl flex justify-center items-center bg-gray-100 mb-5">
         <v-card class="w-full max-w-2xl rounded-xl p-8">
           <v-card-title>
             <h2 class="text-2xl font-semibold mb-2">

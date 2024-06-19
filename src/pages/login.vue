@@ -4,7 +4,7 @@
 
     <v-main>
       <v-alert v-if="responseMessage" type="error">{{ responseMessage }}</v-alert>
-      <v-container class="font-noto-sans-thai rounded-xl flex justify-center items-center min-h-screen bg-gray-100">
+      <v-container class="font-noto-sans-thai rounded-xl flex justify-center items-center bg-gray-100 mb-6" >
         <v-card class="w-full max-w-lg rounded-xl p-8">
           <v-card-title>
            
@@ -69,7 +69,6 @@ export default {
   methods: {
     async login() {
       const { valid } = await this.$refs.form.validate()
-      const form = this.$refs.form;
       const userStore = useUserStore();
       if (valid) {
         try {
