@@ -232,10 +232,15 @@ export default defineComponent({
         axios.get("https://65fb5ab714650eb21009db19.mockapi.io/todos"),
       ]);
 
-      if (api1Response.status == 200) {
-        this.info = api1Response.data.result;
-        this.images = api2Response.data;
-        console.log("Kuyaasd" + this.info);
+      if (api1Response.status == 200 && api2Response.status == 200) {
+        // Filter out the data to get only those with status "active"
+        const activeData = api1Response.data.result.filter(item => item.status === "active");
+        if (activeData.length > 0) {
+          this.info = activeData;
+          this.images = api2Response.data;
+        } else {
+          console.log("No active data found");
+        }
       } else {
         this.error = new Error("One or both API responses are not OK");
         console.error(
@@ -243,10 +248,12 @@ export default defineComponent({
           api1Response.status,
           api2Response.status
         );
+        
       }
     } catch (error) {
       this.error = error;
       console.error("Error fetching data:", error);
+      alert("Error fetching data:", error)
     } finally {
       this.loading = false;
     }

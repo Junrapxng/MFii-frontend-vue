@@ -21,7 +21,7 @@
         <v-card-title>{{ isEdit ? 'แก้ไขผลงานวิจัย' : 'สร้างผลงานวิจัย' }}</v-card-title>
         <v-card-text>
           <v-form>
-            <v-text-field label="ชื่อผลงาน" variant="solo-filled" v-model="currentResearch.title"></v-text-field>
+            <v-text-field label="ชื่อผลงาน" variant="solo-filled" v-model="currentResearch.nameOnMedia"></v-text-field>
             <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.category" :items="['เกษตรกรรม/การแปรรูป', 'วัสดุ/บรรจุภัณฑ์', 'การท่องเที่ยว/การศึกษา', 'อาหาร/เครื่องดื่ม']"></v-autocomplete>
             <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.content"></v-textarea>
             <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled" v-model="currentResearch.image" @change="uploadImage"></v-file-input>
@@ -108,16 +108,7 @@ export default {
       };
     },
 
-    // Fetch API ในการเชื่อมต่อกับ backend API เพื่อดึงข้อมูล
-    async fetchResearches() {
-      try {
-        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
-        this.researches = response.data;
-        console.log(this.researches)
-      } catch (error) {
-        console.error(error);
-      }
-    },
+  
     async saveResearch() {
       try {
         if (this.isEdit) {
@@ -130,6 +121,7 @@ export default {
         console.error(error);
       }
     },
+
     async deleteResearch(item) {
       try {
        await axios.delete(`http://localhost:7770/staff/deleteResearch/research/${item._id}`, {
@@ -143,6 +135,7 @@ export default {
         console.error(error);
       }
     },
+
     async uploadImage(event) {
       const file = event.target.files[0];
       if (file) {
@@ -161,8 +154,16 @@ export default {
       }
     }
   },
-  created() {
-   this.fetchResearches();
+  // get research data
+ async created() {
+    try {
+        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
+        this.researches = response.data;
+        console.log(this.researches)
+      } catch (error) {
+        console.error(error);
+        alert(error)
+      }
   }
 }
 
