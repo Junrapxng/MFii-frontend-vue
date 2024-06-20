@@ -36,7 +36,7 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" md="12" sm="12">
-                      <v-text-field variant="solo-filled" flat v-model="editedItem.name" label="Name"></v-text-field>
+                      <v-text-field variant="solo-filled" flat v-model="editedItem.firstName" label="Name"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="12" sm="12">
                       <v-text-field variant="solo-filled" flat v-model="editedItem.email" label="Email" :rules="[
@@ -159,9 +159,9 @@ export default {
     dialogDelete: false,
     headers: [
       { title: 'ID', align: 'center', key: '_id', },
-      { title: "Name", align: "start", sortable: false, key: "name", },
+      { title: "Name", align: "start", sortable: false, key: "firstName", },
       { title: "Email", sortable: false, key: "email" },
-      { title: "Create Date", key: "create_date" },
+      { title: "Create Date", key: "createDate" },
       { title: "Role", key: "role" },
       { title: "Status", key: "status" },
       { title: "Actions", key: "actions", sortable: false },
@@ -319,6 +319,7 @@ export default {
         const res = await axios.patch(
           'http://localhost:7770/admin/updatePatch/' + this.editedItem._id,
           {
+            firstname: this.editItem.name,
             email: this.editedItem.email,
             role: this.editedItem.role,
             status: this.editedItem.status
@@ -342,7 +343,7 @@ export default {
       // }, 2000); // 2-second delay
        }
       } else {
-        // this.users.resutl.push(this.editedItem);
+        this.users.resutl.push(this.editedItem);
       }
       this.close();
     }
