@@ -87,7 +87,6 @@ export default {
         phone: "",
         firstName: "",
         lastName: "",
-        gender: "",
         password: "",
       },
       showPassword: false, // เพิ่มตรงนี้
@@ -97,29 +96,35 @@ export default {
   },
   methods: {
     async register() {
-      const { valid } = await this.$refs.form.validate()
-      const form = this.$refs.form;
-      if (valid) {
-        try {
-          const response = await axios.post("http://localhost:7770/register", {
-            email: this.form.email,
-            password: this.form.password
-          });
-          localStorage.setItem('token', response.data.result.token);
-          this.$router.push('/');
-        } catch (error) {
-          console.error('Error registering:', error);
-          this.responseMessage = error
-          if (error.response && error.response.data && error.response.data.description) {
-            this.responseMessage = error.response.data.description.description;
-          }
-        }
-      } else {
-        console.log("Form is not valid");
-        this.responseMessage = 'Form is not valid. Please fill out all required fields.'; // Set form validation message
+  const { valid } = await this.$refs.form.validate();
+  const form = this.$refs.form;
+  if (valid) {
+    try {
+      const createDate = new Date().toISOString(); // Create date in ISO format
+      const response = await axios.post("http://localhost:7770/register", {
+        email: this.form.email,
+        password: this.form.password,
+        firstName: this.form.firstName,
+        lastName: this.form.lastName,
+        phoneNumber: this.form.phone,
+        createDate: createDate // Set create date
+      });
+      localStorage.setItem('token', response.data.result.token);
+      this.$router.push('/');
+    } catch (error) {
+      console.error('Error registering:', error);
+      this.responseMessage = error;
+      if (error.response && error.response.data && error.response.data.description) {
+        this.responseMessage = error.response.data.description.description;
       }
-      this.showPassword = false;
     }
+  } else {
+    console.log("Form is not valid");
+    this.responseMessage = 'Form is not valid. Please fill out all required fields.'; // Set form validation message
+  }
+  this.showPassword = false;
+}
+
   },
 };
 </script>
