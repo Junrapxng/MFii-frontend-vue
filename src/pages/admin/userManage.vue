@@ -118,43 +118,18 @@
       </v-card>
     </v-container>
   </admin-layout>
-
-<!-- Snackbar Delete -->
-  <div class="text-center">
-    <v-snackbar
-      v-model="snackbardel"
-      vertical
-    >
-      <div class="text-subtitle-1 pb-2">Success</div>
-
-      <p>Deleted Success</p>
-
-      <template v-slot:actions>
-        <v-btn
-          color="indigo"
-          variant="text"
-          @click="snackbardel = false"
-        >
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
-  </div>
-<!-- Snackbar Edited -->
   <div class="text-center" >
     <v-snackbar
-      v-model="snackbaredit"
-      vertical
+      v-model="snackbar.show" :color="snackbar.color"
     >
-      <div class="text-subtitle-1 pb-2">Success</div>
 
-      <p>Edited Success</p>
+      <p> {{ snackbar.message }}</p>
 
       <template v-slot:actions>
         <v-btn
-          color="indigo"
+          color="white"
           variant="text"
-          @click="snackbaredit = false"
+          @click="snackbar.show = false"
         >
           Close
         </v-btn>
@@ -175,8 +150,11 @@ export default {
   data: () => ({
     search: '',
     users: [],
-    snackbardel: false,
-    snackbaredit: false,
+    snackbar: {
+        show: false,
+        message: '',
+        color: 'success', // Default color
+      },
     dialog: false,
     dialogDelete: false,
     headers: [
@@ -188,7 +166,6 @@ export default {
       { title: "Status", key: "status" },
       { title: "Actions", key: "actions", sortable: false },
     ],
-    desserts: [],
     editedIndex: -1,
     editedItem: {
       name: "",
@@ -230,7 +207,10 @@ export default {
       this.users = response.data;
       console.log(this.users)
     } catch (error) {
-      alert("Error" + error)
+      console.error('Error Fetching data :', error);
+        this.snackbar.message = 'Error Fetching data : ' + error.message;
+        this.snackbar.color = 'error'; // Set error color
+        this.snackbar.show = true;
     }
 
 
@@ -278,10 +258,16 @@ export default {
               Authorization: localStorage.getItem('token')
             }
           }
-        ).then( this.snackbardel = true )
+        )
         console.log(res)
+        this.snackbar.message = 'User deleted successfully';
+        this.snackbar.color = 'success'; // Set success color
+        this.snackbar.show = true;
        } catch (error) {
-        alert("Error" + error)
+        console.error('Error deleting user:', error);
+        this.snackbar.message = 'Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง): ' + error.message;
+        this.snackbar.color = 'error'; // Set error color
+        this.snackbar.show = true;
        }
       this.closeDelete();
     },
@@ -314,7 +300,7 @@ export default {
       this.dialog = true;
     },
 
-  async  save() {
+  async save() {
 
       // if (!this.editedItem.email || !/.+@.+\..+/.test(this.editedItem.email)) {
       //   alert('Please enter a valid email.');
@@ -342,17 +328,26 @@ export default {
               Authorization: localStorage.getItem('token')
             }
           }
-        ).then(this.snackbaredit = true)
-       
+        );
+        this.snackbar.message = 'User Edited successfully';
+        this.snackbar.color = 'success'; // Set success color
+        this.snackbar.show = true;
        } catch (error) {
-        alert("Error" + error)
+        console.error('Error editing user:', error);
+        this.snackbar.message = 'Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): ' + error.message;
+        this.snackbar.color = 'error'; // Set error color
+        this.snackbar.show = true;
+      //   setTimeout(() => {
+      //   window.location.reload();
+      // }, 2000); // 2-second delay
        }
       } else {
-        this.users.resutl.push(this.editedItem);
+        // this.users.resutl.push(this.editedItem);
       }
       this.close();
     }
   },
+
 };
 </script>
 
