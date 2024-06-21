@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <!-- sidebar -->
-    <v-navigation-drawer app class="bg-red-400 rounded-e-circle">
+    <v-navigation-drawer app   style="position: fixed; height: 100vh; overflow-y: auto;" class="bg-red-400 rounded-e-circle">
       <div class="d-flex justify-center mt-4 mb-4">
         <a href="/staff">
         <v-img src="../assets/mfu_logo.png" width="240px"></v-img>
