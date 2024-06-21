@@ -78,7 +78,7 @@
 <script>
 
 import axios from 'axios';
-
+import { useUserStore } from '@/store/user';
 export default {
   name: "AdminLayout",
   data: () => ({
@@ -94,17 +94,20 @@ export default {
   }),
 
   async created() {
-    try {
-      const response = await axios.get('http://localhost:7770/getUser', {
-        headers: {
-          Authorization: localStorage.getItem('token'),
-        },
-      });
-      this.user = response.data.resutl;
-      console.log(response.data.resutl)
-    } catch (error) {
-      console.log(error)
+    // get user info from pinia store/user.js
+    const userStore = useUserStore();
+    
+  try {
+    if (!userStore.user) {
+      await userStore.fetchUser();
     }
+    if (userStore.user) {
+      this.user = userStore.user.resutl;
+      console.log(this.user);
+    }
+  } catch (error) {
+    console.log(error)
+  }
   },
   methods:{
     logout() {

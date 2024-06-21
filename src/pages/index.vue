@@ -7,19 +7,10 @@
         <v-container luid style="width: 90%">
           <Carousel class="carousel" :autoplay="4000" :wrap-around="true">
             <Slide v-for="img in images" :key="img.id">
-              <v-img
-                class="carousel__item mx-auto"
-                max-height="500"
-                lazy-src=""
-                :src="`${img.image}`"
-                cover
-              >
+              <v-img class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`${img.image}`" cover>   
                 <template v-slot:placeholder>
-                  <div class="d-flex align-center justify-center fill-height">
-                    <v-progress-circular
-                      color="pink"
-                      indeterminate
-                    ></v-progress-circular>
+                  <div v-if="images" class="d-flex align-center justify-center fill-height">
+                    <v-progress-circular color="pink" indeterminate></v-progress-circular>
                   </div>
                 </template>
               </v-img>
@@ -37,75 +28,36 @@
         <h1 class="text-2xl font-bold mb-3">Success Case</h1>
       </div>
 
-      
-        <v-container fluid style="width: 70%">
-          <v-carousel class="myCarousel" hide-delimiter-background height="400">
-            <v-carousel-item v-for="(video, index) in videos" :key="index">
-              <v-sheet
-                class="d-flex align-center justify-center"
-                height="100%"
-                elevation="10"
-              >
-                <iframe
-                  class="video-iframe"
-                  :src="video.src"
-                  :title="video.title"
-                  frameborder="0"
-                  allowfullscreen
-                ></iframe>
-              </v-sheet>
-            </v-carousel-item>
-          </v-carousel>
-        </v-container>
-     
+
+      <v-container fluid style="width: 70%">
+        <v-carousel class="myCarousel" hide-delimiter-background height="400">
+          <v-carousel-item v-for="(video, index) in videos" :key="index">
+            <v-sheet class="d-flex align-center justify-center" height="100%" elevation="10">
+              <iframe class="video-iframe" :src="video.src" :title="video.title" frameborder="0"
+                allowfullscreen></iframe>
+            </v-sheet>
+          </v-carousel-item>
+        </v-carousel>
+      </v-container>
+
 
       <!-- Content -->
       <v-container class="inputSearch">
         <p class="text-3xl font-semibold mb-3">ผลงานพร้อมถ่ายทอด</p>
-        <v-text-field
-          v-model="search"
-          density="comfortable"
-          placeholder="Search"
-          prepend-inner-icon="mdi-magnify"
-          style="max-width: 300px"
-          variant="solo"
-          clearable
-          @click:clear="clearSearch"
-          hide-details
-          rounded
-          class="pb-6"
-        ></v-text-field>
+        <v-text-field v-model="search" density="comfortable" placeholder="Search" prepend-inner-icon="mdi-magnify"
+          style="max-width: 300px" variant="solo" clearable @click:clear="clearSearch" hide-details rounded
+          class="pb-6"></v-text-field>
 
         <!-- Cards Section -->
         <v-container class="flex justify-center items-center bg-gray-100 rounded">
-          <v-row class="flex flex-wrap justify-center">
-            <v-col
-              v-for="(item, index) in paginatedItems"
-              :key="index"
-              cols="12"
-              sm="6"
-              md="6"
-              lg="3"
-              class="p-2"
-            >
-              <router-link
-                :to="{ name: 'Innovation', params: { id: item._id } }"
-              >
-                <v-card
-                  class="hover:shadow-lg transition-shadow rounded-xl"
-                  style="max-width: 400px"
-                >
-                  <v-img
-                    :src="`http://localhost:7770/${item.filePath[1]}`"
-                    cover
-                    height="200px"
-                  >
+          <v-row  class="flex flex-wrap justify-center">
+            <v-col v-if="paginatedItems"  v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
+              <router-link  :to="{ name: 'Innovation', params: { id: item._id } }">
+                <v-card class="hover:shadow-lg transition-shadow rounded-xl" style="max-width: 400px">
+                  <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
                     <template v-slot:placeholder>
                       <div class="flex items-center justify-center h-full">
-                        <img
-                          :src="`http://localhost:7770/${item.filePath[0]}`"
-                          alt=""
-                        />
+                        <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
                       </div>
                     </template>
                   </v-img>
@@ -116,34 +68,25 @@
                     item.industryType
                   }}</v-card-subtitle>
                   <v-card-actions>
-                    <v-chip
-                      outlined
-                      :color="
-                        item.techReadiness === 'ระดับการทดลอง'
-                          ? 'purple'
-                          : item.techReadiness === 'ระดับต้นแบบ'
+                    <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
+                        ? 'purple'
+                        : item.techReadiness === 'ระดับต้นแบบ'
                           ? 'blue'
                           : item.techReadiness === 'ระดับถ่ายทอด'
-                          ? 'orange'
-                          : 'default'
-                      "
-                      class="text-xs"
-                    >
+                            ? 'orange'
+                            : 'default'
+                      " class="text-xs">
                       {{ item.techReadiness }}
                     </v-chip>
                   </v-card-actions>
                 </v-card>
               </router-link>
             </v-col>
+            <h1 v-if="paginatedItems.length <= 0">No data available</h1>
           </v-row>
         </v-container>
         <!-- Pagination -->
-        <v-pagination
-          v-model="currentPage"
-          :length="totalPages"
-          class="pt-6"
-          @input="paginate"
-        ></v-pagination>
+        <v-pagination v-model="currentPage" :length="totalPages" class="pt-6" @input="paginate"></v-pagination>
       </v-container>
     </v-main>
     <Footer></Footer>
@@ -225,7 +168,7 @@ export default defineComponent({
   //     };
   // },
   // ====================================================================================
-  async mounted() {
+  async created() {
     try {
       const [api1Response, api2Response] = await Promise.all([
         axios.get("http://localhost:7770/getsResearch/all/all/all"),
@@ -248,7 +191,7 @@ export default defineComponent({
           api1Response.status,
           api2Response.status
         );
-        
+
       }
     } catch (error) {
       this.error = error;
@@ -259,6 +202,7 @@ export default defineComponent({
     }
   },
   computed: {
+    
     // คำนวณจำนวนหน้าทั้งหมด
     totalPages() {
       return Math.ceil(this.filteredItems.length / this.itemsPerPage);
@@ -325,14 +269,16 @@ main {
 
 @media (max-width: 640px) {
   .inputSearch p {
-    font-size: 1.25rem; /* Change text size for mobile */
+    font-size: 1.25rem;
+    /* Change text size for mobile */
   }
 }
 
 /* Adjust card padding for smaller devices */
 @media (max-width: 640px) {
   .v-card {
-    padding: 1rem; /* Adjust padding for mobile */
+    padding: 1rem;
+    /* Adjust padding for mobile */
   }
 }
 </style>
