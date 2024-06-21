@@ -71,7 +71,15 @@
                   <h1>Hello, {{ userStore.user.resutl.email }}</h1>
                 </v-col>
                 <v-col cols="12">
+                  <router-link  v-if="userStore.user.resutl.role === 'staff'" to="/staff">
+                  <v-btn>Staff Page</v-btn>
+                  </router-link>
+                  <router-link v-if="userStore.user.resutl.role === 'admin'" to="/admin">
+                  <v-btn >Admin Page</v-btn>
+                  </router-link>
+            
                   <v-btn @click="logoutBtn">Logout</v-btn>
+             
                 </v-col>
               </v-row>
             </v-container>
