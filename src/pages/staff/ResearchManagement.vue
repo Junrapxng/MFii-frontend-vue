@@ -8,9 +8,11 @@
       <v-card-text>
         <v-data-table :headers="headers" :items="researches.result" class="elevation-1" >
           <template v-slot:[`item.actions`]="{ item }">
-            <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
-            <v-icon small class="mr-2" @click="toggleVisibility(item)">{{ item.visible ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
-            <v-icon small @click="deleteResearch(item)">mdi-delete</v-icon>
+            <v-container class="flex justify-center align-center">  
+                <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
+                <v-icon small class="mr-2" @click="toggleVisibility(item)">{{ item.visible ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>       
+                <v-icon small @click="deleteResearch(item)">mdi-delete</v-icon>         
+            </v-container>
           </template>
         </v-data-table>
         <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
@@ -22,10 +24,24 @@
         <v-card-text>
           <v-form>
             <v-text-field label="ชื่อผลงาน" variant="solo-filled" v-model="currentResearch.nameOnMedia"></v-text-field>
-            <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.major" :items="['เกษตรกรรม/การแปรรูป', 'วัสดุ/บรรจุภัณฑ์', 'การท่องเที่ยว/การศึกษา', 'อาหาร/เครื่องดื่ม']"></v-autocomplete>
+            <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.major" 
+              :items="[
+                    'เครื่องสำอาง',
+                    'การเกษตรและเทคโนโลยีชีวภาพ',
+                    'การแปรรูปอาหาร',
+                    'เชื้อเพลิงชีวภาพและเคมีชีวภาพ',
+                    'การแพทย์ครบวงจร',
+                    'สร้างสรรค์',
+                    'อิเล็กทรอนิกส์อัจฉริยะ',
+                    'หุ่นยนต์',
+                    'ดิจิตอล',
+                    'การท่องเที่ยวกลุ่มรายได้ดีและการท่องเที่ยวเชิงสุขภาพ',
+                    'การบินและระบบขนส่ง',
+                    'ยานยนต์สมัยใหม่',
+                  ]"></v-autocomplete>
             <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.descripton"></v-textarea>
             <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.hilight"></v-textarea>
-            <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled"  v-model="currentResearch.filePath[0]" @change="uploadImage" alt="asd"></v-file-input>
+            <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled" @change="uploadImage" alt="asd"></v-file-input>
           
           </v-form>
         </v-card-text>
@@ -56,7 +72,7 @@ export default {
       headers: [
         { title: 'ชื่อผลงาน', value: 'nameOnMedia' },
         { title: 'ผู้จัดทำ', value: 'inventor' },
-        { title: 'Actions', value: 'actions', sortable: false }
+        { title: 'Actions', align: 'center', value: 'actions', sortable: false }
       ],
       researches: [],
       currentResearch: {

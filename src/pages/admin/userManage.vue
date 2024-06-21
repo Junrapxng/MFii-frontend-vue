@@ -12,8 +12,17 @@
           <v-spacer></v-spacer>
 
           <!-- search -->
-          <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify"
-            variant="solo-filled" flat clearable hide-details single-line></v-text-field>
+          <v-text-field
+            v-model="search"
+            density="compact"
+            label="Search"
+            prepend-inner-icon="mdi-magnify"
+            variant="solo-filled"
+            flat
+            clearable
+            hide-details
+            single-line
+          ></v-text-field>
 
           <!-- Add User -->
           <!-- <template v-slot:top> -->
@@ -36,23 +45,77 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" md="12" sm="12">
-                      <v-text-field variant="solo-filled" flat v-model="editedItem.firstName" label="First Name"></v-text-field>
-                      <v-text-field variant="solo-filled" flat v-model="editedItem.lastName" label="Last Name"></v-text-field>
+                      <v-text-field
+                        variant="solo-filled"
+                        flat
+                        v-model="editedItem.firstName"
+                        label="First Name"
+                      ></v-text-field>
+                      <v-text-field
+                        variant="solo-filled"
+                        flat
+                        v-model="editedItem.lastName"
+                        label="Last Name"
+                      ></v-text-field>
+                      <v-text-field
+                        variant="solo-filled"
+                        flat
+                        v-model="editedItem.phoneNumber"
+                        label="Phone"
+                        :rules="[
+                          (v) => !!v || 'กรุณากรอก เบอร์โทรศัพท์',
+                          (v) =>
+                            /^\d{10}$/.test(v) ||
+                            'กรุณากรอกเบอร์โทรศัพท์ 10 หลัก',
+                        ]"
+                        required
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="12" sm="12">
-                      <v-text-field variant="solo-filled" flat v-model="editedItem.email" label="Email" :rules="[
-                        (v) => !!v || 'กรุณากรอก อีเมล',
-                        (v) => /.+@.+\..+/.test(v) || 'กรุณากรอกอีเมลให้ถูกต้อง',
-                      ]" required></v-text-field>
-                      <v-text-field variant="solo-filled" flat v-model="editedItem.phoneNumber" label="Phone"></v-text-field>
+                      <v-text-field
+                        variant="solo-filled"
+                        flat
+                        v-model="editedItem.email"
+                        label="Email"
+                        :rules="[
+                          (v) => !!v || 'กรุณากรอก อีเมล',
+                          (v) =>
+                            /.+@.+\..+/.test(v) || 'กรุณากรอกอีเมลให้ถูกต้อง',
+                        ]"
+                        required
+                      ></v-text-field>
+                      <v-text-field
+                        v-if="this.editedIndex === -1"
+                        v-model="editedItem.password"
+                        label="Password"
+                        variant="solo-filled"
+                        flat                         
+                        :rules="[
+                          (v) => !!v || 'กรุณากรอก รหัสผ่าน',
+                          (v) =>
+                            v.length >= 6 ||
+                            'กรุณากรอก รหัสผ่าน 6 ตัวอักษรขึ้นไป',
+                        ]"
+                        required
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" sm="6">
-                      <v-autocomplete variant="solo-filled" flat label="Role" v-model="editedItem.role"
-                        :items="['user','staff', 'admin']"></v-autocomplete>
+                      <v-autocomplete
+                        variant="solo-filled"
+                        flat
+                        label="Role"
+                        v-model="editedItem.role"
+                        :items="['user', 'staff', 'admin']"
+                      ></v-autocomplete>
                     </v-col>
                     <v-col cols="12" md="6" sm="6">
-                      <v-autocomplete variant="solo-filled" flat label="Status" v-model="editedItem.status"
-                        :items="['Active', 'Inactive']"></v-autocomplete>
+                      <v-autocomplete
+                        variant="solo-filled"
+                        flat
+                        label="Status"
+                        v-model="editedItem.status"
+                        :items="['Active', 'Inactive']"
+                      ></v-autocomplete>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -60,10 +123,20 @@
 
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300" @click="close">
+                <v-btn
+                  color="red-darken-1"
+                  variant="outlined"
+                  class="hover:bg-red-300"
+                  @click="close"
+                >
                   Cancel
                 </v-btn>
-                <v-btn color="green-darken-1" variant="outlined" class=" hover:bg-green-200" @click="save">
+                <v-btn
+                  color="green-darken-1"
+                  variant="outlined"
+                  class="hover:bg-green-200"
+                  @click="save"
+                >
                   Save
                 </v-btn>
               </v-card-actions>
@@ -73,33 +146,54 @@
           <!-- Delete User -->
           <v-dialog v-model="dialogDelete" max-width="600px">
             <v-card class="rounded-xl pa-4">
-              <v-card-title class="text-h5 text-center text-red-500">Are you sure you want to delete this
-                user?</v-card-title>
+              <v-card-title class="text-h5 text-center text-red-500"
+                >Are you sure you want to delete this user?</v-card-title
+              >
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="'blue-grey-darken-1" variant="outlined" class="hover:bg-gray-500"
-                  @click="closeDelete">Cancel</v-btn>
-                <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300"
-                  @click="deleteItemConfirm">OK</v-btn>
+                <v-btn
+                  color="'blue-grey-darken-1"
+                  variant="outlined"
+                  class="hover:bg-gray-500"
+                  @click="closeDelete"
+                  >Cancel</v-btn
+                >
+                <v-btn
+                  color="red-darken-1"
+                  variant="outlined"
+                  class="hover:bg-red-300"
+                  @click="deleteItemConfirm"
+                  >OK</v-btn
+                >
                 <v-spacer></v-spacer>
               </v-card-actions>
             </v-card>
           </v-dialog>
           <!-- </v-toolbar> -->
           <!-- </template> -->
-
-
         </v-card-title>
         <v-divider></v-divider>
 
         <!-- data table -->
-        <v-data-table v-model:search="search" :headers="headers" :items="users.resutl" :items-per-page="-1"
-          :sort-by="[{ key: 'userId', order: 'asc' }]" :fixed-header="true" height="400">
-
+        <v-data-table
+          v-model:search="search"
+          :headers="headers"
+          :items="users.resutl"
+          :items-per-page="-1"
+          :sort-by="[{ key: 'userId', order: 'asc' }]"
+          :fixed-header="true"
+          height="400"
+        >
           <template v-slot:item.status="{ item }">
             <div>
-              <v-chip :color="item.status.toLowerCase() === 'active' ? 'green' : 'red'" class="text-uppercase"
-                size="small" label>
+              <v-chip
+                :color="
+                  item.status.toLowerCase() === 'active' ? 'green' : 'red'
+                "
+                class="text-uppercase"
+                size="small"
+                label
+              >
                 {{ item.status }}
               </v-chip>
             </div>
@@ -115,31 +209,20 @@
             <v-btn color="primary" @click="initialize"> Reset </v-btn>
           </template>
         </v-data-table>
-
-
       </v-card>
     </v-container>
   </admin-layout>
-  <div class="text-center" >
-    <v-snackbar
-      v-model="snackbar.show" :color="snackbar.color"
-    >
-
-      <p> {{ snackbar.message }}</p>
+  <div class="text-center">
+    <v-snackbar v-model="snackbar.show" :color="snackbar.color">
+      <p>{{ snackbar.message }}</p>
 
       <template v-slot:actions>
-        <v-btn
-          color="white"
-          variant="text"
-          @click="snackbar.show = false"
-        >
+        <v-btn color="white" variant="text" @click="snackbar.show = false">
           Close
         </v-btn>
       </template>
     </v-snackbar>
   </div>
-
-
 </template>
 
 <script>
@@ -150,19 +233,19 @@ export default {
     AdminLayout,
   },
   data: () => ({
-    search: '',
+    search: "",
     users: [],
     snackbar: {
-        show: false,
-        message: '',
-        color: 'success', // Default color
-      },
+      show: false,
+      message: "",
+      color: "success", // Default color
+    },
     dialog: false,
     dialogDelete: false,
     headers: [
-      { title: 'ID', align: 'center', key: '_id', },
-      { title: "Name", align: "start", sortable: false, key: "firstName", },
-      { title: "Last Name", align: "start", sortable: false, key: "lastName", },
+      { title: "ID", align: "center", key: "_id" },
+      { title: "Name", align: "start", sortable: false, key: "firstName" },
+      { title: "Last Name", align: "start", sortable: false, key: "lastName" },
       { title: "Email", sortable: false, key: "email" },
       { title: "Phone", sortable: false, key: "phoneNumber" },
       { title: "Create Date", key: "createDate" },
@@ -174,12 +257,14 @@ export default {
     editedItem: {
       name: "",
       email: "",
+      password: "",
       role: "",
       status: "",
     },
     defaultItem: {
       name: "",
       email: "",
+      password: "",
       role: "",
       status: "Active",
     },
@@ -203,26 +288,24 @@ export default {
   async created() {
     this.initialize();
     try {
-      const response = await axios.get('http://localhost:7770/admin/getsUser', {
+      const response = await axios.get("http://localhost:7770/admin/getsUser", {
         headers: {
-          Authorization: localStorage.getItem('token'),
+          Authorization: localStorage.getItem("token"),
         },
       });
       this.users = response.data;
-      console.log(this.users)
+      console.log(this.users);
     } catch (error) {
-      console.error('Error Fetching data :', error);
-        this.snackbar.message = 'Error Fetching data : ' + error.message;
-        this.snackbar.color = 'error'; // Set error color
-        this.snackbar.show = true;
+      console.error("Error Fetching data :", error);
+      this.snackbar.message = "Error Fetching data : " + error.message;
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
     }
-
-
   },
 
   methods: {
     initialize() {
-      this.search = '';
+      this.search = "";
     },
 
     // generateUserId() {
@@ -241,9 +324,6 @@ export default {
     //   return `${day}/${month}/${year}`;
     // },
 
-
-
-
     // ====================================================================================
     deleteItem(item) {
       this.editedIndex = this.users.resutl.indexOf(item);
@@ -251,28 +331,30 @@ export default {
       this.dialogDelete = true;
     },
 
-   async deleteItemConfirm() {
+    async deleteItemConfirm() {
       this.users.resutl.splice(this.editedIndex, 1);
-      console.log(this.editedItem._id)
+      console.log(this.editedItem._id);
       try {
         const res = await axios.delete(
-          'http://localhost:7770/admin/deleteUser/' + this.editedItem._id,
+          "http://localhost:7770/admin/deleteUser/" + this.editedItem._id,
           {
             headers: {
-              Authorization: localStorage.getItem('token')
-            }
+              Authorization: localStorage.getItem("token"),
+            },
           }
-        )
-        console.log(res)
-        this.snackbar.message = 'User deleted successfully';
-        this.snackbar.color = 'success'; // Set success color
+        );
+        console.log(res);
+        this.snackbar.message = "User deleted successfully";
+        this.snackbar.color = "success"; // Set success color
         this.snackbar.show = true;
-       } catch (error) {
-        console.error('Error deleting user:', error);
-        this.snackbar.message = 'Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง): ' + error.message;
-        this.snackbar.color = 'error'; // Set error color
+      } catch (error) {
+        console.error("Error deleting user:", error);
+        this.snackbar.message =
+          "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง): " +
+          error.message;
+        this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
-       }
+      }
       this.closeDelete();
     },
 
@@ -291,10 +373,7 @@ export default {
         this.editedIndex = -1;
       });
     },
-// ============================================================================
-
-
-
+    // ============================================================================
 
     // Save and edited user ========================================================================
 
@@ -304,8 +383,7 @@ export default {
       this.dialog = true;
     },
 
-  async save() {
-
+    async save() {
       // if (!this.editedItem.email || !/.+@.+\..+/.test(this.editedItem.email)) {
       //   alert('Please enter a valid email.');
       //   return; // Stop execution if email is not valid
@@ -318,42 +396,70 @@ export default {
 
       if (this.editedIndex > -1) {
         Object.assign(this.users.resutl[this.editedIndex], this.editedItem);
-        console.log(this.editedItem._id)
-       try {
-        const res = await axios.patch(
-          'http://localhost:7770/admin/updatePatch/' + this.editedItem._id,
-          {
-            firstname: this.editItem.name,
-            email: this.editedItem.email,
-            role: this.editedItem.role,
-            status: this.editedItem.status
-          },
-          {
-            headers: {
-              Authorization: localStorage.getItem('token')
+        console.log(this.editedItem._id);
+        try {
+          await axios.patch(
+            "http://localhost:7770/admin/updatePatch/" + this.editedItem._id,
+            {
+              firstname: this.editItem.name.trim(),
+              email: this.editedItem.email.trim(),
+              role: this.editedItem.role,
+              status: this.editedItem.status,
+            },
+            {
+              headers: {
+                Authorization: localStorage.getItem("token"),
+              },
             }
-          }
-        );
-        this.snackbar.message = 'User Edited successfully';
-        this.snackbar.color = 'success'; // Set success color
-        this.snackbar.show = true;
-       } catch (error) {
-        console.error('Error editing user:', error);
-        this.snackbar.message = 'Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): ' + error.message;
-        this.snackbar.color = 'error'; // Set error color
-        this.snackbar.show = true;
-      //   setTimeout(() => {
-      //   window.location.reload();
-      // }, 2000); // 2-second delay
-       }
+          );
+          this.snackbar.message = "User Edited successfully";
+          this.snackbar.color = "success"; // Set success color
+          this.snackbar.show = true;
+        } catch (error) {
+          console.error("Error editing user:", error);
+          this.snackbar.message =
+            "Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " +
+            error.message;
+          this.snackbar.color = "error"; // Set error color
+          this.snackbar.show = true;
+          //   setTimeout(() => {
+          //   window.location.reload();
+          // }, 2000); // 2-second delay
+        }
       } else {
         this.users.resutl.push(this.editedItem);
       }
       this.close();
-    }
+    },
   },
-
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+/* สำหรับเบราว์เซอร์ Webkit (เช่น Chrome, Safari) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* สำหรับ Firefox */
+html {
+    scrollbar-width: thin;
+    scrollbar-color: #888 #f1f1f1;
+}
+
+</style>

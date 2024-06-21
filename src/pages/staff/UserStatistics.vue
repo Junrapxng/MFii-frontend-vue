@@ -12,7 +12,7 @@
             </v-col>
             <v-col>
               <v-card>
-                <v-card-title>จำนวนผู้ใช้งานสัปหาห์นี้</v-card-title>
+                <v-card-title>จำนวนผู้ใช้งานสัปดาห์นี้</v-card-title>
                 <v-card-text>{{ weeklyUsers }}</v-card-text>
               </v-card>
             </v-col>
