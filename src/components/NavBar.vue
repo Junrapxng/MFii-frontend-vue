@@ -65,7 +65,7 @@
               >
             </v-container>
             <!-- if user loggedin -->
-            <v-container v-if="!userStore.loading && !userStore.error" 
+            <v-container v-if="!userStore.loading && !userStore.error"
               ><v-row>
                 <v-col cols="12">
                   <h1>Hello, {{ userStore.user.resutl.email }}</h1>
