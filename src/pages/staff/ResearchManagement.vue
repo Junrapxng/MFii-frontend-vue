@@ -6,7 +6,7 @@
     <v-card class="rounded-3xl">
       <v-card-title>จัดการผลงานวิจัย</v-card-title>
       <v-card-text>
-        <v-data-table :headers="headers" :items="researches.result" class="elevation-1">
+        <v-data-table :headers="headers" :items="researches.result" class="elevation-1" >
           <template v-slot:[`item.actions`]="{ item }">
             <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
             <v-icon small class="mr-2" @click="toggleVisibility(item)">{{ item.visible ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
@@ -21,10 +21,12 @@
         <v-card-title>{{ isEdit ? 'แก้ไขผลงานวิจัย' : 'สร้างผลงานวิจัย' }}</v-card-title>
         <v-card-text>
           <v-form>
-            <v-text-field label="ชื่อผลงาน" variant="solo-filled" v-model="currentResearch.title"></v-text-field>
-            <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.category" :items="['เกษตรกรรม/การแปรรูป', 'วัสดุ/บรรจุภัณฑ์', 'การท่องเที่ยว/การศึกษา', 'อาหาร/เครื่องดื่ม']"></v-autocomplete>
-            <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.content"></v-textarea>
-            <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled" v-model="currentResearch.image" @change="uploadImage"></v-file-input>
+            <v-text-field label="ชื่อผลงาน" variant="solo-filled" v-model="currentResearch.nameOnMedia"></v-text-field>
+            <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.major" :items="['เกษตรกรรม/การแปรรูป', 'วัสดุ/บรรจุภัณฑ์', 'การท่องเที่ยว/การศึกษา', 'อาหาร/เครื่องดื่ม']"></v-autocomplete>
+            <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.descripton"></v-textarea>
+            <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.hilight"></v-textarea>
+            <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled"  v-model="currentResearch.filePath[0]" @change="uploadImage" alt="asd"></v-file-input>
+          
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -52,9 +54,9 @@ export default {
       dialog: false,
       isEdit: false,
       headers: [
-        { text: 'ชื่อผลงาน', value: 'nameOnMedia' },
-        { text: 'ผู้จัดทำ', value: 'inventor' },
-        { text: 'Actions', value: 'actions', sortable: false }
+        { title: 'ชื่อผลงาน', value: 'nameOnMedia' },
+        { title: 'ผู้จัดทำ', value: 'inventor' },
+        { title: 'Actions', value: 'actions', sortable: false }
       ],
       researches: [],
       currentResearch: {
@@ -108,16 +110,7 @@ export default {
       };
     },
 
-    // Fetch API ในการเชื่อมต่อกับ backend API เพื่อดึงข้อมูล
-    async fetchResearches() {
-      try {
-        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
-        this.researches = response.data;
-        console.log(this.researches)
-      } catch (error) {
-        console.error(error);
-      }
-    },
+  
     async saveResearch() {
       try {
         if (this.isEdit) {
@@ -130,6 +123,7 @@ export default {
         console.error(error);
       }
     },
+
     async deleteResearch(item) {
       try {
        await axios.delete(`http://localhost:7770/staff/deleteResearch/research/${item._id}`, {
@@ -143,6 +137,7 @@ export default {
         console.error(error);
       }
     },
+
     async uploadImage(event) {
       const file = event.target.files[0];
       if (file) {
@@ -161,8 +156,16 @@ export default {
       }
     }
   },
-  created() {
-   this.fetchResearches();
+  // get research data
+ async created() {
+    try {
+        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
+        this.researches = response.data;
+        console.log(this.researches)
+      } catch (error) {
+        console.error(error);
+        alert(error)
+      }
   }
 }
 

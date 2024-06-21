@@ -28,151 +28,98 @@
         <!-- Filters Section -->
         <v-container>
           <v-card class="rounded-lg p-4 pt-10">
-          <v-row>
-            <v-col cols="12" sm="6" md="4" lg="3">
-              <v-combobox
-                v-model="Industry_type"
-                clearable
-                @click:clear="clearSearch"
-                chips
-                variant="outlined"
-                label="ประเภทอุตสาหกรรม "
-                :items="[
-                  'ทั้งหมด',
-                  'เครื่องสำอาง',
-                  'การเกษตรและเทคโนโลยีชีวภาพ',
-                  'การแปรรูปอาหาร',
-                  'เชื้อเพลิงชีวภาพและเคมีชีวภาพ',
-                  'การแพทย์ครบวงจร',
-                  'สร้างสรรค์',
-                  'อิเล็กทรอนิกส์อัจฉริยะ',
-                  'หุ่นยนต์',
-                  'ดิจิตอล',
-                  'การท่องเที่ยวกลุ่มรายได้ดีและการท่องเที่ยวเชิงสุขภาพ',
-                  'การบินและระบบขนส่ง',
-                  'ยานยนต์สมัยใหม่',
-                ]"
-              ></v-combobox>
-            </v-col>
-            <v-col cols="12" sm="6" md="4" lg="3">
-              <v-combobox
-                v-model="Intellectual_property_type"
-                clearable
-                @click:clear="clearSearch"
-                chips
-                variant="outlined"
-                label="ทรัพย์สินทางปัญญา"
-                :items="[
-                  'ทั้งหมด',
-                  'สิทธิบัตรการประดิษฐ์',
-                  'อนุสิทธิบัตร',
-                  'สิทธิบัตรออกแบบ',
-                  'โปรแกรมคอมพิวเตอร์',
-                  'ลิขสิทธิ์',
-                  'ผลงานวิจัย',
-                  'ต้นแบบ',
-                  'อื่นๆ',
-                ]"
-              ></v-combobox>
-            </v-col>
-            <v-col cols="12" sm="6" md="4" lg="3">
-              <v-combobox
-                v-model="Technology_type"
-                clearable
-                @click:clear="clearSearch"
-                chips
-                variant="outlined"
-                label="ความพร้อมเทคโนโลยี"
-                :items="[
-                  'ทั้งหมด',
-                  'ระดับการทดลอง',
-                  'ระดับต้นแบบ',
-                  'ระดับถ่ายทอด',
-                ]"
-              ></v-combobox>
-            </v-col>
-            <v-col cols="12" sm="6" md="4" lg="3">
-              <!-- search -->
-              <v-text-field
-                v-model="search"
-                density="comfortable"
-                placeholder="Search"
-                prepend-inner-icon="mdi-magnify"
-                style="max-width: 300px"
-                variant="solo"
-                clearable
-                @click:clear="clearSearch"
-                hide-details
-                rounded
-                class="pb-6"
-              >
-              </v-text-field>
-            </v-col>
-          </v-row>
-        </v-card>
+            <v-row>
+              <v-col cols="12" sm="6" md="4" lg="3">
+                <v-combobox v-model="Industry_type" clearable @click:clear="clearSearch" chips variant="outlined"
+                  label="ประเภทอุตสาหกรรม " :items="[
+                    'ทั้งหมด',
+                    'เครื่องสำอาง',
+                    'การเกษตรและเทคโนโลยีชีวภาพ',
+                    'การแปรรูปอาหาร',
+                    'เชื้อเพลิงชีวภาพและเคมีชีวภาพ',
+                    'การแพทย์ครบวงจร',
+                    'สร้างสรรค์',
+                    'อิเล็กทรอนิกส์อัจฉริยะ',
+                    'หุ่นยนต์',
+                    'ดิจิตอล',
+                    'การท่องเที่ยวกลุ่มรายได้ดีและการท่องเที่ยวเชิงสุขภาพ',
+                    'การบินและระบบขนส่ง',
+                    'ยานยนต์สมัยใหม่',
+                  ]"></v-combobox>
+              </v-col>
+              <v-col cols="12" sm="6" md="4" lg="3">
+                <v-combobox v-model="Intellectual_property_type" clearable @click:clear="clearSearch" chips
+                  variant="outlined" label="ทรัพย์สินทางปัญญา" :items="[
+                    'ทั้งหมด',
+                    'สิทธิบัตรการประดิษฐ์',
+                    'อนุสิทธิบัตร',
+                    'สิทธิบัตรออกแบบ',
+                    'โปรแกรมคอมพิวเตอร์',
+                    'ลิขสิทธิ์',
+                    'ผลงานวิจัย',
+                    'ต้นแบบ',
+                    'อื่นๆ',
+                  ]"></v-combobox>
+              </v-col>
+              <v-col cols="12" sm="6" md="4" lg="3">
+                <v-combobox v-model="Technology_type" clearable @click:clear="clearSearch" chips variant="outlined"
+                  label="ความพร้อมเทคโนโลยี" :items="[
+                    'ทั้งหมด',
+                    'ระดับการทดลอง',
+                    'ระดับต้นแบบ',
+                    'ระดับถ่ายทอด',
+                  ]"></v-combobox>
+              </v-col>
+              <v-col cols="12" sm="6" md="4" lg="3">
+                <!-- search -->
+                <v-text-field v-model="search" density="comfortable" placeholder="Search"
+                  prepend-inner-icon="mdi-magnify" style="max-width: 300px" variant="solo" clearable
+                  @click:clear="clearSearch" hide-details rounded class="pb-6">
+                </v-text-field>
+              </v-col>
+            </v-row>
+          </v-card>
         </v-container>
 
         <!-- Cards Section -->
         <v-container>
-        <v-row>
-          <v-col
-            v-for="(item, index) in paginatedItems"
-            :key="index"
-            cols="12"
-            sm="6"
-            md="3"
-          >
-            <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
-              <v-card class="hover:shadow-lg transition-shadow rounded-xl">
-                <v-img
-                  :src="`http://localhost:7770/${item.filePath[1]}`"
-                  cover
-                  height="200px"
-                >
-                  <template v-slot:placeholder>
-                    <div class="d-flex align-center justify-center fill-height">
-                      <img
-                        :src="`http://localhost:7770/${item.filePath[0]}`"
-                        alt=""
-                      />
-                    </div>
-                  </template>
-                </v-img>
-                <v-card-title class="text-lg">{{
-                  item.nameOnMedia
-                }}</v-card-title>
-                <v-card-subtitle class="text-sm">{{
-                  item.industryType
-                }}</v-card-subtitle>
-                <v-card-actions>
-                  <v-chip
-                    outlined
-                    :color="
-                      item.techReadiness === 'ระดับการทดลอง'
+          <v-row>
+            <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
+              <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
+                <v-card class="hover:shadow-lg transition-shadow rounded-xl">
+                  <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
+                    <template v-slot:placeholder>
+                      <div class="d-flex align-center justify-center fill-height">
+                        <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
+                      </div>
+                    </template>
+                  </v-img>
+                  <v-card-title class="text-lg">{{
+                    item.nameOnMedia
+                    }}</v-card-title>
+                  <v-card-subtitle class="text-sm">{{
+                    item.industryType
+                    }}</v-card-subtitle>
+                  <v-card-actions>
+                    <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
                         ? 'purple'
                         : item.techReadiness === 'ระดับต้นแบบ'
-                        ? 'blue'
-                        : item.techReadiness === 'ระดับถ่ายทอด'
-                        ? 'orange'
-                        : 'default'
-                    "
-                  >
-                    {{ item.techReadiness }}
-                  </v-chip>
-                </v-card-actions>
-              </v-card>
-            </router-link>
-          </v-col>
-        </v-row>
+                          ? 'blue'
+                          : item.techReadiness === 'ระดับถ่ายทอด'
+                            ? 'orange'
+                            : 'default'
+                      ">
+                      {{ item.techReadiness }}
+                    </v-chip>
+                  </v-card-actions>
+                </v-card>
+              </router-link>
+            </v-col>
+          </v-row>
         </v-container>
 
         <!-- Pagination -->
-        <v-pagination
-          v-model="currentPage"
-          :length="totalPages"
-          class="pt-6"
-          @input="paginate"
-        ></v-pagination>
+        <v-pagination v-model="currentPage" :length="totalPages" class="pt-6" @input="paginate"></v-pagination>
       </v-container>
     </v-main>
     <Footer></Footer>
@@ -217,9 +164,9 @@ export default {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
       const endIndex = startIndex + this.itemsPerPage;
       return this.filteredItems.slice(startIndex, endIndex);
-      
+
     },
-   // Filter items based on search query
+    // Filter items based on search query
     filteredItems() {
       return this.info.filter((item) => {
         // Check if item matches search query
@@ -247,17 +194,17 @@ export default {
           item.techReadiness === this.Technology_type
         );
 
-        return matchesSearch && matchesIndustryType  && matchesIntellectualPropertyType && matchesTechnologyType;
+        return matchesSearch && matchesIndustryType && matchesIntellectualPropertyType && matchesTechnologyType;
       });
     },
   },
   methods: {
     clearSearch() {
-      this.search = '';  
-      this.currentPage = '1'; 
-      this.Industry_type= 'ทั้งหมด';
-      this.Intellectual_property_type= 'ทั้งหมด';
-      this.Technology_type= 'ทั้งหมด';
+      this.search = '';
+      this.currentPage = '1';
+      this.Industry_type = 'ทั้งหมด';
+      this.Intellectual_property_type = 'ทั้งหมด';
+      this.Technology_type = 'ทั้งหมด';
     },
   },
   async mounted() {
@@ -267,10 +214,15 @@ export default {
         axios.get("https://65fb5ab714650eb21009db19.mockapi.io/todos"),
       ]);
 
-      if (api1Response.status == 200) {
-        this.info = api1Response.data.result;
-        this.images = api2Response.data;
-        console.log("Kuyaasd" + this.info);
+      if (api1Response.status == 200 && api2Response.status == 200) {
+        // Filter out the data to get only those with status "active"
+        const activeData = api1Response.data.result.filter(item => item.status === "active");
+        if (activeData.length > 0) {
+          this.info = activeData;
+          this.images = api2Response.data;
+        } else {
+          console.log("No active data found");
+        }
       } else {
         this.error = new Error("One or both API responses are not OK");
         console.error(
@@ -280,8 +232,9 @@ export default {
         );
       }
     } catch (error) {
-      this.error = error;
+      this.error = `'Error fetching data: ${error}'`;
       console.error("Error fetching data:", error);
+      alert("Error fetching data:" + error)
     } finally {
       this.loading = false;
     }
