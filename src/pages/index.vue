@@ -82,7 +82,10 @@
                 </v-card>
               </router-link>
             </v-col>
+            <h1 v-if="loading">Loading...</h1>
+           <div v-if="!loading">
             <h1 v-if="paginatedItems.length <= 0">No data available</h1>
+           </div>
           </v-row>
         </v-container>
         <!-- Pagination -->
@@ -128,46 +131,6 @@ export default defineComponent({
       // Define info property here
     };
   },
-  async created() {
-    // try {
-    //     const response = await axios.get('http://localhost:7770/verify', {
-    //         headers: {
-    //             Authorization: localStorage.getItem('token')
-    //         }
-    //     })
-    // console.log('Full response:', response);
-    // this.userId = response.data.result.userId,
-    // console.log(this.userId) // Log the full response to inspect it
-    // Adjust the following line based on the actual structure of your response
-    // this.userinfo = await axios.get(`http://localhost:7770/getUser/${this.userId}`)
-    // console.log(this.userinfo)
-    // await this.fetchAdditionalData();
-    // } catch (error) {
-    //     console.error('Error fetching user data:', error);
-    // }
-  },
-  // fetch API ======================================================================
-  // setup() {
-  //     const info = ref(null);
-  //     const images = ref(null);
-  //     const error = ref(null);
-  //     const loading = ref(true);
-
-  //     onMounted(async () => {
-  //         const result = await fetchProducts();
-  //         info.value = result.info || [];
-  //         images.value = result.images || [];
-  //         error.value = result.error;
-  //         loading.value = false;
-  //     });
-  //     return {
-  //         info,
-  //         images,
-  //         error,
-  //         loading,
-  //     };
-  // },
-  // ====================================================================================
   async created() {
     try {
       const [api1Response, api2Response] = await Promise.all([
