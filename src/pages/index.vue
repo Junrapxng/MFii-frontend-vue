@@ -5,9 +5,9 @@
       <!-- Carousel Slide -->
       <v-container class="flex">
         <v-container luid style="width: 90%">
-          <Carousel class="carousel" :autoplay="4000" :wrap-around="true">
-            <Slide v-for="img in images" :key="img.id">
-              <v-img class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`${img.image}`" cover>   
+          <Carousel v-for="(img, index) in images"  :key="index"  class="carousel" :autoplay="4000" :wrap-around="true">
+            <Slide v-for="(path, index) in img.filePath" :key="index">
+              <v-img class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`http://localhost:7770/${path}`" cover>   
                 <template v-slot:placeholder>
                   <div v-if="images" class="d-flex align-center justify-center fill-height">
                     <v-progress-circular color="pink" indeterminate></v-progress-circular>
@@ -135,7 +135,7 @@ export default defineComponent({
     try {
       const [api1Response, api2Response] = await Promise.all([
         axios.get("http://localhost:7770/getsResearch/all/all/all"),
-        axios.get("https://65fb5ab714650eb21009db19.mockapi.io/todos"),
+        axios.get("http://localhost:7770/getsNews"),
       ]);
 
       if (api1Response.status == 200 && api2Response.status == 200) {
@@ -143,7 +143,8 @@ export default defineComponent({
         const activeData = api1Response.data.result.filter(item => item.status === "active");
         if (activeData.length > 0) {
           this.info = activeData;
-          this.images = api2Response.data;
+          this.images = api2Response.data.result;
+          console.log("images is " +this.images.result)
         } else {
           console.log("No active data found");
         }
