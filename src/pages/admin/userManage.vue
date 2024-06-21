@@ -44,7 +44,12 @@
                         (v) => !!v || 'กรุณากรอก อีเมล',
                         (v) => /.+@.+\..+/.test(v) || 'กรุณากรอกอีเมลให้ถูกต้อง',
                       ]" required></v-text-field>
-                      <v-text-field variant="solo-filled" flat v-model="editedItem.phoneNumber" label="Phone"></v-text-field>
+                      <v-text-field variant="solo-filled" flat v-model="editedItem.phoneNumber" label="Phone"
+                      :rules="[
+                      (v) => !!v || 'กรุณากรอก เบอร์โทรศัพท์',
+                      (v) =>
+                        /^\d{10}$/.test(v) || 'กรุณากรอกเบอร์โทรศัพท์ 10 หลัก',
+                      ]" required></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" sm="6">
                       <v-autocomplete variant="solo-filled" flat label="Role" v-model="editedItem.role"
@@ -320,7 +325,7 @@ export default {
         Object.assign(this.users.resutl[this.editedIndex], this.editedItem);
         console.log(this.editedItem._id)
        try {
-        const res = await axios.patch(
+        await axios.patch(
           'http://localhost:7770/admin/updatePatch/' + this.editedItem._id,
           {
             firstname: this.editItem.name,
