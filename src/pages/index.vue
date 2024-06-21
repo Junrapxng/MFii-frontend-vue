@@ -50,8 +50,8 @@
 
         <!-- Cards Section -->
         <v-container class="flex justify-center items-center bg-gray-100 rounded">
-          <v-row  class="flex flex-wrap justify-center">
-            <v-col v-if="paginatedItems"  v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
+          <v-row v-if="paginatedItems" class="flex flex-wrap justify-center">
+            <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
               <router-link  :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="hover:shadow-lg transition-shadow rounded-xl" style="max-width: 400px">
                   <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
