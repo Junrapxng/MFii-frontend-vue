@@ -36,17 +36,19 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" md="12" sm="12">
-                      <v-text-field variant="solo-filled" flat v-model="editedItem.firstName" label="Name"></v-text-field>
+                      <v-text-field variant="solo-filled" flat v-model="editedItem.firstName" label="First Name"></v-text-field>
+                      <v-text-field variant="solo-filled" flat v-model="editedItem.lastName" label="Last Name"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="12" sm="12">
                       <v-text-field variant="solo-filled" flat v-model="editedItem.email" label="Email" :rules="[
                         (v) => !!v || 'กรุณากรอก อีเมล',
                         (v) => /.+@.+\..+/.test(v) || 'กรุณากรอกอีเมลให้ถูกต้อง',
                       ]" required></v-text-field>
+                      <v-text-field variant="solo-filled" flat v-model="editedItem.phoneNumber" label="Phone"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" sm="6">
                       <v-autocomplete variant="solo-filled" flat label="Role" v-model="editedItem.role"
-                        :items="['staff', 'admin']"></v-autocomplete>
+                        :items="['user','staff', 'admin']"></v-autocomplete>
                     </v-col>
                     <v-col cols="12" md="6" sm="6">
                       <v-autocomplete variant="solo-filled" flat label="Status" v-model="editedItem.status"
@@ -160,7 +162,9 @@ export default {
     headers: [
       { title: 'ID', align: 'center', key: '_id', },
       { title: "Name", align: "start", sortable: false, key: "firstName", },
+      { title: "Last Name", align: "start", sortable: false, key: "lastName", },
       { title: "Email", sortable: false, key: "email" },
+      { title: "Phone", sortable: false, key: "phoneNumber" },
       { title: "Create Date", key: "createDate" },
       { title: "Role", key: "role" },
       { title: "Status", key: "status" },

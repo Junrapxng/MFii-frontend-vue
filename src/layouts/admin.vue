@@ -76,8 +76,6 @@
 </template>
 
 <script>
-
-import axios from 'axios';
 import { useUserStore } from '@/store/user';
 export default {
   name: "AdminLayout",

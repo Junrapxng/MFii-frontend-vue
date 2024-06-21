@@ -40,11 +40,9 @@
       <!-- logout -->
       <template #append>
         <div class="pa-4 d-flex justify-start">
-          <router-link link to="/">
-            <v-btn class="primary--text" rounded>
+            <v-btn class="primary--text" rounded @click="logout()">
               <v-icon class="primary--text mr-2">mdi-logout</v-icon>Logout
             </v-btn>
-          </router-link>
         </div>
       </template>
     </v-navigation-drawer>
@@ -65,8 +63,8 @@
 
       <v-col class="hidden-xs-only" cols="auto">
         <div class="d-flex flex-column mr-2">
-          <span class="title">John Leider</span>
-          <span class="subtitle text-xs">Staff</span>
+          <span class="title">{{ user.email }}</span>
+          <span class="subtitle text-xs">{{ user.role }}</span>
         </div>
       </v-col>
     </v-app-bar>
@@ -80,6 +78,7 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store/user';
 export default {
   name: "StaffLayout",
   data: () => ({
@@ -89,7 +88,32 @@ export default {
         name: "John Leider",
       },
     ],
+    user: [],
   }),
+
+ async created(){
+      // get user info from pinia store/user.js
+      const userStore = useUserStore();
+    try {
+      if (!userStore.user) {
+        await userStore.fetchUser();
+      }
+      if (userStore.user) {
+        this.user = userStore.user.resutl;
+        console.log(this.user);
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  },
+
+  methods: {
+    logout() {
+      this.user = null;
+      localStorage.removeItem('token');
+      window.location.reload();
+    },
+  }
 };
 </script>
 

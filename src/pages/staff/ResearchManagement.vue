@@ -6,7 +6,7 @@
     <v-card class="rounded-3xl">
       <v-card-title>จัดการผลงานวิจัย</v-card-title>
       <v-card-text>
-        <v-data-table :headers="headers" :items="researches.result" class="elevation-1">
+        <v-data-table :headers="headers" :items="researches.result" class="elevation-1" >
           <template v-slot:[`item.actions`]="{ item }">
             <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
             <v-icon small class="mr-2" @click="toggleVisibility(item)">{{ item.visible ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>
@@ -22,9 +22,11 @@
         <v-card-text>
           <v-form>
             <v-text-field label="ชื่อผลงาน" variant="solo-filled" v-model="currentResearch.nameOnMedia"></v-text-field>
-            <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.category" :items="['เกษตรกรรม/การแปรรูป', 'วัสดุ/บรรจุภัณฑ์', 'การท่องเที่ยว/การศึกษา', 'อาหาร/เครื่องดื่ม']"></v-autocomplete>
-            <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.content"></v-textarea>
-            <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled" v-model="currentResearch.image" @change="uploadImage"></v-file-input>
+            <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.major" :items="['เกษตรกรรม/การแปรรูป', 'วัสดุ/บรรจุภัณฑ์', 'การท่องเที่ยว/การศึกษา', 'อาหาร/เครื่องดื่ม']"></v-autocomplete>
+            <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.descripton"></v-textarea>
+            <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.hilight"></v-textarea>
+            <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled"  v-model="currentResearch.filePath[0]" @change="uploadImage" alt="asd"></v-file-input>
+          
           </v-form>
         </v-card-text>
         <v-card-actions>
@@ -52,9 +54,9 @@ export default {
       dialog: false,
       isEdit: false,
       headers: [
-        { text: 'ชื่อผลงาน', value: 'nameOnMedia' },
-        { text: 'ผู้จัดทำ', value: 'inventor' },
-        { text: 'Actions', value: 'actions', sortable: false }
+        { title: 'ชื่อผลงาน', value: 'nameOnMedia' },
+        { title: 'ผู้จัดทำ', value: 'inventor' },
+        { title: 'Actions', value: 'actions', sortable: false }
       ],
       researches: [],
       currentResearch: {
