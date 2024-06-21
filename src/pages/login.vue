@@ -73,8 +73,8 @@ export default {
       if (valid) {
         try {
           const response = await axios.post("http://localhost:7770/login", {
-            email: this.form.email,
-            password: this.form.password
+            email: this.form.email.trim(),
+            password: this.form.password.trim()
           });
           localStorage.setItem('token', response.data.result.token);
           console.log(response.data.result.token);

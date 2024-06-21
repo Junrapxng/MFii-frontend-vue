@@ -14,7 +14,17 @@
           </v-card-title>
           <v-card-text>
             <v-form @submit.prevent="register" ref="form">
-              <v-row>
+              <v-row>            
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="form.firstName" label="ชื่อ" variant="outlined" outlined color="#BA984C"
+                    :rules="[(v) => !!v || 'กรุณากรอก ชื่อ']" required></v-text-field>
+                </v-col>
+
+                <v-col cols="12" md="6">
+                  <v-text-field v-model="form.lastName" label="นามสกุล" variant="outlined" outlined color="#BA984C"
+                    :rules="[(v) => !!v || 'กรุณากรอก นามสกุล']" required></v-text-field>
+                </v-col>
+
                 <v-col cols="12" md="6">
                   <v-text-field v-model="form.email" label="อีเมล" variant="outlined" outlined color="#BA984C" :rules="[
                     (v) => !!v || 'กรุณากรอก อีเมล',
@@ -29,16 +39,6 @@
                       (v) =>
                         /^\d{10}$/.test(v) || 'กรุณากรอกเบอร์โทรศัพท์ 10 หลัก',
                     ]" required></v-text-field>
-                </v-col>
-
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="form.firstName" label="ชื่อ" variant="outlined" outlined color="#BA984C"
-                    :rules="[(v) => !!v || 'กรุณากรอก ชื่อ']" required></v-text-field>
-                </v-col>
-
-                <v-col cols="12" md="6">
-                  <v-text-field v-model="form.lastName" label="นามสกุล" variant="outlined" outlined color="#BA984C"
-                    :rules="[(v) => !!v || 'กรุณากรอก นามสกุล']" required></v-text-field>
                 </v-col>
 
                 <v-col cols="6">
@@ -97,16 +97,15 @@ export default {
   methods: {
     async register() {
   const { valid } = await this.$refs.form.validate();
-  const form = this.$refs.form;
   if (valid) {
     try {
       const createDate = new Date().toISOString(); // Create date in ISO format
       const response = await axios.post("http://localhost:7770/register", {
-        email: this.form.email,
-        password: this.form.password,
-        firstName: this.form.firstName,
-        lastName: this.form.lastName,
-        phoneNumber: this.form.phone,
+        email: this.form.email.trim(),
+        password: this.form.password.trim(),
+        firstName: this.form.firstName.trim(),
+        lastName: this.form.lastName.trim(),
+        phoneNumber: this.form.phone.trim(),
         createDate: createDate // Set create date
       });
       localStorage.setItem('token', response.data.result.token);
