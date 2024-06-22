@@ -14,13 +14,6 @@
           <!-- search -->
           <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify"
             variant="solo-filled" flat clearable hide-details single-line></v-text-field>
-
-          <!-- Add User -->
-          <!-- <template v-slot:top> -->
-          <!-- <v-toolbar flat> -->
-          <!-- <v-toolbar-title>My CRUD</v-toolbar-title> -->
-          <!-- <v-divider class="mx-4" inset vertical></v-divider> -->
-          <!-- <v-spacer></v-spacer> -->
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ props }">
               <v-btn class="mx-4" color="primary" dark v-bind="props">
@@ -161,16 +154,50 @@ export default {
     },
     dialog: false,
     dialogDelete: false,
-    headers: [
-      { title: "ID", align: "center", key: "_id" },
-      { title: "Name", align: "start", sortable: false, key: "firstName" },
-      { title: "Last Name", align: "start", sortable: false, key: "lastName" },
-      { title: "Email", sortable: false, key: "email" },
-      { title: "Phone", sortable: false, key: "phoneNumber" },
-      { title: "Create Date", key: "createDate" },
-      { title: "Role", key: "role" },
-      { title: "Status", key: "status" },
-      { title: "Actions", key: "actions", sortable: false },
+    headers: [{
+      title: "ID",
+      align: "center",
+      key: "_id"
+    },
+    {
+      title: "Name",
+      align: "start",
+      sortable: false,
+      key: "firstName"
+    },
+    {
+      title: "Last Name",
+      align: "start",
+      sortable: false,
+      key: "lastName"
+    },
+    {
+      title: "Email",
+      sortable: false,
+      key: "email"
+    },
+    {
+      title: "Phone",
+      sortable: false,
+      key: "phoneNumber"
+    },
+    {
+      title: "Create Date",
+      key: "createDate"
+    },
+    {
+      title: "Role",
+      key: "role"
+    },
+    {
+      title: "Status",
+      key: "status"
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      sortable: false
+    },
     ],
     editedIndex: -1,
     editedItem: {
@@ -235,9 +262,6 @@ export default {
       }
     },
 
-
-
-
     // Delete users ====================================================================================
     deleteItem(item) {
       this.editedIndex = this.users.resutl.indexOf(item);
@@ -250,12 +274,11 @@ export default {
       console.log(this.editedItem._id);
       try {
         const res = await axios.delete(
-          "http://localhost:7770/admin/deleteUser/" + this.editedItem._id,
-          {
-            headers: {
-              Authorization: localStorage.getItem("token"),
-            },
-          }
+          "http://localhost:7770/admin/deleteUser/" + this.editedItem._id, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        }
         );
         console.log(res);
         this.snackbar.message = "User deleted successfully";
@@ -288,8 +311,7 @@ export default {
         this.editedIndex = -1;
       });
     },
-    // ============================================================================
-
+    // =================================================================================
 
     //edit user ========================================================================
 
@@ -304,31 +326,23 @@ export default {
         alert('Please enter a valid email.');
         return; // Stop execution if email is not valid
       }
-
-      // if (!this.editedItem.name || !this.editedItem.email || !this.editedItem.role || !this.editedItem.status) {
-      //   alert('Please fill in all required fields.');
-      //   return;
-      // }
-
       if (this.editedIndex > -1) {
         Object.assign(this.users.resutl[this.editedIndex], this.editedItem);
         console.log(this.editedItem._id);
         try {
           await axios.patch(
-            "http://localhost:7770/admin/updatePatch/" + this.editedItem._id,
-            {
-              firstName: this.editedItem.firstName.trim(),
-              lastName: this.editedItem.lastName.trim(),
-              email: this.editedItem.email.trim(),
-              phoneNumber: this.editedItem.phoneNumber.trim(),
-              role: this.editedItem.role,
-              status: this.editedItem.status,
+            "http://localhost:7770/admin/updatePatch/" + this.editedItem._id, {
+            firstName: this.editedItem.firstName.trim(),
+            lastName: this.editedItem.lastName.trim(),
+            email: this.editedItem.email.trim(),
+            phoneNumber: this.editedItem.phoneNumber.trim(),
+            role: this.editedItem.role,
+            status: this.editedItem.status,
+          }, {
+            headers: {
+              Authorization: localStorage.getItem("token"),
             },
-            {
-              headers: {
-                Authorization: localStorage.getItem("token"),
-              },
-            }
+          }
           );
           this.snackbar.message = "User Edited successfully";
           this.snackbar.color = "success"; // Set success color
@@ -341,17 +355,12 @@ export default {
             error.message;
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
-          //   setTimeout(() => {
-          //   window.location.reload();
-          // }, 2000); // 2-second delay
         }
       } else {
         this.users.resutl.push(this.editedItem);
       }
       this.close();
     },
-
-
 
     // Add user =========================================================================================================================
     async addsave() {
@@ -382,17 +391,16 @@ export default {
         const createDate = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}T${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}:${parts.find(p => p.type === 'second').value}.000Z`;
         try {
           await axios.post(
-            "http://localhost:7770/register",
-            {
-              firstName: this.editedItem.firstName.trim(),
-              lastName: this.editedItem.lastName.trim(),
-              email: this.editedItem.email.trim(),
-              phoneNumber: this.editedItem.phoneNumber.trim(),
-              password: this.editedItem.password.trim(),
-              role: this.editedItem.role,
-              status: this.editedItem.status,
-              createDate: createDate,
-            },
+            "http://localhost:7770/register", {
+            firstName: this.editedItem.firstName.trim(),
+            lastName: this.editedItem.lastName.trim(),
+            email: this.editedItem.email.trim(),
+            phoneNumber: this.editedItem.phoneNumber.trim(),
+            password: this.editedItem.password.trim(),
+            role: this.editedItem.role,
+            status: this.editedItem.status,
+            createDate: createDate,
+          },
           );
           this.snackbar.message = "User Added successfully";
           this.snackbar.color = "success"; // Set success color
@@ -405,9 +413,6 @@ export default {
             error.message;
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
-          //   setTimeout(() => {
-          //   window.location.reload();
-          // }, 2000); // 2-second delay
         }
       } else {
         this.users.resutl.push(this.editedItem);
@@ -419,11 +424,6 @@ export default {
 
 };
 </script>
-
-
-
-
-
 
 
 
