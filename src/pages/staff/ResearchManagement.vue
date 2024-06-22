@@ -26,20 +26,21 @@
                 <v-form>
                   <v-text-field label="ชื่อผลงาน" variant="solo-filled"
                     v-model="currentResearch.nameOnMedia"></v-text-field>
-                  <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.industryType" :items="[
-                    'เครื่องสำอาง',
-                    'การเกษตรและเทคโนโลยีชีวภาพ',
-                    'การแปรรูปอาหาร',
-                    'เชื้อเพลิงชีวภาพและเคมีชีวภาพ',
-                    'การแพทย์ครบวงจร',
-                    'สร้างสรรค์',
-                    'อิเล็กทรอนิกส์อัจฉริยะ',
-                    'หุ่นยนต์',
-                    'ดิจิตอล',
-                    'การท่องเที่ยวกลุ่มรายได้ดีและการท่องเที่ยวเชิงสุขภาพ',
-                    'การบินและระบบขนส่ง',
-                    'ยานยนต์สมัยใหม่',
-                  ]"></v-autocomplete>
+                  <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.industryType"
+                    :items="[
+                      'เครื่องสำอาง',
+                      'การเกษตรและเทคโนโลยีชีวภาพ',
+                      'การแปรรูปอาหาร',
+                      'เชื้อเพลิงชีวภาพและเคมีชีวภาพ',
+                      'การแพทย์ครบวงจร',
+                      'สร้างสรรค์',
+                      'อิเล็กทรอนิกส์อัจฉริยะ',
+                      'หุ่นยนต์',
+                      'ดิจิตอล',
+                      'การท่องเที่ยวกลุ่มรายได้ดีและการท่องเที่ยวเชิงสุขภาพ',
+                      'การบินและระบบขนส่ง',
+                      'ยานยนต์สมัยใหม่',
+                    ]"></v-autocomplete>
                   <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.descripton"></v-textarea>
                   <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.hilight"></v-textarea>
                   <v-combobox v-model="currentResearch.inventor" label="ผู้คิดค้น" chips multiple></v-combobox>
@@ -57,6 +58,17 @@
           </v-dialog>
         </v-container>
       </staff-layout>
+      <div class="text-center">
+        <v-snackbar v-model="snackbar.show" :color="snackbar.color">
+          <p>{{ snackbar.message }}</p>
+
+          <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar.show = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </div>
     </v-main>
   </v-app>
 </template>
@@ -73,6 +85,11 @@ export default {
     return {
       dialog: false,
       isEdit: false,
+      snackbar: {
+        show: false,
+        message: "",
+        color: "success", // Default color
+      },
       headers: [
         { title: 'ชื่อผลงาน', value: 'nameOnMedia' },
         { title: 'หมวดหมู่', value: 'industryType' },
@@ -150,20 +167,39 @@ export default {
       };
     },
 
-
+//  Add and Edit Research ===============================================================================
     async saveResearch() {
       try {
         if (this.isEdit) {
-          await axios.put(`/api/researches/${this.currentResearch.id}`, this.currentResearch);
+          await axios.patch(`http://localhost:7770/staff/updateResearchData/${this.currentResearch._id}`,
+            this.currentResearch
+            , {
+              headers: {
+                Authorization: localStorage.getItem('token'),
+              },
+            });
+          this.snackbar.message = "Edit research successfully";
+          this.snackbar.color = "success"; // Set success color
+          this.snackbar.show = true;
         } else {
           await axios.post('/api/researches', this.currentResearch);
         }
         this.fetchResearches();
       } catch (error) {
-        console.error(error);
-      }
-    },
 
+        console.error(error);
+        this.snackbar.message =
+          "Error Edit research user(ข้อมูลยังไม่แก้ไข โปรดลองอีกครั้ง): " +
+          error.message;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+      }
+      this.dialog = false;
+      this.resetCurrentResearch();
+    },
+// =====================================================================================================
+
+// Delete Research =====================================================================================================
     async deleteResearch(item) {
       try {
         await axios.delete(`http://localhost:7770/staff/deleteResearch/research/${item._id}`, {
@@ -171,14 +207,14 @@ export default {
             Authorization: localStorage.getItem('token'),
           },
         });
-
         this.fetchResearches();
       } catch (error) {
         console.error(error);
       }
     },
-
-    async uploadImage(event) {
+// =====================================================================================================
+   
+async uploadImage(event) {
       const file = event.target.files[0];
       if (file) {
         const formData = new FormData();
@@ -194,26 +230,28 @@ export default {
           console.error(error);
         }
       }
+    },
+
+
+
+      // get research data funnctions
+    async fetchResearches() {
+      try {
+        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
+        this.researches = response.data;
+        console.log(this.researches)
+      } catch (error) {
+        console.error(error);
+        alert(error)
+      };
     }
+
   },
-  // get research data
+
+
+  // get research data when loaded website
   async created() {
-    try {
-      const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
-      this.researches = response.data;
-      console.log(this.researches)
-    } catch (error) {
-      console.error(error);
-      alert(error)
-    };
-
-    const inventors = this.researches.result.inventor
-    for (const inventor of inventors) {
-      console.log(inventor);
-    }
-
-
-
+    this.fetchResearches();
   }
 }
 
