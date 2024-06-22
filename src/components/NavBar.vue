@@ -344,10 +344,10 @@ export default {
       });
     },
   },
+  // fetch User prom state management 
   setup() {
     const userStore = useUserStore();
     userStore.fetchUser();
-
     return { userStore };
   },
 };

@@ -2,30 +2,31 @@
   <v-app>
     <v-main>
       <staff-layout>
-  <v-container class="font-noto-sans-thai">
-    <v-card class="rounded-3xl">
-      <v-card-title>จัดการผลงานวิจัย</v-card-title>
-      <v-card-text>
-        <v-data-table :headers="headers" :items="researches.result" class="elevation-1" >
-          <template v-slot:[`item.actions`]="{ item }">
-            <v-container class="flex justify-center align-center">  
-                <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
-                <v-icon small class="mr-2" @click="toggleVisibility(item)">{{ item.visible ? 'mdi-eye' : 'mdi-eye-off' }}</v-icon>       
-                <v-icon small @click="deleteResearch(item)">mdi-delete</v-icon>         
-            </v-container>
-          </template>
-        </v-data-table>
-        <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
-      </v-card-text>
-    </v-card>
-    <v-dialog v-model="dialog" max-width="600px">
-      <v-card class="rounded-xl">
-        <v-card-title>{{ isEdit ? 'แก้ไขผลงานวิจัย' : 'สร้างผลงานวิจัย' }}</v-card-title>
-        <v-card-text>
-          <v-form>
-            <v-text-field label="ชื่อผลงาน" variant="solo-filled" v-model="currentResearch.nameOnMedia"></v-text-field>
-            <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.major" 
-              :items="[
+        <v-container class="font-noto-sans-thai">
+          <v-card class="rounded-3xl">
+            <v-card-title>จัดการผลงานวิจัย</v-card-title>
+            <v-card-text>
+              <v-data-table :headers="headers" :items="researches.result" class="elevation-1">
+                <template v-slot:[`item.actions`]="{ item }">
+                  <v-container class="flex justify-center align-center">
+                    <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
+                    <v-icon small class="mr-2" @click="toggleVisibility(item)">{{ item.visible ? 'mdi-eye' :
+                      'mdi-eye-off' }}</v-icon>
+                    <v-icon small @click="deleteResearch(item)">mdi-delete</v-icon>
+                  </v-container>
+                </template>
+              </v-data-table>
+              <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
+            </v-card-text>
+          </v-card>
+          <v-dialog v-model="dialog" max-width="800px">
+            <v-card class="rounded-xl">
+              <v-card-title>{{ isEdit ? 'แก้ไขผลงานวิจัย' : 'สร้างผลงานวิจัย' }}</v-card-title>
+              <v-card-text>
+                <v-form>
+                  <v-text-field label="ชื่อผลงาน" variant="solo-filled"
+                    v-model="currentResearch.nameOnMedia"></v-text-field>
+                  <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.industryType" :items="[
                     'เครื่องสำอาง',
                     'การเกษตรและเทคโนโลยีชีวภาพ',
                     'การแปรรูปอาหาร',
@@ -39,47 +40,60 @@
                     'การบินและระบบขนส่ง',
                     'ยานยนต์สมัยใหม่',
                   ]"></v-autocomplete>
-            <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.descripton"></v-textarea>
-            <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.hilight"></v-textarea>
-            <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled" @change="uploadImage" alt="asd"></v-file-input>
-          
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="red darken-1" variant="tonal" class="" text @click="dialog = false">ยกเลิก</v-btn>
-          <v-btn color="green darken-1" variant="tonal" text @click="saveResearch">{{ isEdit ? 'บันทึก' : 'สร้าง' }}</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-container>
-</staff-layout>
-</v-main>
-</v-app>
+                  <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.descripton"></v-textarea>
+                  <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.hilight"></v-textarea>
+                  <v-combobox v-model="currentResearch.inventor" label="ผู้คิดค้น" chips multiple></v-combobox>
+                  <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled" @change="uploadImage"
+                    alt="IMG"></v-file-input>
+
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="red darken-1" variant="tonal" class="" text @click="dialog = false">ยกเลิก</v-btn>
+                <v-btn color="green darken-1" variant="tonal" text @click="saveResearch">{{ isEdit ? 'บันทึก' : 'สร้าง'
+                  }}</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-container>
+      </staff-layout>
+    </v-main>
+  </v-app>
 </template>
 
 <script>
-  import axios from 'axios';
-  import StaffLayout from "@/layouts/staff.vue";
+import axios from 'axios';
+import StaffLayout from "@/layouts/staff.vue";
 export default {
   name: "staff-ResearchManagement-page",
-    components: {
-        StaffLayout,
-      },
+  components: {
+    StaffLayout,
+  },
   data() {
     return {
       dialog: false,
       isEdit: false,
       headers: [
         { title: 'ชื่อผลงาน', value: 'nameOnMedia' },
+        { title: 'หมวดหมู่', value: 'industryType' },
         { title: 'ผู้จัดทำ', value: 'inventor' },
         { title: 'Actions', align: 'center', value: 'actions', sortable: false }
       ],
       researches: [],
       currentResearch: {
-        title: '',
-        category: '',
-        content: '',
-        image: null,
+        nameOnMedia: '',
+        inventor: [],
+        major: '',
+        descripton: '',
+        intelProp: '',
+        industryType: '',
+        filePath: [],
+        hilight: '',
+        techReadiness: '',
+        coop: '',
+        link: '',
+        status: '',
+        ipType: '',
         visible: true
       }
     }
@@ -119,14 +133,24 @@ export default {
     },
     resetCurrentResearch() {
       this.currentResearch = {
-        title: '',
-        content: '',
-        image: null,
+        nameOnMedia: '',
+        inventor: [],
+        major: '',
+        descripton: '',
+        intelProp: '',
+        industryType: '',
+        filePath: [],
+        hilight: '',
+        techReadiness: '',
+        coop: '',
+        link: '',
+        status: '',
+        ipType: '',
         visible: true
       };
     },
 
-  
+
     async saveResearch() {
       try {
         if (this.isEdit) {
@@ -142,12 +166,12 @@ export default {
 
     async deleteResearch(item) {
       try {
-       await axios.delete(`http://localhost:7770/staff/deleteResearch/research/${item._id}`, {
-        headers: {
+        await axios.delete(`http://localhost:7770/staff/deleteResearch/research/${item._id}`, {
+          headers: {
             Authorization: localStorage.getItem('token'),
           },
-       });
-      
+        });
+
         this.fetchResearches();
       } catch (error) {
         console.error(error);
@@ -173,19 +197,26 @@ export default {
     }
   },
   // get research data
- async created() {
+  async created() {
     try {
-        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
-        this.researches = response.data;
-        console.log(this.researches)
-      } catch (error) {
-        console.error(error);
-        alert(error)
-      }
+      const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
+      this.researches = response.data;
+      console.log(this.researches)
+    } catch (error) {
+      console.error(error);
+      alert(error)
+    };
+
+    const inventors = this.researches.result.inventor
+    for (const inventor of inventors) {
+      console.log(inventor);
+    }
+
+
+
   }
 }
 
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
