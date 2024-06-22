@@ -28,9 +28,9 @@
       </v-row>
 
       <!-- Research Access Table -->
-      <v-card class="mb-4">
+      <v-card class="rounded-xl pa-4 mb-4">
         <v-card-title class="text-3xl">การเข้าถึงการวิจัย</v-card-title>
-        <v-data-table :headers="headers" :items="research"></v-data-table>
+        <v-data-table :headers="headers" :items="research"  :items-per-page="-1" :fixed-header="true" height="400"></v-data-table>
       </v-card>
 
       <!-- Charts -->

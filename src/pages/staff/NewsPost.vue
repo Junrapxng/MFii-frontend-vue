@@ -3,16 +3,26 @@
     <v-main>
       <staff-layout>
         <v-container>
-          <v-card>
+          <v-card class="rounded-xl pa-4">
             <v-card-title>สร้างโพสข่าวสาร</v-card-title>
             <v-card-text>
               <v-form>
                 <v-text-field
-                  label="หัวข้อ"
-                  v-model="news.title"
+                 v-model="news.url"
+                  label="URL"
+                  clearable
+                  prepend-icon="mdi-web"
+                  variant="solo-filled"
                 ></v-text-field>
-                <v-textarea label="เนื้อหา" v-model="news.content"></v-textarea>
-                <v-btn @click="submitNews">บันทึก</v-btn>
+                <v-file-input
+                 v-model="news.images"
+                  label="Upload Images"
+                  chips
+                  multiple
+                  show-size
+                  variant="solo-filled"
+                ></v-file-input>
+                <v-btn @click="submitNews" class=" bg-slate-800 text-white">บันทึก</v-btn>
               </v-form>
             </v-card-text>
           </v-card>
@@ -32,8 +42,8 @@ export default {
   data() {
     return {
       news: {
-        title: "",
-        content: "",
+        url: "",
+        images: "",
       },
     };
   },

@@ -1,7 +1,7 @@
 <template>
     <v-container>
-      <v-card>
-        <v-card-title>จำนวนผู้ใช้งานเว็บไซต์</v-card-title>
+      <v-card class="rounded-lg bg-gray-200">
+        <v-card-title class="font-semibold"><v-icon>mdi mdi-web</v-icon> จำนวนผู้ใช้งานเว็บไซต์</v-card-title>
         <v-card-text>
           <v-row>
             <v-col>
