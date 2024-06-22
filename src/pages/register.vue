@@ -6,15 +6,11 @@
       <v-alert v-if="responseMessage" type="error">{{
         responseMessage
       }}</v-alert>
-      <v-container
-        class="font-noto-sans-thai rounded-xl flex justify-center items-center bg-gray-100 mb-5"
-      >
+      <v-container class="font-noto-sans-thai rounded-xl flex justify-center items-center bg-gray-100 mb-5">
         <v-card class="w-full max-w-2xl rounded-xl p-8">
           <v-card-title>
             <h2 class="text-2xl font-semibold mb-2">
-              <v-icon class="align-baseline" style="font-size: 28px"
-                >mdi-account-plus</v-icon
-              >
+              <v-icon class="align-baseline" style="font-size: 28px">mdi-account-plus</v-icon>
               สมัครสมาชิก
             </h2>
           </v-card-title>
@@ -22,60 +18,30 @@
             <v-form @submit.prevent="register" ref="form">
               <v-row>
                 <v-col cols="12" md="6">
-                  <v-text-field
-                    v-model="form.firstName"
-                    label="ชื่อ"
-                    variant="outlined"
-                    outlined
-                    color="#BA984C"
-                    :rules="[(v) => !!v || 'กรุณากรอก ชื่อ']"
-                    required
-                  ></v-text-field>
+                  <v-text-field v-model="form.firstName" label="ชื่อ" variant="outlined" outlined color="#BA984C"
+                    :rules="[(v) => !!v || 'กรุณากรอก ชื่อ']" required></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
-                  <v-text-field
-                    v-model="form.lastName"
-                    label="นามสกุล"
-                    variant="outlined"
-                    outlined
-                    color="#BA984C"
-                    :rules="[(v) => !!v || 'กรุณากรอก นามสกุล']"
-                    required
-                  ></v-text-field>
+                  <v-text-field v-model="form.lastName" label="นามสกุล" variant="outlined" outlined color="#BA984C"
+                    :rules="[(v) => !!v || 'กรุณากรอก นามสกุล']" required></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
-                  <v-text-field
-                    v-model="form.email"
-                    label="อีเมล"
-                    prepend-inner-icon="mdi-email-outline"
-                    variant="outlined"
-                    outlined
-                    color="#BA984C"
-                    :rules="[
+                  <v-text-field v-model="form.email" label="อีเมล" prepend-inner-icon="mdi-email-outline"
+                    variant="outlined" outlined color="#BA984C" :rules="[
                       (v) => !!v || 'กรุณากรอก อีเมล',
                       (v) => /.+@.+\..+/.test(v) || 'กรุณากรอกอีเมลให้ถูกต้อง',
-                    ]"
-                    required
-                  ></v-text-field>
+                    ]" required></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
-                  <v-text-field
-                    v-model="form.phone"
-                    label="เบอร์โทรศัพท์"
-                    prepend-inner-icon="mdi-phone-outline"
-                    variant="outlined"
-                    outlined
-                    color="#BA984C"
-                    :rules="[
+                  <v-text-field v-model="form.phone" label="เบอร์โทรศัพท์" prepend-inner-icon="mdi-phone-outline"
+                    variant="outlined" outlined color="#BA984C" :rules="[
                       (v) => !!v || 'กรุณากรอก เบอร์โทรศัพท์',
                       (v) =>
                         /^\d{10}$/.test(v) || 'กรุณากรอกเบอร์โทรศัพท์ 10 หลัก',
-                    ]"
-                    required
-                  ></v-text-field>
+                    ]" required></v-text-field>
                 </v-col>
 
                 <!-- <v-col cols="6">
@@ -87,36 +53,20 @@
                 </v-col> -->
 
                 <v-col cols="12">
-                  <v-text-field
-                    v-model="form.password"
-                    label="รหัสผ่าน"
+                  <v-text-field v-model="form.password" label="รหัสผ่าน"
                     :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                    :type="showPassword ? 'text' : 'password'"
-                    prepend-inner-icon="mdi-lock-outline"
-                    variant="outlined"
-                    color="#BA984C"
-                    @click:append-inner="showPassword = !showPassword"
-                    :rules="[
+                    :type="showPassword ? 'text' : 'password'" prepend-inner-icon="mdi-lock-outline" variant="outlined"
+                    color="#BA984C" @click:append-inner="showPassword = !showPassword" :rules="[
                       (v) => !!v || 'กรุณากรอก รหัสผ่าน',
                       (v) =>
                         v.length >= 6 || 'กรุณากรอก รหัสผ่าน 6 ตัวอักษรขึ้นไป',
-                    ]"
-                    required
-                    class="mb-4"
-                  ></v-text-field>
+                    ]" required class="mb-4"></v-text-field>
                 </v-col>
               </v-row>
-              <v-btn class="rounded-xl" type="submit" color="#BA984C" s block
-                >สมัครสมาชิก</v-btn
-              >
+              <v-btn class="rounded-xl" type="submit" color="#BA984C" s block>สมัครสมาชิก</v-btn>
               <div class="text-center justify-center pt-5 flex text-base">
                 <p>
-                  <a
-                    class="px-2 hover:underline"
-                    style="color: #ba984c"
-                    href="/login"
-                    >เข้าสู่ระบบ</a
-                  >
+                  <a class="px-2 hover:underline" style="color: #ba984c" href="/login">เข้าสู่ระบบ</a>
                 </p>
                 <p class="text-gray-500">หากท่านสมัครสมาชิกไว้แล้ว</p>
               </div>
@@ -152,7 +102,9 @@ export default {
       const { valid } = await this.$refs.form.validate();
       if (valid) {
         try {
-          const createDate = new Date().toISOString(); // Create date in ISO format
+          const formatter = new Intl.DateTimeFormat('en-GB', options);
+          const parts = formatter.formatToParts(new Date());
+          const createDate = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}T${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}:${parts.find(p => p.type === 'second').value}.000Z`;
           const response = await axios.post("http://localhost:7770/register", {
             email: this.form.email.trim(),
             password: this.form.password.trim(),
