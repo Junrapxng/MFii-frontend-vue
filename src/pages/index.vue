@@ -5,9 +5,10 @@
       <!-- Carousel Slide -->
       <v-container class="flex">
         <v-container luid style="width: 90%">
-          <Carousel v-for="(img, index) in images"  :key="index"  class="carousel" :autoplay="4000" :wrap-around="true">
+          <Carousel v-for="(img, index) in images" :key="index" class="carousel" :autoplay="4000" :wrap-around="true">
             <Slide v-for="(path, index) in img.filePath" :key="index">
-              <v-img class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`http://localhost:7770/${path}`" cover>   
+              <v-img class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`http://localhost:7770/${path}`"
+                cover>
                 <template v-slot:placeholder>
                   <div v-if="images" class="d-flex align-center justify-center fill-height">
                     <v-progress-circular color="pink" indeterminate></v-progress-circular>
@@ -52,7 +53,7 @@
         <v-container class="flex justify-center items-center bg-gray-100 rounded">
           <v-row v-if="paginatedItems" class="flex flex-wrap justify-center">
             <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
-              <router-link  :to="{ name: 'Innovation', params: { id: item._id } }">
+              <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="hover:shadow-lg transition-shadow rounded-xl" style="max-width: 400px">
                   <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
                     <template v-slot:placeholder>
@@ -69,12 +70,12 @@
                   }}</v-card-subtitle>
                   <v-card-actions>
                     <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
-                        ? 'purple'
-                        : item.techReadiness === 'ระดับต้นแบบ'
-                          ? 'blue'
-                          : item.techReadiness === 'ระดับถ่ายทอด'
-                            ? 'orange'
-                            : 'default'
+                      ? 'purple'
+                      : item.techReadiness === 'ระดับต้นแบบ'
+                        ? 'blue'
+                        : item.techReadiness === 'ระดับถ่ายทอด'
+                          ? 'orange'
+                          : 'default'
                       " class="text-xs">
                       {{ item.techReadiness }}
                     </v-chip>
@@ -83,9 +84,9 @@
               </router-link>
             </v-col>
             <h1 v-if="loading">Loading...</h1>
-           <div v-if="!loading">
-            <h1 v-if="paginatedItems.length <= 0">No data available</h1>
-           </div>
+            <div v-if="!loading">
+              <h1 v-if="paginatedItems.length <= 0">No data available</h1>
+            </div>
           </v-row>
         </v-container>
         <!-- Pagination -->
@@ -132,6 +133,7 @@ export default defineComponent({
     };
   },
   async created() {
+    // Fetch api research and News(Banner) =======================================================================================
     try {
       const [api1Response, api2Response] = await Promise.all([
         axios.get("http://localhost:7770/getsResearch/all/all/all"),
@@ -144,7 +146,7 @@ export default defineComponent({
         if (activeData.length > 0) {
           this.info = activeData;
           this.images = api2Response.data.result;
-          console.log("images is " +this.images.result)
+          console.log("images is " + this.images.result)
         } else {
           console.log("No active data found");
         }
@@ -164,9 +166,10 @@ export default defineComponent({
     } finally {
       this.loading = false;
     }
+    // ==============================================================================================================================
   },
   computed: {
-    
+
     // คำนวณจำนวนหน้าทั้งหมด
     totalPages() {
       return Math.ceil(this.filteredItems.length / this.itemsPerPage);
@@ -202,13 +205,6 @@ export default defineComponent({
     Slide,
     Navigation,
   },
-
-  // Remove the duplicate data declaration here
-  // settings and breakpoints can go outside of data
-  // settings: {
-  //     itemsToShow: 1,
-  //     snapAlign: 'center',
-  // },
   breakpoints: {
     // 700px and up
     700: {
