@@ -28,7 +28,7 @@
                     v-model="currentResearch.nameOnMedia"></v-text-field>
                   <v-combobox v-model="currentResearch.inventor" label="ผู้คิดค้น" chips multiple></v-combobox>
                   <v-text-field label="สำนัก" variant="solo-filled" v-model="currentResearch.major"></v-text-field>
-                  
+
                   <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.intelProp"
                     :items="[
                       'สิทธิบัตรการประดิษฐ์',
@@ -55,22 +55,21 @@
                       'การบินและระบบขนส่ง',
                       'ยานยนต์สมัยใหม่',
                     ]"></v-autocomplete>
-                    <v-autocomplete variant="solo-filled" flat label="ระดับ" v-model="currentResearch.techReadiness"
+                  <v-autocomplete variant="solo-filled" flat label="ความพร้อมของเทคโนโลยี" v-model="currentResearch.techReadiness"
                     :items="[
                       'ระดับการทดลอง',
                       'ระดับต้นแบบ',
                       'ระดับถ่ายทอด',
                     ]"></v-autocomplete>
 
-                  <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.descripton"></v-textarea>
+                  <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.description"></v-textarea>
                   <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.hilight"></v-textarea>
-                  <v-combobox v-model="currentResearch.coop" label="การร่วมมือ" chips multiple></v-combobox>
+                  <v-combobox v-model="currentResearch.coop" label="ความร่วมมือที่เสาะหา" chips multiple></v-combobox>
                   <v-text-field label="IP" variant="solo-filled" v-model="currentResearch.ipType"></v-text-field>
-                  <v-autocomplete variant="solo-filled" flat label="สถานะ" v-model="currentResearch.status"
-                    :items="[
-                      'active',
-                      'inactive',
-                    ]"></v-autocomplete>
+                  <v-autocomplete variant="solo-filled" flat label="สถานะ" v-model="currentResearch.status" :items="[
+                    'active',
+                    'inactive',
+                  ]"></v-autocomplete>
 
                   <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled" @change="uploadImage"
                     alt="IMG"></v-file-input>
@@ -125,20 +124,20 @@ export default {
       ],
       researches: [],
       currentResearch: {
+        budgetYear: '2566',
         nameOnMedia: '',
         inventor: [],
         major: '',
-        descripton: '',
+        description: '',
         intelProp: '',
         industryType: '',
         filePath: [],
         hilight: '',
         techReadiness: '',
-        coop: '',
+        coop: [],
         link: '',
         status: '',
         ipType: '',
-        visible: true
       }
     }
   },
@@ -177,24 +176,24 @@ export default {
     },
     resetCurrentResearch() {
       this.currentResearch = {
+        budgetYear: '',
         nameOnMedia: '',
         inventor: [],
         major: '',
-        descripton: '',
+        description: '',
         intelProp: '',
         industryType: '',
         filePath: [],
         hilight: '',
         techReadiness: '',
-        coop: '',
+        coop: [],
         link: '',
         status: '',
         ipType: '',
-        visible: true
       };
     },
 
-//  Add and Edit Research ===============================================================================
+    //  Add and Edit Research ===============================================================================
     async saveResearch() {
       try {
         if (this.isEdit) {
@@ -209,14 +208,36 @@ export default {
           this.snackbar.color = "success"; // Set success color
           this.snackbar.show = true;
         } else {
-          await axios.post('/api/researches', this.currentResearch);
+          await axios.post('http://localhost:7770/staff/addResearch', {
+            budgetYear: 2566,
+            nameOnMedia: this.currentResearch.nameOnMedia,
+            inventor: this.currentResearch.inventor,
+            major: this.currentResearch.major,
+            description: this.currentResearch.description,
+            intelProp: this.currentResearch.intelProp,
+            industryType: this.currentResearch.industryType,
+            filePath: [],
+            hilight: this.currentResearch.hilight,
+            techReadiness: this.currentResearch.techReadiness,
+            coop: this.currentResearch.coop,
+            link: this.currentResearch.link,
+            status: this.currentResearch.status,
+            ipType: this.currentResearch.ipType,
+          }, {
+            headers: {
+              Authorization: localStorage.getItem('token'),
+              'Content-Type': 'multipart/form-data'
+            },
+          });
         }
+        this.snackbar.message = "Added research successfully";
+        this.snackbar.color = "success"; // Set success color
+        this.snackbar.show = true;
         this.fetchResearches();
       } catch (error) {
-
         console.error(error);
         this.snackbar.message =
-          "Error Edit research user(ข้อมูลยังไม่แก้ไข โปรดลองอีกครั้ง): " +
+          "Error Edit/Add research user(ข้อมูลยังไม่แก้ไข โปรดลองอีกครั้ง): " +
           error.message;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
@@ -224,9 +245,9 @@ export default {
       this.dialog = false;
       this.resetCurrentResearch();
     },
-// =====================================================================================================
+    // =====================================================================================================
 
-// Delete Research =====================================================================================================
+    // Delete Research =====================================================================================================
     async deleteResearch(item) {
       try {
         await axios.delete(`http://localhost:7770/staff/deleteResearch/research/${item._id}`, {
@@ -239,9 +260,9 @@ export default {
         console.error(error);
       }
     },
-// =====================================================================================================
-   
-async uploadImage(event) {
+    // =====================================================================================================
+
+    async uploadImage(event) {
       const file = event.target.files[0];
       if (file) {
         const formData = new FormData();
@@ -261,7 +282,7 @@ async uploadImage(event) {
 
 
 
-      // get research data funnctions
+    // get research data funnctions
     async fetchResearches() {
       try {
         const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');

@@ -83,7 +83,8 @@
 
         <!-- Cards Section -->
         <v-container>
-          <v-row>
+        <div v-if="loading">Loading....</div>
+          <v-row v-else>
             <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
               <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="hover:shadow-lg transition-shadow rounded-xl">
