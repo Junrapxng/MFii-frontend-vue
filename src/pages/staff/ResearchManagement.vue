@@ -19,13 +19,27 @@
               <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
             </v-card-text>
           </v-card>
-          <v-dialog v-model="dialog" max-width="800px">
+          <v-dialog v-model="dialog" max-width="1050px">
             <v-card class="rounded-xl">
               <v-card-title>{{ isEdit ? 'แก้ไขผลงานวิจัย' : 'สร้างผลงานวิจัย' }}</v-card-title>
               <v-card-text>
                 <v-form>
                   <v-text-field label="ชื่อผลงาน" variant="solo-filled"
                     v-model="currentResearch.nameOnMedia"></v-text-field>
+                  <v-combobox v-model="currentResearch.inventor" label="ผู้คิดค้น" chips multiple></v-combobox>
+                  <v-text-field label="สำนัก" variant="solo-filled" v-model="currentResearch.major"></v-text-field>
+                  
+                  <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.intelProp"
+                    :items="[
+                      'สิทธิบัตรการประดิษฐ์',
+                      'อนุสิทธิบัตร',
+                      'สิทธิบัตรออกแบบ',
+                      'ลิขสิทธิ์',
+                      'ลิขสิทธิ์-โปรแกรมคอมพิวเตอร์',
+                      'ผลงานวิจัย',
+                      'ต้นแบบ',
+                      'อื่น ๆ',
+                    ]"></v-autocomplete>
                   <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.industryType"
                     :items="[
                       'เครื่องสำอาง',
@@ -41,9 +55,23 @@
                       'การบินและระบบขนส่ง',
                       'ยานยนต์สมัยใหม่',
                     ]"></v-autocomplete>
+                    <v-autocomplete variant="solo-filled" flat label="ระดับ" v-model="currentResearch.techReadiness"
+                    :items="[
+                      'ระดับการทดลอง',
+                      'ระดับต้นแบบ',
+                      'ระดับถ่ายทอด',
+                    ]"></v-autocomplete>
+
                   <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.descripton"></v-textarea>
                   <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.hilight"></v-textarea>
-                  <v-combobox v-model="currentResearch.inventor" label="ผู้คิดค้น" chips multiple></v-combobox>
+                  <v-combobox v-model="currentResearch.coop" label="การร่วมมือ" chips multiple></v-combobox>
+                  <v-text-field label="IP" variant="solo-filled" v-model="currentResearch.ipType"></v-text-field>
+                  <v-autocomplete variant="solo-filled" flat label="สถานะ" v-model="currentResearch.status"
+                    :items="[
+                      'active',
+                      'inactive',
+                    ]"></v-autocomplete>
+
                   <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled" @change="uploadImage"
                     alt="IMG"></v-file-input>
 
@@ -61,7 +89,6 @@
       <div class="text-center">
         <v-snackbar v-model="snackbar.show" :color="snackbar.color">
           <p>{{ snackbar.message }}</p>
-
           <template v-slot:actions>
             <v-btn color="white" variant="text" @click="snackbar.show = false">
               Close
