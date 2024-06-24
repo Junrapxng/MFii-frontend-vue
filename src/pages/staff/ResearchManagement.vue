@@ -55,8 +55,8 @@
                       'การบินและระบบขนส่ง',
                       'ยานยนต์สมัยใหม่',
                     ]"></v-autocomplete>
-                  <v-autocomplete variant="solo-filled" flat label="ความพร้อมของเทคโนโลยี" v-model="currentResearch.techReadiness"
-                    :items="[
+                  <v-autocomplete variant="solo-filled" flat label="ความพร้อมของเทคโนโลยี"
+                    v-model="currentResearch.techReadiness" :items="[
                       'ระดับการทดลอง',
                       'ระดับต้นแบบ',
                       'ระดับถ่ายทอด',
@@ -71,9 +71,9 @@
                     'inactive',
                   ]"></v-autocomplete>
 
-                  <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled" @change="uploadImage"
-                    alt="IMG"></v-file-input>
-
+                  <v-file-input label="Upload Images" multiple @change="handleFileUpload" accept="image/*"
+                    prepend-icon="mdi-camera"></v-file-input>
+                  <!-- <input type="file" @change="handleFileUpload"> -->
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -131,7 +131,7 @@ export default {
         description: '',
         intelProp: '',
         industryType: '',
-        filePath: [],
+        filePath: null,
         hilight: '',
         techReadiness: '',
         coop: [],
@@ -168,12 +168,7 @@ export default {
       item.visible = !item.visible;
       // Logic to update visibility
     },
-    uploadImage(event) {
-      const file = event.target.files[0];
-      if (file) {
-        // Logic to upload image
-      }
-    },
+ 
     resetCurrentResearch() {
       this.currentResearch = {
         budgetYear: '',
@@ -183,7 +178,7 @@ export default {
         description: '',
         intelProp: '',
         industryType: '',
-        filePath: [],
+        filePath: null,
         hilight: '',
         techReadiness: '',
         coop: [],
@@ -196,55 +191,82 @@ export default {
     //  Add and Edit Research ===============================================================================
     async saveResearch() {
       try {
+        const formData = new FormData();
+        formData.append('budgetYear', 2566);
+        formData.append('nameOnMedia', this.currentResearch.nameOnMedia);
+        formData.append('inventor', this.currentResearch.inventor);
+        formData.append('major', this.currentResearch.major);
+        formData.append('description', this.currentResearch.description);
+        formData.append('intelProp', this.currentResearch.intelProp);
+        formData.append('industryType', this.currentResearch.industryType);
+        formData.append('hilight', this.currentResearch.hilight);
+        formData.append('techReadiness', this.currentResearch.techReadiness);
+        formData.append('coop', this.currentResearch.coop);
+        formData.append('link', this.currentResearch.link);
+        formData.append('status', this.currentResearch.status);
+        formData.append('ipType', this.currentResearch.ipType);
+
+        if (this.currentResearch.filePaths.length) {
+          this.currentResearch.filePaths.forEach((file, index) => {
+            formData.append(`file${index + 1}`, file);
+          });
+        }
+
         if (this.isEdit) {
-          await axios.patch(`http://localhost:7770/staff/updateResearchData/${this.currentResearch._id}`,
-            this.currentResearch
-            , {
-              headers: {
-                Authorization: localStorage.getItem('token'),
-              },
-            });
-          this.snackbar.message = "Edit research successfully";
-          this.snackbar.color = "success"; // Set success color
-          this.snackbar.show = true;
-        } else {
-          await axios.post('http://localhost:7770/staff/addResearch', {
-            budgetYear: 2566,
-            nameOnMedia: this.currentResearch.nameOnMedia,
-            inventor: this.currentResearch.inventor,
-            major: this.currentResearch.major,
-            description: this.currentResearch.description,
-            intelProp: this.currentResearch.intelProp,
-            industryType: this.currentResearch.industryType,
-            filePath: [],
-            hilight: this.currentResearch.hilight,
-            techReadiness: this.currentResearch.techReadiness,
-            coop: this.currentResearch.coop,
-            link: this.currentResearch.link,
-            status: this.currentResearch.status,
-            ipType: this.currentResearch.ipType,
-          }, {
+          await axios.patch(`http://localhost:7770/staff/updateResearchData/${this.currentResearch._id}`, formData, {
             headers: {
               Authorization: localStorage.getItem('token'),
               'Content-Type': 'multipart/form-data'
             },
           });
+          this.snackbar.message = "Edit research successfully";
+          this.snackbar.color = "success";
+        } else {
+          await axios.post('http://localhost:7770/staff/addResearch', formData, {
+            headers: {
+              Authorization: localStorage.getItem('token'),
+              'Content-Type': 'multipart/form-data'
+            },
+          });
+          this.snackbar.message = "Added research successfully";
+          this.snackbar.color = "success";
         }
-        this.snackbar.message = "Added research successfully";
-        this.snackbar.color = "success"; // Set success color
+
         this.snackbar.show = true;
         this.fetchResearches();
       } catch (error) {
         console.error(error);
-        this.snackbar.message =
-          "Error Edit/Add research user(ข้อมูลยังไม่แก้ไข โปรดลองอีกครั้ง): " +
-          error.message;
-        this.snackbar.color = "error"; // Set error color
+        this.snackbar.message = "Error Edit/Add research user(ข้อมูลยังไม่แก้ไข โปรดลองอีกครั้ง): " + error.message;
+        this.snackbar.color = "error";
         this.snackbar.show = true;
       }
       this.dialog = false;
       this.resetCurrentResearch();
     },
+    handleFileUpload(event) {
+      this.currentResearch.filePaths = Array.from(event.target.files);
+    },
+    resetCurrentResearch() {
+      this.currentResearch = {
+        nameOnMedia: '',
+        inventor: [],
+        major: '',
+        description: '',
+        intelProp: '',
+        industryType: '',
+        filePaths: [],
+        hilight: '',
+        techReadiness: '',
+        coop: [],
+        link: '',
+        status: '',
+        ipType: ''
+      };
+    },
+    fetchResearches() {
+      // Fetch researches logic
+    },
+
     // =====================================================================================================
 
     // Delete Research =====================================================================================================
