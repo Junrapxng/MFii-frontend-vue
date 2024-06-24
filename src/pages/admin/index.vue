@@ -92,7 +92,6 @@ export default {
   async  fetchResearch(){
       try {
         const res = await axios.get('http://localhost:7770/getsResearch/all/all/all')
-
         this.research = res.data.result
         console.log(this.research);
       } catch (error) {

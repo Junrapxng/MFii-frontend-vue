@@ -77,7 +77,9 @@
                   <router-link v-if="userStore.user.resutl.role === 'admin'" to="/admin">
                   <v-btn >Admin Page</v-btn>
                   </router-link>
-            
+                  <router-link v-if="userStore.user.resutl.role === 'user'" to="/profile">
+                  <v-btn >Edit Profile</v-btn>
+                  </router-link>
                   <v-btn @click="logoutBtn">Logout</v-btn>
              
                 </v-col>

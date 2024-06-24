@@ -13,7 +13,7 @@
               <v-card-text>
                 <v-form @submit.prevent="saveProfile" ref="form">
                   <v-row>
-                    <v-col cols="12" class="text-center">
+                    <!-- <v-col cols="12" class="text-center">
                       <v-avatar size="128" class="profile-avatar" @click="triggerFileInput">
                         <v-img :src="profile.picture || defaultPicture"></v-img>
                       </v-avatar>
@@ -24,36 +24,24 @@
                         @change="onFileChange"
                         style="display: none;"
                       />
+                    </v-col> -->
+                    <v-col cols="12">
+                      <v-text-field v-model="user.firstName" label="First Name" prepend-inner-icon="mdi-account"
+                        :rules="[rules.required]" required></v-text-field>
+                      <v-text-field v-model="user.lastName" label="Last Name" prepend-inner-icon="mdi-account"
+                        :rules="[rules.required]" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <v-text-field
-                        v-model="profile.name"
-                        label="Name"
-                        prepend-inner-icon="mdi-account"
-                        :rules="[rules.required]"
-                        required
-                      ></v-text-field>
+                      <v-text-field v-model="user.email" label="Email" prepend-inner-icon="mdi-email"
+                        :rules="[rules.required, rules.email]" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <v-text-field
-                        v-model="profile.email"
-                        label="Email"
-                        prepend-inner-icon="mdi-email"
-                        :rules="[rules.required, rules.email]"
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        v-model="profile.phone"
-                        label="Phone"
-                        prepend-inner-icon="mdi-phone"
-                        :rules="[rules.required, rules.phone]"
-                      ></v-text-field>
+                      <v-text-field v-model="user.phoneNumber" label="Phone" prepend-inner-icon="mdi-phone"
+                        :rules="[rules.required, rules.phone]"></v-text-field>
                     </v-col>
                     <v-col cols="12" class="text-center">
                       <v-btn type="submit" color="primary" class="mr-2">Save</v-btn>
-                      <v-btn type="button" color="grey" @click="resetForm">Cancel</v-btn>
+                      <!-- <v-btn type="button" color="grey" @click="resetForm">Cancel</v-btn> -->
                     </v-col>
                   </v-row>
                 </v-form>
@@ -62,16 +50,36 @@
           </v-col>
         </v-row>
       </v-container>
+
+      <div class="text-center">
+        <v-snackbar v-model="snackbar.show" :color="snackbar.color">
+          <p>{{ snackbar.message }}</p>
+          <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar.show = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </div>
+
     </main>
     <Footer></Footer>
   </v-app>
 </template>
 
 <script>
+import { useUserStore } from '@/store/user';
+import axios from 'axios';
 export default {
   name: 'user-profile-page',
   data() {
     return {
+      snackbar: {
+        show: false,
+        message: "",
+        color: "success", // Default color
+      },
+      user: [],
       profile: {
         name: '',
         email: '',
@@ -87,9 +95,29 @@ export default {
     }
   },
   methods: {
-    saveProfile() {
-      // Handle save profile logic
-      console.log('Profile saved:', this.profile)
+    async saveProfile() {
+      try {
+        await axios.patch('http://localhost:7770/user/updatePatch', this.user, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        console.log('Profile saved:', this.user)
+        this.snackbar.message = "User Edited successfully";
+        this.snackbar.color = "success"; // Set success color
+        this.snackbar.show = true;
+        setTimeout(function () {
+          window.location.reload();
+        }, 1000);
+      } catch (error) {
+        console.log("Error", error);
+        alert("Error" + error)
+        this.snackbar.message =
+          "Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " +
+          error.message;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+      }
     },
     onFileChange(e) {
       const file = e.target.files[0];
@@ -104,17 +132,26 @@ export default {
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
-    resetForm() {
-      // Reset the form fields to their initial values
-      this.profile = {
-        name: '',
-        email: '',
-        phone: '',
-        picture: ''
-      };
-      this.$refs.form.reset();
-    }
+    // resetForm() {
+    //   // Reset the form fields to their initial values
+    //   this.profile = {
+    //     name: '',
+    //     email: '',
+    //     phone: '',
+    //     picture: ''
+    //   };
+    //   this.$refs.form.reset();
+    // },
+    async getUser() {
+      const userStore = useUserStore();
+      this.user = userStore.user.resutl
+      console.log(this.user);
+    },
+  },
+  created() {
+    this.getUser();
   }
+
 }
 </script>
 
@@ -134,6 +171,6 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
- 
+
 }
 </style>
