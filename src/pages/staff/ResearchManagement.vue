@@ -40,9 +40,9 @@
                     'การบินและระบบขนส่ง',
                     'ยานยนต์สมัยใหม่',
                   ]"></v-autocomplete>
+                  <v-combobox v-model="currentResearch.inventor" variant="solo-filled" label="ผู้คิดค้น" chips multiple></v-combobox>
                   <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.descripton"></v-textarea>
                   <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.hilight"></v-textarea>
-                  <v-combobox v-model="currentResearch.inventor" label="ผู้คิดค้น" chips multiple></v-combobox>
                   <v-file-input label="อัปโหลดรูปภาพ" variant="solo-filled" @change="uploadImage"
                     alt="IMG"></v-file-input>
 
@@ -150,7 +150,6 @@ export default {
       };
     },
 
-
     async saveResearch() {
       try {
         if (this.isEdit) {
@@ -205,7 +204,7 @@ export default {
     } catch (error) {
       console.error(error);
       alert(error)
-    };
+    }
 
     const inventors = this.researches.result.inventor
     for (const inventor of inventors) {
