@@ -6,7 +6,7 @@
           <v-card class="rounded-xl pa-4">
             <v-card-title>สร้างโพสข่าวสาร</v-card-title>
             <v-card-text>
-              <v-form @submit.prevent="uploadNews">
+              <v-form @submit.prevent="addNews">
                 <v-text-field
                   v-model="news.url"
                   label="URL"
@@ -90,7 +90,7 @@ export default {
     };
   },
   methods: {
-    async uploadNews() {
+    async addNews() {
       console.log('uploadNews method called.');
       try {
         const formData = new FormData();
@@ -98,10 +98,10 @@ export default {
         this.news.images.forEach((image, index) => {
           formData.append(`images[${index}]`, image);
         });
-
-        const response = await axios.post('http://localhost:7770/addNews/uploads/image', formData, {
+        const response = await axios.post('http://localhost:7770/staff/addNews', formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
+            Authorization: localStorage.getItem("token"),
           }
         });
 
@@ -133,7 +133,11 @@ export default {
     },
     async deleteImage() {
       try {
-        const response = await axios.delete(`http://localhost:7770/deleteNews/${this.deleteImgId}`);
+        const response = await axios.delete(`http://localhost:7770/staff/deleteNews/${this.deleteImgId}`, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          }
+        });
         console.log(response.data);
         // Remove the deleted image from imgs array to update UI
         this.imgs[this.deleteIndex].filePath.splice(this.deleteIndex, 1);
