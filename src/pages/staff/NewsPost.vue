@@ -6,7 +6,7 @@
           <v-card class="rounded-xl pa-4">
             <v-card-title>สร้างโพสข่าวสาร</v-card-title>
             <v-card-text>
-              <v-form>
+              <v-form @submit.prevent="uploadNews">
                 <v-text-field
                   v-model="news.url"
                   label="URL"
@@ -22,7 +22,7 @@
                   show-size
                   variant="solo-filled"
                 ></v-file-input>
-                <v-btn @click="uploadImage" class="bg-slate-800 text-white">บันทึก</v-btn>
+                <v-btn type="submit" class="bg-slate-800 text-white">บันทึก</v-btn>
               </v-form>
             </v-card-text>
           </v-card>
@@ -90,8 +90,8 @@ export default {
     };
   },
   methods: {
-    async uploadImage() {
-      console.log('uploadImage method called.');
+    async uploadNews() {
+      console.log('uploadNews method called.');
       try {
         const formData = new FormData();
         formData.append('url', this.news.url);
@@ -99,17 +99,18 @@ export default {
           formData.append(`images[${index}]`, image);
         });
 
-        const response = await axios.post('http://localhost:7770/addNews', formData, {
+        const response = await axios.post('http://localhost:7770/addNews/uploads/image', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
         });
 
         console.log(response.data);
-        alert('Images uploaded successfully!');
+        alert('News and images uploaded successfully!');
+        this.fetchImg(); // Reload images after upload
       } catch (error) {
         console.error(error);
-        alert('Failed to upload images.');
+        alert('Failed to upload news and images.');
       }
     },
     async fetchImg() {
