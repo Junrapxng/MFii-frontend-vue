@@ -319,10 +319,12 @@ export default {
 
   },
   
-  computed() {
-    if (this.dialog === false) {
-        this.markedForDeletion = null;
+  watch: {
+  dialog(newValue) {
+    if (!newValue) {
+      this.markedForDeletion = [];
     }
+  }
 },
   // get research data when loaded website
   async created() {
