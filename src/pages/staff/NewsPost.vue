@@ -6,7 +6,7 @@
           <v-card class="rounded-xl pa-4">
             <v-card-title>สร้างโพสข่าวสาร</v-card-title>
             <v-card-text>
-              <v-form @submit.prevent="updateNews">
+              <v-form @submit.prevent="addNews">
                 <v-text-field
                   v-model="news.url"
                   label="URL"
@@ -18,7 +18,6 @@
                   v-model="news.images"
                   label="Upload Images"
                   chips
-                  multiple
                   show-size
                   variant="solo-filled"
                 ></v-file-input>
@@ -30,11 +29,11 @@
 
         <v-container>
           <v-window v-model="currentSlide" show-arrows="hover">
-            <v-window-item v-for="(img, i) in imgs" :key="i">
+            <v-window-item>
               <v-row>
-                <v-col v-for="(path, index) in img.filePath" :key="index" cols="12" md="4">
+                <v-col v-for="(img, index) in imgs" :key="index" cols="12" md="4">
                   <v-card class="hover:shadow-lg transition-shadow rounded-lg" style="max-width: 400px">
-                    <v-img :src="`http://localhost:7770/${path}`" height="150px" />
+                    <v-img :src="`http://localhost:7770/${img.filePath}`" height="150px" />
                     <!-- Centered delete button -->
                     <v-container class="d-flex justify-center">
                       <v-btn @click="confirmDelete(img._id, index)" color="error" icon>
@@ -147,6 +146,7 @@ export default {
         console.log('Error: ' + error);
       }
     },
+
     confirmDelete(imgId, index) {
       this.deleteIndex = index;
       this.deleteImgId = imgId;
