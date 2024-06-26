@@ -76,8 +76,10 @@
 
                   <v-container class="flex">
                     <v-img v-for="img in currentResearch.filePath" :src="`http://localhost:7770/${img}`"
-                      v-model="currentResearch.filePath"><v-btn @click="deleteFile(currentResearch._id, img)"
-                        prepend-icon="mdi-camera">DELETE</v-btn></v-img>
+                    <v-img v-for="(img, index) in currentResearch.filePath" :src="`http://localhost:7770/${img}`"
+                      v-model="currentResearch.filePath" width="100px" cover> 
+                      <v-btn v-if="isEdit" @click="markForDeletion(index)" :class="{'marked-for-deletion': markedForDeletion.includes(index)}" :icon="markedForDeletion.includes(index) ? 'mdi-check' : 'mdi-delete'"></v-btn>
+                      </v-img>
                   </v-container>
                   <!-- <input type="file" @change="handleFileUpload"> -->
                 </v-form>
@@ -115,6 +117,7 @@ export default {
   },
   data() {
     return {
+      markedForDeletion: [],
       dialog: false,
       isEdit: false,
       snackbar: {
@@ -160,18 +163,6 @@ export default {
       this.isEdit = true;
       this.dialog = true;
     },
-    saveResearch() {
-      if (this.isEdit) {
-        // Logic to update research
-      } else {
-        // Logic to create new research
-      }
-      this.dialog = false;
-      this.resetCurrentResearch();
-    },
-    deleteResearch(item) {
-      // Logic to delete research
-    },
     toggleVisibility(item) {
       item.visible = !item.visible;
       // Logic to update visibility
@@ -193,8 +184,9 @@ export default {
         status: '',
         ipType: '',
       };
+      this.markedForDeletion = [];
     },
-
+  
 
     //  Add and Edit Research ===============================================================================
     async saveResearch() {
@@ -240,6 +232,21 @@ export default {
               Authorization: localStorage.getItem('token'),
             },
           });
+          // selected Images delete
+          if (this.markedForDeletion.length > 0) {
+            const deleteRequests = this.markedForDeletion.map(index => {
+              const img = this.currentResearch.filePath[index];
+              return axios.patch(`http://localhost:7770/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
+                filePath: img
+              }, {
+                headers: {
+                  Authorization: localStorage.getItem('token'),
+                },
+              });
+            });
+            await Promise.all(deleteRequests);
+          }
+
           // Add file edit
           await axios.patch(`http://localhost:7770/staff/addFileResearch/${this.currentResearch._id}`, formData, {
             headers: {
@@ -259,7 +266,6 @@ export default {
           this.snackbar.message = "Added research successfully";
           this.snackbar.color = "success";
         }
-
         this.snackbar.show = true;
         this.fetchResearches();
       } catch (error) {
@@ -274,9 +280,6 @@ export default {
     handleFileUpload(event) {
       this.currentResearch.filePath = Array.from(event.target.files);
     },
-
-
-
     // =====================================================================================================
 
 
@@ -293,49 +296,16 @@ export default {
         console.error(error);
       }
     },
-    
-    async deleteFile(id, img) {
-      try {
-        await axios.patch('http://localhost:7770/staff/deleteFileResearch/research/' + id, {
-          "filePath": img
-        }, {
-          headers: {
-            Authorization: localStorage.getItem('token'),
-          },
-        })
-        const index = this.currentResearch.filePath.indexOf(img);
-        if (index > -1) {
-          this.currentResearch.filePath.splice(index, 1);
-        }
-        this.snackbar.message = "Image Deleted successfully";
-        this.snackbar.color = "success";
-        this.snackbar.show = true;
-      } catch (error) {
-        this.snackbar.message = "Error Edit/Add research user(ข้อมูลยังไม่แก้ไข โปรดลองอีกครั้ง): " + error.message;
-        this.snackbar.color = "error";
-        this.snackbar.show = true;
+       markForDeletion(index) {
+      if (!this.markedForDeletion.includes(index)) {
+        this.markedForDeletion.push(index);
+      } else {
+        const deletionIndex = this.markedForDeletion.indexOf(index);
+        this.markedForDeletion.splice(deletionIndex, 1);
       }
     },
 
     // =====================================================================================================
-
-    // async uploadImage(event) {
-    //   const file = event.target.files[0];
-    //   if (file) {
-    //     const formData = new FormData();
-    //     formData.append('image', file);
-    //     try {
-    //       const response = await axios.post('/api/upload', formData, {
-    //         headers: {
-    //           'Content-Type': 'multipart/form-data'
-    //         }
-    //       });
-    //       this.currentResearch.image = response.data.url;
-    //     } catch (error) {
-    //       console.error(error);
-    //     }
-    //   }
-    // },
     // get research data funnctions
     async fetchResearches() {
       try {
@@ -349,8 +319,12 @@ export default {
     }
 
   },
-
-
+  
+  computed() {
+    if (this.dialog === false) {
+        this.markedForDeletion = null;
+    }
+},
   // get research data when loaded website
   async created() {
     try {
@@ -361,8 +335,6 @@ export default {
       console.error(error);
       alert(error)
     }
-
-
   },
 
 
@@ -370,4 +342,8 @@ export default {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.marked-for-deletion {
+  border: 3px solid red;
+}
+</style>
