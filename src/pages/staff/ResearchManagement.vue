@@ -74,11 +74,11 @@
                   <v-file-input label="Upload Images" multiple @change="handleFileUpload" accept="image/*"
                     prepend-icon="mdi-camera"></v-file-input>
 
-                <v-container class="flex">
-                  <v-img v-for="img in currentResearch.filePath" :src="`http://localhost:7770/${img}`"
-                    v-model="currentResearch.filePath"><v-btn
-                      @click="deleteFile(currentResearch._id, img)"  prepend-icon="mdi-camera">DELETE</v-btn></v-img>
-                </v-container>
+                  <v-container class="flex">
+                    <v-img v-for="img in currentResearch.filePath" :src="`http://localhost:7770/${img}`"
+                      v-model="currentResearch.filePath"><v-btn @click="deleteFile(currentResearch._id, img)"
+                        prepend-icon="mdi-camera">DELETE</v-btn></v-img>
+                  </v-container>
                   <!-- <input type="file" @change="handleFileUpload"> -->
                 </v-form>
               </v-card-text>
@@ -274,9 +274,11 @@ export default {
     handleFileUpload(event) {
       this.currentResearch.filePath = Array.from(event.target.files);
     },
-   
+
+
 
     // =====================================================================================================
+
 
     // Delete Research =====================================================================================================
     async deleteResearch(item) {
@@ -291,40 +293,49 @@ export default {
         console.error(error);
       }
     },
+    
     async deleteFile(id, img) {
-      await axios.patch('http://localhost:7770/staff/deleteFileResearch/research/' + id, {
-        "filePath": img
-      }, {
-        headers: {
-          Authorization: localStorage.getItem('token'),
-        },
-      })
-      this.fetchResearches()
-      this.currentResearch
-      console.log(img);
-      console.log(id);
- 
+      try {
+        await axios.patch('http://localhost:7770/staff/deleteFileResearch/research/' + id, {
+          "filePath": img
+        }, {
+          headers: {
+            Authorization: localStorage.getItem('token'),
+          },
+        })
+        const index = this.currentResearch.filePath.indexOf(img);
+        if (index > -1) {
+          this.currentResearch.filePath.splice(index, 1);
+        }
+        this.snackbar.message = "Image Deleted successfully";
+        this.snackbar.color = "success";
+        this.snackbar.show = true;
+      } catch (error) {
+        this.snackbar.message = "Error Edit/Add research user(ข้อมูลยังไม่แก้ไข โปรดลองอีกครั้ง): " + error.message;
+        this.snackbar.color = "error";
+        this.snackbar.show = true;
+      }
     },
 
     // =====================================================================================================
 
-    async uploadImage(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const formData = new FormData();
-        formData.append('image', file);
-        try {
-          const response = await axios.post('/api/upload', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-          this.currentResearch.image = response.data.url;
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    },
+    // async uploadImage(event) {
+    //   const file = event.target.files[0];
+    //   if (file) {
+    //     const formData = new FormData();
+    //     formData.append('image', file);
+    //     try {
+    //       const response = await axios.post('/api/upload', formData, {
+    //         headers: {
+    //           'Content-Type': 'multipart/form-data'
+    //         }
+    //       });
+    //       this.currentResearch.image = response.data.url;
+    //     } catch (error) {
+    //       console.error(error);
+    //     }
+    //   }
+    // },
     // get research data funnctions
     async fetchResearches() {
       try {
@@ -338,7 +349,7 @@ export default {
     }
 
   },
- 
+
 
   // get research data when loaded website
   async created() {
@@ -354,7 +365,7 @@ export default {
 
   },
 
- 
+
 }
 
 </script>
