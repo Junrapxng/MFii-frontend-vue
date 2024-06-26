@@ -7,20 +7,10 @@
             <v-card-title>สร้างโพสข่าวสาร</v-card-title>
             <v-card-text>
               <v-form @submit.prevent="addNews">
-                <v-text-field
-                  v-model="news.url"
-                  label="URL"
-                  clearable
-                  prepend-icon="mdi-web"
-                  variant="solo-filled"
-                ></v-text-field>
-                <v-file-input
-                  v-model="news.images"
-                  label="Upload Images"
-                  chips
-                  show-size
-                  variant="solo-filled"
-                ></v-file-input>
+                <v-text-field v-model="news.url" label="URL" clearable prepend-icon="mdi-web"
+                  variant="solo-filled"></v-text-field>
+                <v-file-input v-model="news.images" label="Upload Images" chips show-size
+                  variant="solo-filled"></v-file-input>
                 <v-btn type="submit" class="bg-slate-800 text-white">บันทึก</v-btn>
               </v-form>
             </v-card-text>
@@ -94,19 +84,29 @@ export default {
       try {
         const formData = new FormData();
         formData.append('url', this.news.url);
+
+        // Append images only if they are not empty
         this.news.images.forEach((image, index) => {
-          formData.append(`images[${index}]`, image);
-        });
-        const response = await axios.post('http://localhost:7770/staff/addNews', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: localStorage.getItem("token"),
+          if (image.size > 0) { // Check if file is not empty
+            formData.append(`images[${index}]`, image);
           }
         });
 
-        console.log(response.data);
-        alert('News and images uploaded successfully!');
-        this.fetchImg(); // Reload images after upload
+        // Check if formData has any files before making the request
+        if (formData.has('images[0]')) {
+          const response = await axios.post('http://localhost:7770/staff/addNews', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: localStorage.getItem("token"),
+            }
+          });
+          console.log(response.data);
+          alert('News and images uploaded successfully!');
+          this.fetchImg(); // Reload images after upload
+          this.news.images = [];
+        } else {
+          alert('No images selected or all selected images are empty.');
+        }
       } catch (error) {
         console.error(error);
         alert('Failed to upload news and images.');
@@ -157,16 +157,15 @@ export default {
     },
     async deleteImage() {
       try {
-        const response = await axios.delete(`http://localhost:7770/staff/deleteNews/${this.deleteImgId}`, {
+        const response = await axios.delete(`http://localhost:7770/staff/deleteNews/news/${this.deleteImgId}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           }
         });
+        this.fetchImg();
         console.log(response.data);
-        // Remove the deleted image from imgs array to update UI
         this.imgs[this.deleteIndex].filePath.splice(this.deleteIndex, 1);
         this.dialog = false; // Close dialog
-        alert('Image deleted successfully!');
       } catch (error) {
         console.error('Error deleting image:', error);
         alert('Failed to delete image.');
@@ -176,7 +175,7 @@ export default {
   mounted() {
     console.log('Component mounted.');
     this.fetchImg(); // Call fetchImg when the component is mounted
-      // Assign _id from your fetched news data to this.news._id
+    // Assign _id from your fetched news data to this.news._id
     this.news._id = '667541a606c00cb40299b17a'; // Replace with actual fetched _id
   }
 };
