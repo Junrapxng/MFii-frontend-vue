@@ -73,6 +73,10 @@
 
                   <v-file-input label="Upload Images" multiple @change="handleFileUpload" accept="image/*"
                     prepend-icon="mdi-camera"></v-file-input>
+
+                  <v-img v-for="img in currentResearch.filePath" :src="`http://localhost:7770/${img}`"
+                    v-model="currentResearch.filePath"><v-btn
+                      @click="deleteFile(currentResearch._id, img)">DELETE</v-btn></v-img>
                   <!-- <input type="file" @change="handleFileUpload"> -->
                 </v-form>
               </v-card-text>
@@ -168,7 +172,7 @@ export default {
       item.visible = !item.visible;
       // Logic to update visibility
     },
- 
+
     resetCurrentResearch() {
       this.currentResearch = {
         budgetYear: '',
@@ -196,7 +200,7 @@ export default {
         formData.append('nameOnMedia', this.currentResearch.nameOnMedia);
         formData.append('inventor', this.currentResearch.inventor);
         formData.append('major', this.currentResearch.major);
-        formData.append('description', this.currentResearch.description);
+        formData.append('description', this.currentResearch.descripton);
         formData.append('intelProp', this.currentResearch.intelProp);
         formData.append('industryType', this.currentResearch.industryType);
         formData.append('hilight', this.currentResearch.hilight);
@@ -206,14 +210,35 @@ export default {
         formData.append('status', this.currentResearch.status);
         formData.append('ipType', this.currentResearch.ipType);
 
-        if (this.currentResearch.filePaths.length) {
-          this.currentResearch.filePaths.forEach((file, index) => {
+        if (this.currentResearch.filePath.length) {
+          this.currentResearch.filePath.forEach((file, index) => {
             formData.append(`file${index + 1}`, file);
           });
         }
-
+        // Edit
         if (this.isEdit) {
-          await axios.patch(`http://localhost:7770/staff/updateResearchData/${this.currentResearch._id}`, formData, {
+          await axios.patch(`http://localhost:7770/staff/updateResearchData/${this.currentResearch._id}`, {
+            budgetYear: '2566',
+            nameOnMedia: this.currentResearch.nameOnMedia,
+            inventor: this.currentResearch.inventor,
+            major: this.currentResearch.major,
+            description: this.currentResearch.description,
+            intelProp: this.currentResearch.intelProp,
+            industryType: this.currentResearch.industryType,
+            hilight: this.currentResearch.hilight,
+            techReadiness: this.currentResearch.techReadiness,
+            coop: this.currentResearch.coop,
+            link: this.currentResearch.link,
+            status: this.currentResearch.status,
+            ipType: this.currentResearch.ipType,
+          }, {
+            headers: {
+              Authorization: localStorage.getItem('token'),
+              'Content-Type': 'multipart/form-data'
+            },
+          });
+          // Add file edit
+          await axios.patch(`http://localhost:7770/staff/addFileResearch/${this.currentResearch._id}`, formData, {
             headers: {
               Authorization: localStorage.getItem('token'),
               'Content-Type': 'multipart/form-data'
@@ -244,7 +269,7 @@ export default {
       this.resetCurrentResearch();
     },
     handleFileUpload(event) {
-      this.currentResearch.filePaths = Array.from(event.target.files);
+      this.currentResearch.filePath = Array.from(event.target.files);
     },
     resetCurrentResearch() {
       this.currentResearch = {
@@ -254,7 +279,7 @@ export default {
         description: '',
         intelProp: '',
         industryType: '',
-        filePaths: [],
+        filePath: [],
         hilight: '',
         techReadiness: '',
         coop: [],
@@ -282,6 +307,19 @@ export default {
         console.error(error);
       }
     },
+    async deleteFile(id, img) {
+      await axios.patch('http://localhost:7770/staff/deleteFileResearch/research/' + id, {
+        "filePath": img
+      }, {
+        headers: {
+          Authorization: localStorage.getItem('token'),
+          'Content-Type': 'multipart/form-data'
+        },
+      });
+      console.log(img);
+      console.log(id);
+    },
+
     // =====================================================================================================
 
     async uploadImage(event) {
@@ -329,12 +367,6 @@ export default {
       console.error(error);
       alert(error)
     }
-
-    const inventors = this.researches.result.inventor
-    for (const inventor of inventors) {
-      console.log(inventor);
-    }
-
 
 
   }
