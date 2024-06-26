@@ -75,7 +75,6 @@
                     prepend-icon="mdi-camera"></v-file-input>
 
                   <v-container class="flex">
-                    <v-img v-for="img in currentResearch.filePath" :src="`http://localhost:7770/${img}`"
                     <v-img v-for="(img, index) in currentResearch.filePath" :src="`http://localhost:7770/${img}`"
                       v-model="currentResearch.filePath" width="100px" cover> 
                       <v-btn v-if="isEdit" @click="markForDeletion(index)" :class="{'marked-for-deletion': markedForDeletion.includes(index)}" :icon="markedForDeletion.includes(index) ? 'mdi-check' : 'mdi-delete'"></v-btn>
