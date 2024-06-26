@@ -74,9 +74,11 @@
                   <v-file-input label="Upload Images" multiple @change="handleFileUpload" accept="image/*"
                     prepend-icon="mdi-camera"></v-file-input>
 
+                <v-container class="flex">
                   <v-img v-for="img in currentResearch.filePath" :src="`http://localhost:7770/${img}`"
                     v-model="currentResearch.filePath"><v-btn
-                      @click="deleteFile(currentResearch._id, img)">DELETE</v-btn></v-img>
+                      @click="deleteFile(currentResearch._id, img)"  prepend-icon="mdi-camera">DELETE</v-btn></v-img>
+                </v-container>
                   <!-- <input type="file" @change="handleFileUpload"> -->
                 </v-form>
               </v-card-text>
@@ -142,9 +144,11 @@ export default {
         link: '',
         status: '',
         ipType: '',
-      }
+      },
     }
   },
+
+
   methods: {
     createResearch() {
       this.resetCurrentResearch();
@@ -172,7 +176,6 @@ export default {
       item.visible = !item.visible;
       // Logic to update visibility
     },
-
     resetCurrentResearch() {
       this.currentResearch = {
         budgetYear: '',
@@ -191,6 +194,7 @@ export default {
         ipType: '',
       };
     },
+
 
     //  Add and Edit Research ===============================================================================
     async saveResearch() {
@@ -234,7 +238,6 @@ export default {
           }, {
             headers: {
               Authorization: localStorage.getItem('token'),
-              'Content-Type': 'multipart/form-data'
             },
           });
           // Add file edit
@@ -271,26 +274,7 @@ export default {
     handleFileUpload(event) {
       this.currentResearch.filePath = Array.from(event.target.files);
     },
-    resetCurrentResearch() {
-      this.currentResearch = {
-        nameOnMedia: '',
-        inventor: [],
-        major: '',
-        description: '',
-        intelProp: '',
-        industryType: '',
-        filePath: [],
-        hilight: '',
-        techReadiness: '',
-        coop: [],
-        link: '',
-        status: '',
-        ipType: ''
-      };
-    },
-    fetchResearches() {
-      // Fetch researches logic
-    },
+   
 
     // =====================================================================================================
 
@@ -313,11 +297,13 @@ export default {
       }, {
         headers: {
           Authorization: localStorage.getItem('token'),
-          'Content-Type': 'multipart/form-data'
         },
-      });
+      })
+      this.fetchResearches()
+      this.currentResearch
       console.log(img);
       console.log(id);
+ 
     },
 
     // =====================================================================================================
@@ -339,9 +325,6 @@ export default {
         }
       }
     },
-
-
-
     // get research data funnctions
     async fetchResearches() {
       try {
@@ -355,7 +338,7 @@ export default {
     }
 
   },
-
+ 
 
   // get research data when loaded website
   async created() {
@@ -369,7 +352,9 @@ export default {
     }
 
 
-  }
+  },
+
+ 
 }
 
 </script>
