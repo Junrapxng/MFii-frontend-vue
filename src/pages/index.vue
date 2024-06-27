@@ -5,10 +5,10 @@
       <!-- Carousel Slide -->
       <v-container class="flex">
         <v-container luid style="width: 90%">
-          <Carousel v-for="(img, index) in images" :key="index" class="carousel" :autoplay="4000" :wrap-around="true">
-            <Slide v-for="(path, index) in img.filePath" :key="index">
-              <v-img class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`http://localhost:7770/${path}`"
-                cover>
+          <Carousel class="carousel" :autoplay="4000" :wrap-around="true">
+            <Slide v-for="(path, index) in images" :key="index">
+              <v-img class="carousel__item mx-auto" max-height="500" lazy-src=""
+                :src="`http://localhost:7770/${path.filePath}`" cover>
                 <template v-slot:placeholder>
                   <div v-if="images" class="d-flex align-center justify-center fill-height">
                     <v-progress-circular color="pink" indeterminate></v-progress-circular>
@@ -40,8 +40,6 @@
           </v-carousel-item>
         </v-carousel>
       </v-container>
-
-
       <!-- Content -->
       <v-container class="inputSearch">
         <p class="text-3xl font-semibold mb-3">ผลงานพร้อมถ่ายทอด</p>
@@ -79,6 +77,9 @@
                       " class="text-xs">
                       {{ item.techReadiness }}
                     </v-chip>
+                    <v-chip>
+                      {{ productCounts[item._id] || 0 }} views
+                    </v-chip>
                   </v-card-actions>
                 </v-card>
               </router-link>
@@ -99,7 +100,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, ref, onMounted } from "vue";
 import { Carousel, Navigation, Slide, Pagination } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
 import axios from "axios";
@@ -132,6 +133,41 @@ export default defineComponent({
       // Define info property here
     };
   },
+
+  // counter visitor ====================================================================
+  async setup() {
+    const globalVisitorCount = ref(0)
+    const sessionId = ref(localStorage.getItem('sessionId') || '')
+    const productCounts = ref({})
+
+    const generateSessionId = () => {
+      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
+
+    const fetchGlobalCount = async () => {
+      if (!sessionId.value) {
+        sessionId.value = generateSessionId()
+        localStorage.setItem('sessionId', sessionId.value)
+      }
+
+      try {
+        await axios.get(`http://localhost:7770/visitor-count`, {
+          params: { sessionId: sessionId.value }
+        })
+        const response = await axios.get('http://localhost:7770/all-product-counts')
+        productCounts.value = response.data.productCounts
+      } catch (error) {
+        console.error('Error fetching global visitor count:', error)
+        alert(error)
+      }
+    }
+    onMounted(fetchGlobalCount)
+    return {
+      productCounts,
+      globalVisitorCount
+    }
+  },
+
   async created() {
     // Fetch api research and News(Banner) =======================================================================================
     try {

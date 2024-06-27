@@ -87,6 +87,10 @@ export default {
     };
   },
 
+ async setup() {
+   
+  },
+
   methods: {
     async fetchData() {
       try {
@@ -101,6 +105,16 @@ export default {
         this.isLoading = false;
       }
     },
+    // counter visitor
+    async counter(){
+      try {
+      const response = await axios.get(
+        "http://localhost:7770/product-visits/" + this.id
+      );
+    } catch (error) {
+      console.error(error);
+    }
+    }
   },
   computed: {
     filteredFilePaths() {
@@ -117,6 +131,7 @@ export default {
     console.log(this.id)
     console.log(typeof (this.id))
     this.fetchData();
+    this.counter();
   },
 
 }
