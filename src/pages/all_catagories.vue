@@ -112,6 +112,7 @@
                       ">
                       {{ item.techReadiness }}
                     </v-chip>
+                    <ViewCounter :productId="item._id" />
                   </v-card-actions>
                 </v-card>
               </router-link>
