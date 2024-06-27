@@ -7,7 +7,7 @@
           <v-col>
             <v-card>
               <v-card-title>จำนวนผู้ใช้งานวันนี้</v-card-title>
-              <v-card-text>{{ productCounts }}</v-card-text>
+              <v-card-text>{{ counter }}</v-card-text>
             </v-card>
           </v-col>
           <v-col>
@@ -48,18 +48,18 @@ export default {
     }
   },
 async setup() {
-    const productCounts = ref({});
+    const counter = ref({});
 
   try {
     const res = await axios.get('http://localhost:7770/all-product-counts');
-    productCounts.value = res.data.globalCount;
-    console.log(productCounts);
+    counter.value = res.data.globalCount;
+    console.log(counter);
   } catch (error) {
     alert(error)
   }
 
   return{
-    productCounts
+    counter
   }
   },
       

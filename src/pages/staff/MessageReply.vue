@@ -9,8 +9,10 @@
               <v-list>
                 <v-list-item v-for="message in messages" :key="message.id" class="list-item-border my-2">
                   <v-list-item-content>
-                    <v-list-item-title>{{ message.title }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ message.content }}</v-list-item-subtitle>
+                    <v-list-item-title>{{ message.email }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ message.businessName }}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{ message.businessType }}</v-list-item-subtitle>
+                    <v-list-item-subtitle>{{ message.interestTech }}</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action class="my-2">
                     <v-btn @click="openReplyDialog(message)">ตอบกลับ</v-btn>
@@ -22,11 +24,11 @@
 
           <v-dialog v-model="isDialogOpen" max-width="800px">
             <v-card>
-              <v-card-title class="headline">{{ selectedMessage.title }}</v-card-title>
+              <v-card-title class="headline">{{ selectedMessage.email }}</v-card-title>
               <v-card-text>
                <div class="chatbox">
                 <v-list class="">
-                  <v-list-item v-for="reply in selectedMessage.replies" :key="reply.id"
+                  <v-list-item v-for="reply in selectedMessage.messageReply" :key="reply.id"
                     :class="reply.sentByCurrentUser ? 'd-flex justify-end ' : 'd-flex justify-start'">
 
                     <v-list-item-content>
@@ -62,6 +64,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import StaffLayout from "@/layouts/staff.vue";
 export default {
   name: "staff-MessageReply-page",
@@ -73,15 +76,23 @@ export default {
       isDialogOpen: false,
       selectedMessage: {},
       replyText: '',
-      messages: [
-        { id: 1, title: 'Message 1', content: 'Content of message 1', sender: 'Sender A', replies: [{sender:"Kim", text: "สวัสดีครับ"}] },
-        { id: 2, title: 'Message 2', content: 'Content of message 2', sender: 'Sender B', replies: [] },
-        // Add more messages as needed
-      ],
+      messages: [],
     };
   },
-  created() {
+ async created() {
     this.fetchMessages();
+
+    try {
+        const response = await axios.get('http://localhost:7770/mesGetData',{
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        });
+       console.log(response);
+       this.messages = response.data.result
+      } catch (error) {
+        console.error("Error fetching product counts:", error);
+      }
   },
   methods: {
     openReplyDialog(message) {
