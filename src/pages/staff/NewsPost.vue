@@ -112,30 +112,6 @@ export default {
         alert('Failed to upload news and images.');
       }
     },
-    async updateNews() {
-      console.log('uploadNews method called.');
-      console.log('ID = ' + this.news._id);
-      try {
-        const formData = new FormData();
-        formData.append('url', this.news.url);
-        this.news.images.forEach((image, index) => {
-          formData.append(`images[${index}]`, image);
-        });
-        const response = await axios.patch(`http://localhost:7770/staff/updateNews/${this.news._id}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: localStorage.getItem("token"),
-          }
-        });
-
-        console.log(response.data);
-        alert('News and images uploaded successfully!');
-        this.fetchImg(); // Reload images after upload
-      } catch (error) {
-        console.error(error);
-        alert('Failed to upload news and images.');
-      }
-    },
     async fetchImg() {
       console.log('fetchImg method called.');
       try {
@@ -175,8 +151,6 @@ export default {
   mounted() {
     console.log('Component mounted.');
     this.fetchImg(); // Call fetchImg when the component is mounted
-    // Assign _id from your fetched news data to this.news._id
-    this.news._id = '667541a606c00cb40299b17a'; // Replace with actual fetched _id
   }
 };
 </script>
