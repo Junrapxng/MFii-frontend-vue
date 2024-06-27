@@ -21,12 +21,6 @@
                 ></v-img>
               </a>
             </div>
-            <v-divider
-              :thickness="10"
-              vertical
-              color="#ff0000"
-              class="border-opacity-100 mx-4 my-2 d-none d-md-block"
-            ></v-divider>
             <!-- Title and subtitle column -->
             <div class="title text-center text-md-left">
               <h1 class="text-2xl md:text-3xl">
