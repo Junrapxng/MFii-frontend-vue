@@ -108,7 +108,7 @@ export default {
     // counter visitor
     async counter(){
       try {
-      const response = await axios.get(
+      await axios.get(
         "http://localhost:7770/product-visits/" + this.id
       );
     } catch (error) {
