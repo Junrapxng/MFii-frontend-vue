@@ -39,45 +39,101 @@
           lg="3"
           md="3"
           sm="3"
-          class="font-noto-sans-thai head-right flex justify-center items-center"
+          class="font-noto-sans-thai"
         >
-          <v-container class="p-0">
+          <v-container class="p-0 m-0">
+            <v-text-field
+                    v-model="search"
+                    density="comfortable"
+                    placeholder="Search"
+                    prepend-inner-icon="mdi-magnify"
+                    style="max-width: 270px"
+                    variant="solo"
+                    clearable
+                    @click:clear="clearSearch"
+                    hide-details
+                    rounded 
+                    class="py-3 btn-search"
+                  ></v-text-field>
             <!-- if user not loggedin -->
             <v-container
               v-if="userStore.error || userStore.loading"
-              class="btn-top p-0 flex justify-center"
+              class="p-0 m-0"
             >
               <v-btn
-                class="mr-4 bg-black text-white py-2 px-4 rounded-xl border w-32 h-14"
+                class="mr-2  bg-black text-white rounded-xl border w-32 h-14 btn-nav"
                 to="/register"
                 >สมัครสมาชิก</v-btn
               >
               <v-btn
-                class="py-2 px-4 text-black rounded-xl border border-black w-32 h-14"
+                class="ml-2 text-black rounded-xl border border-black w-32 h-14 btn-nav"
                 to="/login"
                 >เข้าสู่ระบบ</v-btn
               >
             </v-container>
+
             <!-- if user loggedin -->
             <v-container v-if="!userStore.loading && !userStore.error"
-              ><v-row>
-                <v-col cols="12">
-                  <h1>สวัสดี, คุณ {{ userStore.user.resutl.firstName }} {{ userStore.user.resutl.lastName }}</h1>
-                </v-col>
-                <v-col cols="12">
-                  <router-link  v-if="userStore.user.resutl.role === 'staff'" to="/staff">
-                  <v-btn>Staff Page</v-btn>
-                  </router-link>
-                  <router-link v-if="userStore.user.resutl.role === 'admin'" to="/admin">
-                  <v-btn >Admin Page</v-btn>
-                  </router-link>
-                  <router-link v-if="userStore.user.resutl.role === 'user'" to="/profile">
-                  <v-btn >Edit Profile</v-btn>
-                  </router-link>
-                  <v-btn @click="logoutBtn">Logout</v-btn>
-             
-                </v-col>
-              </v-row>
+            class="flex align-center justify-center p-0">
+                  <h1 class=" mx-4">
+                    สวัสดี, คุณ {{ userStore.user.resutl.firstName }}
+                    {{ userStore.user.resutl.lastName }}
+                  </h1>
+
+                  <v-menu transition="slide-x-transition">
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        v-bind="props"
+                        icon
+                        size="48px"
+                        class="hover:bg-gray-200"
+                      >
+                        <v-avatar size="48px">
+                          <v-icon
+                            v-if="!userStore.user.resutl.img"
+                            icon="mdi-account-circle"
+                            size="58px"
+                          ></v-icon>
+                          <v-img
+                            v-else
+                            alt="John"
+                            src="https://cdn.vuetifyjs.com/images/john.jpg"
+                            cover
+                          ></v-img>
+                        </v-avatar>
+                      </v-btn>
+                    </template>
+
+                    <v-list>
+                      <router-link
+                        v-if="userStore.user.resutl.role === 'staff'"
+                        to="/staff"
+                      >
+                        <v-list-item>
+                          <v-list-item-title>Staff Page</v-list-item-title>
+                        </v-list-item>
+                      </router-link>
+                      <router-link
+                        v-if="userStore.user.resutl.role === 'admin'"
+                        to="/admin"
+                      >
+                        <v-list-item>
+                          <v-list-item-title>Admin Page</v-list-item-title>
+                        </v-list-item>
+                      </router-link>
+                      <router-link
+                        v-if="userStore.user.resutl.role === 'user'"
+                        to="/profile"
+                      >
+                        <v-list-item>
+                          <v-list-item-title>Edit Profile</v-list-item-title>
+                        </v-list-item>
+                      </router-link>
+                      <v-list-item @click="logoutBtn">
+                        <v-list-item-title>Logout</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
             </v-container>
           </v-container>
         </v-col>
@@ -340,7 +396,7 @@ export default {
       });
     },
   },
-  // fetch User prom state management 
+  // fetch User prom state management
   setup() {
     const userStore = useUserStore();
     userStore.fetchUser();
@@ -363,6 +419,11 @@ export default {
   }
   .text-xl {
     font-size: 16px;
+  }
+  .btn-nav {
+    width: 95px; 
+    height: 40px; 
+    font-size: 12px;
   }
   .v-app-bar {
     margin-top: 15%;
@@ -387,19 +448,16 @@ export default {
     display: flex;
     margin-bottom: 10px;
   }
-  .btn-top {
+  /* .btn-top {
     display: block;
-    justify-content: center; /* จัดให้อยู่ตรงกลางแนวนอน */
-    align-items: center; /* จัดให้อยู่ตรงกลางแนวตั้ง */
-  }
-  .v-app-bar {
-    margin-top: 15%;
-  }
-  /* 
-  .header-title{
-    display: block;
+    justify-content: center; 
+    align-items: center; 
   } */
-
+  .btn-nav {
+    width: 79px; 
+    height: 40px; 
+    font-size: 10px;
+  }
   .v-app-bar {
     margin-top: 20%;
   }
