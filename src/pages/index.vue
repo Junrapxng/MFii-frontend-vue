@@ -77,9 +77,10 @@
                       " class="text-xs">
                       {{ item.techReadiness }}
                     </v-chip>
-                    <v-chip>
+                    <ViewCounter :productId="item._id" />
+                    <!-- <v-chip>
                       {{ productCounts[item._id] || 0 }} views
-                    </v-chip>
+                    </v-chip> -->
                   </v-card-actions>
                 </v-card>
               </router-link>
@@ -100,9 +101,10 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, } from "vue";
 import { Carousel, Navigation, Slide, Pagination } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
+import ViewCounter from '@/components/ViewCounter.vue'
 import axios from "axios";
 export default defineComponent({
   name: "index-page",
@@ -135,38 +137,38 @@ export default defineComponent({
   },
 
   // counter visitor ====================================================================
-  async setup() {
-    const globalVisitorCount = ref(0)
-    const sessionId = ref(localStorage.getItem('sessionId') || '')
-    const productCounts = ref({})
+  // async setup() {
+  //   const globalVisitorCount = ref(0)
+  //   const sessionId = ref(localStorage.getItem('sessionId') || '')
+  //   const productCounts = ref({})
 
-    const generateSessionId = () => {
-      return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    }
+  //   const generateSessionId = () => {
+  //     return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+  //   }
 
-    const fetchGlobalCount = async () => {
-      if (!sessionId.value) {
-        sessionId.value = generateSessionId()
-        localStorage.setItem('sessionId', sessionId.value)
-      }
+  //   const fetchGlobalCount = async () => {
+  //     if (!sessionId.value) {
+  //       sessionId.value = generateSessionId()
+  //       localStorage.setItem('sessionId', sessionId.value)
+  //     }
 
-      try {
-        await axios.get(`http://localhost:7770/visitor-count`, {
-          params: { sessionId: sessionId.value }
-        })
-        const response = await axios.get('http://localhost:7770/all-product-counts')
-        productCounts.value = response.data.productCounts
-      } catch (error) {
-        console.error('Error fetching global visitor count:', error)
-        alert(error)
-      }
-    }
-    onMounted(fetchGlobalCount)
-    return {
-      productCounts,
-      globalVisitorCount
-    }
-  },
+  //     try {
+  //       await axios.get(`http://localhost:7770/visitor-count`, {
+  //         params: { sessionId: sessionId.value }
+  //       })
+  //       const response = await axios.get('http://localhost:7770/all-product-counts')
+  //       productCounts.value = response.data.productCounts
+  //     } catch (error) {
+  //       console.error('Error fetching global visitor count:', error)
+  //       alert(error)
+  //     }
+  //   }
+  //   onMounted(fetchGlobalCount)
+  //   return {
+  //     productCounts,
+  //     globalVisitorCount
+  //   }
+  // },
 
   async created() {
     // Fetch api research and News(Banner) =======================================================================================
@@ -240,6 +242,7 @@ export default defineComponent({
     Carousel,
     Slide,
     Navigation,
+    ViewCounter,
   },
   breakpoints: {
     // 700px and up
