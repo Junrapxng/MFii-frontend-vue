@@ -134,19 +134,19 @@
                             <v-radio
                               label="บุคคลธรรมดา "
                               value="บุคคลธรรมดา "
-                              v-model="form.Business_type"
+                              v-model="form.businessType"
                             ></v-radio>
                             <v-radio
                               label=" นิติบุคคล"
                               value="นิติบุคคล"
-                              v-model="form.Business_type"
+                              v-model="form.businessType"
                             ></v-radio>
                           </v-radio-group>
                         </div>
 
                         <div>
                           <v-text-field
-                            v-model="form.Business_name"
+                            v-model="form.businessName"
                             label="ระบุ ชื่อกิจการ"
                             variant="outlined"
                             outlined
@@ -157,7 +157,7 @@
                         </div>
                         <div>
                           <v-text-field
-                            v-model="form.interested"
+                            v-model="form.interestTech"
                             label="เทคโนโลยีที่สนใจ "
                             variant="outlined"
                             outlined
@@ -178,7 +178,7 @@
                           ></v-text-field>
                         </div>
                         <div class="text-center">
-                          <v-btn class="bg-red-600 text-white" type="submit"
+                          <v-btn class="bg-red-600 text-white" type="submit" @click="sendRequest"
                             >ส่ง</v-btn
                           >
                         </div>
@@ -197,6 +197,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
   name: "contact-page",
   data() {
@@ -206,14 +207,37 @@ export default {
         phone: "",
         firstName: "",
         lastName: "",
-        Business_type: "",
-        Business_name: "",
-        interested: "",
+        businessType: "",
+        businessName: "",
+        interestTech: "",
         scope: "",
+        messageReply: [ {
+          "user": '60c72b2f5f1b2c001c8e4b8b',
+        "messages": "asdqweqweasdasdsad.",
+        "date": "2024-06-27T14:30:00Z"
+    },]
       },
     };
   },
+
+methods: {
+ async sendRequest(){
+    try {
+      const response = await axios.post('http://localhost:7770/user/mesRequest', this.form ,{
+        headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+      })
+      alert("Success");
+      console.log(response);
+    } catch (error) {
+      alert(error)
+    }
+  }
+},
 };
+
+
 </script>
 
 <style scoped></style>
