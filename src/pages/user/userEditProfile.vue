@@ -13,18 +13,6 @@
               <v-card-text>
                 <v-form @submit.prevent="saveProfile" ref="form">
                   <v-row>
-                    <!-- <v-col cols="12" class="text-center">
-                      <v-avatar size="128" class="profile-avatar" @click="triggerFileInput">
-                        <v-img :src="profile.picture || defaultPicture"></v-img>
-                      </v-avatar>
-                      <input
-                        ref="fileInput"
-                        type="file"
-                        accept="image/*"
-                        @change="onFileChange"
-                        style="display: none;"
-                      />
-                    </v-col> -->
                     <v-col cols="12">
                       <v-text-field v-model="user.firstName" label="First Name" prepend-inner-icon="mdi-account"
                         :rules="[rules.required]" required></v-text-field>
@@ -52,7 +40,8 @@
       </v-container>
 
       <div class="text-center">
-        <v-snackbar v-model="snackbar.show" :color="snackbar.color">
+        <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+          <div class="text-subtitle-1 pb-2"></div>
           <p>{{ snackbar.message }}</p>
           <template v-slot:actions>
             <v-btn color="white" variant="text" @click="snackbar.show = false">
@@ -111,41 +100,32 @@ export default {
         }, 1000);
       } catch (error) {
         console.log("Error", error);
-        alert("Error" + error)
-        this.snackbar.message =
-          "Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " +
-          error.message;
+        if (error.response.status = 401) {
+          this.snackbar.message = "Error : " + error.response.data.description.description;
+        }
+        if (error.response.status = 404) {
+          this.snackbar.message = "Error : " + error.response.data.description.description;
+        }
+        if (error.response.status = 500) {
+          this.snackbar.message = "Error : " + error.response.data.description.description;
+        } else {
+          this.snackbar.message = "Error : " + error;
+        }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
     },
-    onFileChange(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.profile.picture = e.target.result;
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    triggerFileInput() {
-      this.$refs.fileInput.click();
-    },
-    // resetForm() {
-    //   // Reset the form fields to their initial values
-    //   this.profile = {
-    //     name: '',
-    //     email: '',
-    //     phone: '',
-    //     picture: ''
-    //   };
-    //   this.$refs.form.reset();
-    // },
+
     async getUser() {
       const userStore = useUserStore();
-      this.user = userStore.user.resutl
-      console.log(this.user);
+      try {
+        this.user = userStore.user.resutl
+      } catch (error) {
+        this.snackbar.message = "Error: " + error;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+      }
+
     },
   },
   created() {

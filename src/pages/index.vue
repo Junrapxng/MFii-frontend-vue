@@ -98,7 +98,7 @@
         <div class="text-subtitle-1 pb-2"></div>
         <p>{{ snackbar.message }}</p>
         <template v-slot:actions>
-          <v-btn color="indigo" variant="text" @click="snackbar.show = false">
+          <v-btn color="white" variant="text" @click="snackbar.show = false">
             Close
           </v-btn>
         </template>

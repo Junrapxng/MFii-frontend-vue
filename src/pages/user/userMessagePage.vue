@@ -11,8 +11,8 @@
                             <v-list-item v-for="message in filteredMessages" :key="message.id"
                                 class="list-item-border my-2">
                                 <v-list-item-content>
-                                    <v-list-item-title>ชื่อกิจการ: {{ message.businessName }}</v-list-item-title>
-                                    <v-list-item-subtitle>เทคโนโลยีที่สนใจ: {{ message.interestTech }}</v-list-item-subtitle>
+                                    <v-list-item-title> เทคโนโลยีที่สนใจ: {{ message.interestTech }}</v-list-item-title>
+                                    <v-list-item-subtitle>ชื่อกิจการ: {{ message.businessName }}</v-list-item-subtitle>
                                 </v-list-item-content>
                                 <v-list-item-action class="my-2">
                                     <v-btn @click="openReplyDialog(message._id)">ตอบกลับ</v-btn>
@@ -25,9 +25,8 @@
                 <!-- Message Reply -->
                 <v-dialog v-model="isDialogOpen" max-width="800px">
                     <v-card v-for="selected in selectedMessage">
-                        <v-card-title class="headline">{{ selected.email }}</v-card-title>
+                        <v-card-title class="headline">ชื่อกิจการ: {{ selected.businessName }}</v-card-title>
                         <v-card-text>
-
                             <div class="chatbox">
                                 <v-list class="">
                                     <v-list-item v-for="reply in selected.messageReply"
@@ -39,7 +38,7 @@
                                                 Staff
                                             </v-list-item-subtitle>
                                             <v-list-item-subtitle v-else class="blue--text text-right align-self-start">
-                                            {{ selected.firstName }} {{ selected.lastName }}
+                                                {{ selected.firstName }} {{ selected.lastName }}
                                             </v-list-item-subtitle>
                                             <!-- ข้อความ -->
                                             <v-list-item-title
@@ -51,7 +50,7 @@
                                 </v-list>
                             </div>
 
-                            
+
                             <v-textarea label="Your Reply" v-model="replyText" @keyup.enter="sendReply"
                                 outlined></v-textarea>
                         </v-card-text>
@@ -65,6 +64,15 @@
                 </v-dialog>
             </v-container>
 
+            <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+                <div class="text-subtitle-1 pb-2"></div>
+                <p>{{ snackbar.message }}</p>
+                <template v-slot:actions>
+                    <v-btn color="white" variant="text" @click="snackbar.show = false">
+                        Close
+                    </v-btn>
+                </template>
+            </v-snackbar>
 
         </v-main>
         <Footer />
@@ -80,6 +88,11 @@ export default {
     components: { NavBar },
     data() {
         return {
+            snackbar: {
+                show: false,
+                message: "",
+                color: "success", // Default color
+            },
             isDialogOpen: false,
             selectedMessage: {},
             replyText: '',
@@ -93,7 +106,6 @@ export default {
 
     async created() {
         this.fetchMessages();
-
         // get user info from pinia store/user.js
         const userStore = useUserStore();
         try {
@@ -106,30 +118,46 @@ export default {
             }
         } catch (error) {
             console.log(error)
+            this.snackbar.message = "Error Fetching data : " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
         }
 
     },
+
+
     methods: {
         async openReplyDialog(id) {
-            const response = await axios.get('http://localhost:7770/mesDetail/' + id, {
-                headers: {
-                    Authorization: localStorage.getItem("token"),
-                },
-            })
-            this.selectedMessage = response.data.result;
-            // console.log(this.selectedMessage);
-            this.replyText = ''; // Clear previous reply text
-            this.isDialogOpen = true;
-        },
-        // Reply by enter
-        sendReply() {
-            if (this.replyText.trim()) {
-                this.replyMessage(this.replyText, this.selectedMessage[0]._id);
+            try {
+                const response = await axios.get('http://localhost:7770/mesDetail/' + id, {
+                    headers: {
+                        Authorization: localStorage.getItem("token"),
+                    },
+                })
+                this.selectedMessage = response.data.result;
+                // console.log(this.selectedMessage);
+                this.replyText = ''; // Clear previous reply text
+                this.isDialogOpen = true;
+            } catch (error) {
+                if (error.response.status = 401) {
+                    this.snackbar.message = "Error : " + error.response.data.description.description;
+                }
+                if (error.response.status = 404) {
+                    this.snackbar.message = "Error : " + error.response.data.description.description;
+                }
+                if (error.response.status = 500) {
+                    this.snackbar.message = "Error : " + error.response.data.description.description;
+                } else {
+                    this.snackbar.message = "Error : " + error;
+                }
+                this.snackbar.color = "error"; // Set error color
+                this.snackbar.show = true;
             }
         },
+
         async replyMessage(message, id) {
             try {
-                const response = await axios.patch('http://localhost:7770/mesReplyUpdate/' + id, {
+                await axios.patch('http://localhost:7770/mesReplyUpdate/' + id, {
                     messages: message,
                     user: this.user._id // Assuming you have the user object available
                 }, {
@@ -143,15 +171,27 @@ export default {
                     user: this.user._id,
                     id: Date.now() // Generate a unique id for the new reply
                 });
-
                 // Clear the reply text
                 this.replyText = '';
-
                 console.log(this.selectedMessage);
             } catch (error) {
                 console.error("Error sending reply:", error);
+                if (error.response.status = 401) {
+                    this.snackbar.message = "Error : " + error.response.data.description.description;
+                }
+                if (error.response.status = 404) {
+                    this.snackbar.message = "Error : " + error.response.data.description.description;
+                }
+                if (error.response.status = 500) {
+                    this.snackbar.message = "Error : " + error.response.data.description.description;
+                } else {
+                    this.snackbar.message = "Error : " + error;
+                }
+                this.snackbar.color = "error"; // Set error color
+                this.snackbar.show = true;
             }
         },
+
 
         // fetch ข้อความมาแสดง
         async fetchMessages() {
@@ -162,9 +202,28 @@ export default {
                     },
                 });
                 this.messages = response.data.result
-                console.log(this.messages);
             } catch (error) {
-                console.error("Error fetching product counts:", error);
+                if (error.response.status = 401) {
+                    this.snackbar.message = "Error : " + error.response.data.description.description;
+                }
+                if (error.response.status = 404) {
+                    this.snackbar.message = "Error : " + error.response.data.description.description;
+                }
+                if (error.response.status = 500) {
+                    this.snackbar.message = "Error : " + error.response.data.description.description;
+                } else {
+                    this.snackbar.message = "Error : " + error;
+                }
+                this.snackbar.color = "error"; // Set error color
+                this.snackbar.show = true;
+            }
+
+        },
+
+        // Reply by enter
+        sendReply() {
+            if (this.replyText.trim()) {
+                this.replyMessage(this.replyText, this.selectedMessage[0]._id);
             }
 
         },
@@ -186,24 +245,23 @@ export default {
 
 <style scoped>
 .list-item-border {
-  border: 1px solid #ccc;
-  border-radius: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .text-right {
-  text-align: right;
+    text-align: right;
 }
 
 .text-left {
-  text-align: left
+    text-align: left
 }
 
 .chatbox {
-  overflow: auto;
+    overflow: auto;
 }
 
 .black-text {
-  color: black;
+    color: black;
 }
-
 </style>
