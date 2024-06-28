@@ -10,10 +10,9 @@
               <v-list>
                 <v-list-item v-for="message in messages" :key="message.id" class="list-item-border my-2">
                   <v-list-item-content>
-                    <v-list-item-title>{{ message.businessName }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ message.email }}</v-list-item-subtitle>
-                    <v-list-item-subtitle>{{ message.firstName }}</v-list-item-subtitle>
-                    <v-list-item-subtitle>{{ message.usesScope }}</v-list-item-subtitle>
+                    <v-list-item-title>เทคโนโลยีที่สนใจ: {{ message.interestTech }}</v-list-item-title>
+                    <v-list-item-subtitle>ชื่อกิจการ: {{ message.businessName }}</v-list-item-subtitle>
+                    <v-list-item-subtitle>ผู้ส่ง: {{ message.firstName }} {{ message.lastName }}</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action class="my-2">
                     <v-btn @click="openReplyDialog(message._id)">ตอบกลับ</v-btn>
@@ -26,27 +25,30 @@
 
 
 
-          <!-- Message Reply -->
+          <!-- Message Reply  -->
+          <!-- header ====================================================================================== -->
           <v-dialog v-model="isDialogOpen" max-width="800px">
             <v-card v-for="selected in selectedMessage">
-              <v-card-title class="headline">{{ selected.email }}</v-card-title>
+              <v-card-title class="headline">{{ selected.businessName }}</v-card-title>
               <v-card-text>
 
+                <!-- Chat box ====================================================================================== -->
                 <div class="chatbox">
                   <v-list class="">
                     <v-list-item v-for="reply in selected.messageReply"
                       :class="reply.user === user._id ? 'd-flex justify-end' : 'd-flex justify-start'" :key="reply.id">
                       <v-list-item-content>
-                       <!-- Email ผู้ส่ง -->
+
+                        <!-- ชื่อผู้ส่ง -->
                         <v-list-item-subtitle v-if="reply.user !== user._id" class="black--text">
-                          {{ selected.email }}
+                          {{ selected.firstName }} {{ selected.lastName }}
                         </v-list-item-subtitle>
                         <v-list-item-subtitle v-else class="blue--text text-right align-self-start">
                           Staff
                         </v-list-item-subtitle>
-                        <!-- ข้อความ -->
-                        <v-list-item-title
-                          :class="[reply.user === user._id ? 'text-right' : 'text-left',]">
+                        
+                        <!-- แสดงข้อความ -->
+                        <v-list-item-title :class="[reply.user === user._id ? 'text-right' : 'text-left',]">
                           {{ reply.messages }}
                         </v-list-item-title>
                       </v-list-item-content>

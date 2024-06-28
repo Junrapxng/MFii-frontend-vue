@@ -11,10 +11,8 @@
                             <v-list-item v-for="message in filteredMessages" :key="message.id"
                                 class="list-item-border my-2">
                                 <v-list-item-content>
-                                    <v-list-item-title>{{ message.businessName }}</v-list-item-title>
-                                    <v-list-item-subtitle>{{ message.email }}</v-list-item-subtitle>
-                                    <v-list-item-subtitle>{{ message.firstName }}</v-list-item-subtitle>
-                                    <v-list-item-subtitle>{{ message.usesScope }}</v-list-item-subtitle>
+                                    <v-list-item-title>ชื่อกิจการ: {{ message.businessName }}</v-list-item-title>
+                                    <v-list-item-subtitle>เทคโนโลยีที่สนใจ: {{ message.interestTech }}</v-list-item-subtitle>
                                 </v-list-item-content>
                                 <v-list-item-action class="my-2">
                                     <v-btn @click="openReplyDialog(message._id)">ตอบกลับ</v-btn>
@@ -41,7 +39,7 @@
                                                 Staff
                                             </v-list-item-subtitle>
                                             <v-list-item-subtitle v-else class="blue--text text-right align-self-start">
-                                            {{ selected.email }}
+                                            {{ selected.firstName }} {{ selected.lastName }}
                                             </v-list-item-subtitle>
                                             <!-- ข้อความ -->
                                             <v-list-item-title
@@ -155,6 +153,7 @@ export default {
             }
         },
 
+        // fetch ข้อความมาแสดง
         async fetchMessages() {
             try {
                 const response = await axios.get('http://localhost:7770/mesGetData', {

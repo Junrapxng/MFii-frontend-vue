@@ -25,7 +25,7 @@ import MessageReply from '@/pages/staff/MessageReply.vue'
 import Notfound from '../pages/NotFound.vue'
 import UserEditProfile from '../pages/user/userEditProfile.vue'
 import { useUserStore } from '@/store/user'
-import MessagePage from '../pages/user/messagePage.vue'
+import MessagePage from '../pages/user/userMessagePage.vue'
 
 
 const routes = [
