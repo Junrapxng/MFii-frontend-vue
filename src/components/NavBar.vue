@@ -42,7 +42,9 @@
           class="font-noto-sans-thai"
         >
           <v-container class="p-0 m-0">
-            <v-text-field
+            <search-component  class="btn-search"></search-component>
+            <router-view></router-view>
+            <!-- <v-text-field
                     v-model="search"
                     density="comfortable"
                     placeholder="Search"
@@ -54,7 +56,7 @@
                     hide-details
                     rounded 
                     class="py-3 btn-search"
-                  ></v-text-field>
+                  ></v-text-field> -->
             <!-- if user not loggedin -->
             <v-container
               v-if="userStore.error || userStore.loading"
@@ -300,8 +302,12 @@
 </template>
 <script>
 import { useUserStore } from "@/store/user";
+import SearchComponent from '../components/SearchComponent.vue';
 export default {
   name: "NavBar",
+  components: {
+    SearchComponent
+  },
   data() {
     return {
       loggedIn: false,
