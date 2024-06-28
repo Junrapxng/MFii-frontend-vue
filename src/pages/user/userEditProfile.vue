@@ -75,7 +75,6 @@ export default {
         phone: '',
         picture: ''
       },
-      defaultPicture: 'https://via.placeholder.com/128',
       rules: {
         required: value => !!value || 'Required.',
         email: value => /.+@.+\..+/.test(value) || 'E-mail must be valid.',
@@ -84,6 +83,7 @@ export default {
     }
   },
   methods: {
+
     async saveProfile() {
       try {
         await axios.patch('http://localhost:7770/user/updatePatch', this.user, {
@@ -115,6 +115,7 @@ export default {
         this.snackbar.show = true;
       }
     },
+
 
     async getUser() {
       const userStore = useUserStore();

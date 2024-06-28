@@ -46,7 +46,7 @@
                         <v-list-item-subtitle v-else class="blue--text text-right align-self-start">
                           Staff
                         </v-list-item-subtitle>
-                        
+
                         <!-- แสดงข้อความ -->
                         <v-list-item-title :class="[reply.user === user._id ? 'text-right' : 'text-left',]">
                           {{ reply.messages }}
@@ -66,6 +66,19 @@
           </v-dialog>
         </v-container>
       </staff-layout>
+
+      <div class="text-center">
+        <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+          <div class="text-subtitle-1 pb-2"></div>
+          <p>{{ snackbar.message }}</p>
+          <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar.show = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </div>
+
     </v-main>
   </v-app>
 </template>
@@ -81,6 +94,11 @@ export default {
   },
   data() {
     return {
+      snackbar: {
+        show: false,
+        message: "",
+        color: "success", // Default color
+      },
       isDialogOpen: false,
       selectedMessage: {},
       replyText: '',
@@ -101,24 +119,43 @@ export default {
       }
       if (userStore.user) {
         this.user = userStore.user.resutl;
-        console.log(this.user);
       }
     } catch (error) {
-      console.log(error)
+      this.snackbar.message = "Error : " + error;
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
     }
 
   },
   methods: {
     async openReplyDialog(id) {
-      const response = await axios.get('http://localhost:7770/mesDetail/' + id, {
-        headers: {
-          Authorization: localStorage.getItem("token"),
-        },
-      })
-      this.selectedMessage = response.data.result;
-      // console.log(this.selectedMessage);
-      this.replyText = ''; // Clear previous reply text
-      this.isDialogOpen = true;
+      try {
+        const response = await axios.get('http://localhost:7770/mesDetail/' + id, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        this.selectedMessage = response.data.result;
+        // console.log(this.selectedMessage);
+        this.replyText = ''; // Clear previous reply text
+        this.isDialogOpen = true;
+
+      } catch (error) {
+        console.error("Error fetching research:", error);
+        if (error.response.status = 401) {
+          this.snackbar.message = "Error : " + error.response.data.description.description;
+        }
+        if (error.response.status = 404) {
+          this.snackbar.message = "Error : " + error.response.data.description.description;
+        }
+        if (error.response.status = 500) {
+          this.snackbar.message = "Error : " + error.response.data.description.description;
+        } else {
+          this.snackbar.message = "Error : " + error;
+        }
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+      }
     },
     // Reply by enter
     sendReply() {
@@ -126,6 +163,8 @@ export default {
         this.replyMessage(this.replyText, this.selectedMessage[0]._id);
       }
     },
+
+    // reply Message
     async replyMessage(message, id) {
       try {
         const response = await axios.patch('http://localhost:7770/mesReplyUpdate/' + id, {
@@ -142,13 +181,23 @@ export default {
           user: this.user._id,
           id: Date.now() // Generate a unique id for the new reply
         });
-
         // Clear the reply text
         this.replyText = '';
-
-        console.log(this.selectedMessage);
+        // console.log(this.selectedMessage);
       } catch (error) {
-        console.error("Error sending reply:", error);
+        if (error.response.status = 401) {
+          this.snackbar.message = "Error : " + error.response.data.description.description;
+        }
+        if (error.response.status = 404) {
+          this.snackbar.message = "Error : " + error.response.data.description.description;
+        }
+        if (error.response.status = 500) {
+          this.snackbar.message = "Error : " + error.response.data.description.description;
+        } else {
+          this.snackbar.message = "Error : " + error;
+        }
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
     },
 
@@ -164,6 +213,19 @@ export default {
         console.log(this.messages);
       } catch (error) {
         console.error("Error fetching product counts:", error);
+        if (error.response.status = 401) {
+          this.snackbar.message = "Error : " + error.response.data.description.description;
+        }
+        if (error.response.status = 404) {
+          this.snackbar.message = "Error : " + error.response.data.description.description;
+        }
+        if (error.response.status = 500) {
+          this.snackbar.message = "Error : " + error.response.data.description.description;
+        } else {
+          this.snackbar.message = "Error : " + error;
+        }
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
 
     },

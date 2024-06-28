@@ -76,9 +76,11 @@
 
                   <v-container class="flex">
                     <v-card v-for="(img, index) in currentResearch.filePath" :key="index" class="mx-2">
-                      <v-img :src="`http://localhost:7770/${img}`"
-                      v-model="currentResearch.filePath" height="250px"  width="300px" cover> 
-                      <v-btn v-if="isEdit" @click="markForDeletion(index)" :class="{'marked-for-deletion': markedForDeletion.includes(index)}" :icon="markedForDeletion.includes(index) ? 'mdi-check' : 'mdi-delete'"></v-btn>
+                      <v-img :src="`http://localhost:7770/${img}`" v-model="currentResearch.filePath" height="250px"
+                        width="300px" cover>
+                        <v-btn v-if="isEdit" @click="markForDeletion(index)"
+                          :class="{ 'marked-for-deletion': markedForDeletion.includes(index) }"
+                          :icon="markedForDeletion.includes(index) ? 'mdi-check' : 'mdi-delete'"></v-btn>
                       </v-img>
                     </v-card>
                   </v-container>
@@ -95,7 +97,8 @@
         </v-container>
       </staff-layout>
       <div class="text-center">
-        <v-snackbar v-model="snackbar.show" :color="snackbar.color">
+        <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+          <div class="text-subtitle-1 pb-2"></div>
           <p>{{ snackbar.message }}</p>
           <template v-slot:actions>
             <v-btn color="white" variant="text" @click="snackbar.show = false">
@@ -187,7 +190,7 @@ export default {
       };
       this.markedForDeletion = [];
     },
-  
+
 
     //  Add and Edit Research ===============================================================================
     async saveResearch() {
@@ -214,49 +217,66 @@ export default {
         }
         // Edit
         if (this.isEdit) {
-          await axios.patch(`http://localhost:7770/staff/updateResearchData/${this.currentResearch._id}`, {
-            budgetYear: '2566',
-            nameOnMedia: this.currentResearch.nameOnMedia,
-            inventor: this.currentResearch.inventor,
-            major: this.currentResearch.major,
-            description: this.currentResearch.description,
-            intelProp: this.currentResearch.intelProp,
-            industryType: this.currentResearch.industryType,
-            hilight: this.currentResearch.hilight,
-            techReadiness: this.currentResearch.techReadiness,
-            coop: this.currentResearch.coop,
-            link: this.currentResearch.link,
-            status: this.currentResearch.status,
-            ipType: this.currentResearch.ipType,
-          }, {
-            headers: {
-              Authorization: localStorage.getItem('token'),
-            },
-          });
-          // selected Images delete
-          if (this.markedForDeletion.length > 0) {
-            const deleteRequests = this.markedForDeletion.map(index => {
-              const img = this.currentResearch.filePath[index];
-              return axios.patch(`http://localhost:7770/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
-                filePath: img
-              }, {
-                headers: {
-                  Authorization: localStorage.getItem('token'),
-                },
-              });
+          try {
+            await axios.patch(`http://localhost:7770/staff/updateResearchData/${this.currentResearch._id}`, {
+              budgetYear: '2566',
+              nameOnMedia: this.currentResearch.nameOnMedia,
+              inventor: this.currentResearch.inventor,
+              major: this.currentResearch.major,
+              description: this.currentResearch.description,
+              intelProp: this.currentResearch.intelProp,
+              industryType: this.currentResearch.industryType,
+              hilight: this.currentResearch.hilight,
+              techReadiness: this.currentResearch.techReadiness,
+              coop: this.currentResearch.coop,
+              link: this.currentResearch.link,
+              status: this.currentResearch.status,
+              ipType: this.currentResearch.ipType,
+            }, {
+              headers: {
+                Authorization: localStorage.getItem('token'),
+              },
             });
-            await Promise.all(deleteRequests);
+            // selected Images delete
+            if (this.markedForDeletion.length > 0) {
+              const deleteRequests = this.markedForDeletion.map(index => {
+                const img = this.currentResearch.filePath[index];
+                return axios.patch(`http://localhost:7770/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
+                  filePath: img
+                }, {
+                  headers: {
+                    Authorization: localStorage.getItem('token'),
+                  },
+                });
+              });
+              await Promise.all(deleteRequests);
+            }
+            // Add file edit
+            await axios.patch(`http://localhost:7770/staff/addFileResearch/${this.currentResearch._id}`, formData, {
+              headers: {
+                Authorization: localStorage.getItem('token'),
+                'Content-Type': 'multipart/form-data'
+              },
+            });
+            this.snackbar.message = "Edit research successfully";
+            this.snackbar.color = "success";
+          } catch (error) {
+            console.error("Error fetching research:", error);
+            if (error.response.status = 401) {
+              this.snackbar.message = "Error : " + error.response.data.description.description;
+            }
+            if (error.response.status = 404) {
+              this.snackbar.message = "Error : " + error.response.data.description.description;
+            }
+            if (error.response.status = 500) {
+              this.snackbar.message = "Error : " + error.response.data.description.description;
+            } else {
+              this.snackbar.message = "Error : " + error;
+            }
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
           }
 
-          // Add file edit
-          await axios.patch(`http://localhost:7770/staff/addFileResearch/${this.currentResearch._id}`, formData, {
-            headers: {
-              Authorization: localStorage.getItem('token'),
-              'Content-Type': 'multipart/form-data'
-            },
-          });
-          this.snackbar.message = "Edit research successfully";
-          this.snackbar.color = "success";
         } else {
           await axios.post('http://localhost:7770/staff/addResearch', formData, {
             headers: {
@@ -269,11 +289,22 @@ export default {
         }
         this.snackbar.show = true;
         this.fetchResearches();
+
       } catch (error) {
-        console.error(error);
-        this.snackbar.message = "Error Edit/Add research user(ข้อมูลยังไม่แก้ไข โปรดลองอีกครั้ง): " + error.message;
-        this.snackbar.color = "error";
-        this.snackbar.show = true;
+           console.error("Error fetching research:", error);
+            if (error.response.status = 401) {
+              this.snackbar.message = "Error : " + error.response.data.description.description;
+            }
+            if (error.response.status = 404) {
+              this.snackbar.message = "Error : " + error.response.data.description.description;
+            }
+            if (error.response.status = 500) {
+              this.snackbar.message = "Error : " + error.response.data.description.description;
+            } else {
+              this.snackbar.message = "Error : " + error;
+            }
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
       }
       this.dialog = false;
       this.resetCurrentResearch();
@@ -293,11 +324,24 @@ export default {
           },
         });
         this.fetchResearches();
+
       } catch (error) {
-        console.error(error);
+            if (error.response.status = 401) {
+              this.snackbar.message = "Error : " + error.response.data.description.description;
+            }
+            if (error.response.status = 404) {
+              this.snackbar.message = "Error : " + error.response.data.description.description;
+            }
+            if (error.response.status = 500) {
+              this.snackbar.message = "Error : " + error.response.data.description.description;
+            } else {
+              this.snackbar.message = "Error : " + error;
+            }
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
       }
     },
-       markForDeletion(index) {
+    markForDeletion(index) {
       if (!this.markedForDeletion.includes(index)) {
         this.markedForDeletion.push(index);
       } else {
@@ -312,32 +356,37 @@ export default {
       try {
         const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
         this.researches = response.data;
-        console.log(this.researches)
+        
       } catch (error) {
-        console.error(error);
-        alert(error)
+        console.error("Error fetching research:", error);
+            if (error.response.status = 401) {
+              this.snackbar.message = "Error : " + error.response.data.description.description;
+            }
+            if (error.response.status = 404) {
+              this.snackbar.message = "Error : " + error.response.data.description.description;
+            }
+            if (error.response.status = 500) {
+              this.snackbar.message = "Error : " + error.response.data.description.description;
+            } else {
+              this.snackbar.message = "Error : " + error;
+            }
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
       }
     }
 
   },
-  
+
   watch: {
-  dialog(newValue) {
-    if (!newValue) {
-      this.markedForDeletion = [];
+    dialog(newValue) {
+      if (!newValue) {
+        this.markedForDeletion = [];
+      }
     }
-  }
-},
+  },
   // get research data when loaded website
   async created() {
-    try {
-      const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
-      this.researches = response.data;
-      console.log(this.researches)
-    } catch (error) {
-      console.error(error);
-      alert(error)
-    }
+    this.fetchResearches();
   },
 
 
