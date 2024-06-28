@@ -197,11 +197,13 @@
 </template>
 
 <script>
+import { useUserStore } from '@/store/user';
 import axios from 'axios';
 export default {
   name: "contact-page",
   data() {
     return {
+      user: [],
       form: {
         email: "",
         phone: "",
@@ -211,17 +213,18 @@ export default {
         businessName: "",
         interestTech: "",
         scope: "",
-        messageReply: [ {
-          "user": '60c72b2f5f1b2c001c8e4b8b',
-        "messages": "asdqweqweasdasdsad.",
-        "date": "2024-06-27T14:30:00Z"
-    },]
+        messageReply:  {
+          "user": "",
+          "messages": "Hello",
+    },
       },
     };
   },
 
+
 methods: {
  async sendRequest(){
+  this.form.messageReply.user = this.user._id;
     try {
       const response = await axios.post('http://localhost:7770/user/mesRequest', this.form ,{
         headers: {
@@ -233,7 +236,27 @@ methods: {
     } catch (error) {
       alert(error)
     }
+  },
+  
+  //get user
+  async getUser(){
+    const userStore = useUserStore();
+    try {
+            if (!userStore.user) {
+                await userStore.fetchUser();
+            }
+            if (userStore.user) {
+                this.user = userStore.user.resutl;
+                console.log(this.user);        
+            }
+        } catch (error) {
+            console.log(error)
+        }
   }
+},
+
+created() {
+  this.getUser()
 },
 };
 
