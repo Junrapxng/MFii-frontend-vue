@@ -1,8 +1,10 @@
-<!-- src/views/SearchPage.vue -->
 <template>
-    <v-text-field
+    <v-combobox
       v-model="searchQuery"
       label="ค้นหา"
+      :items="filteredPages.map(page => page.name)"
+      item-text="name"
+      item-value="path"
       density="comfortable"
       prepend-inner-icon="mdi-magnify"
       style="max-width: 270px"
@@ -11,26 +13,10 @@
       hide-details
       rounded
       class="py-3"
+      no-data-text="ไม่พบผลลัพธ์"
       @input="updateSearchQuery"
-    ></v-text-field>
-    <v-card v-show="searchQuery" style="max-width: 250px">
-      <v-list>
-        <template v-if="filteredPages.length">
-          <v-list-item
-            v-for="page in filteredPages"
-            :key="page.path"
-            @click="navigateToPage(page.path)"
-          >
-            <v-list-item-title>{{ page.name }}</v-list-item-title>
-          </v-list-item>
-        </template>
-        <template v-else>
-          <v-list-item>
-            <v-list-item-title>ไม่พบผลลัพธ์</v-list-item-title>
-          </v-list-item>
-        </template>
-      </v-list>
-    </v-card>
+      @keydown.enter="navigateToFirstResult"
+    ></v-combobox>
   </template>
   
   <script setup>
@@ -42,17 +28,16 @@
   const router = useRouter();
   const searchQuery = ref(pageStore.searchQuery);
   
-  const updateSearchQuery = () => {
-    pageStore.setSearchQuery(searchQuery.value);
+  const updateSearchQuery = (event) => {
+    pageStore.setSearchQuery(event.target.value);
   };
   
   const filteredPages = computed(() => pageStore.filteredPages);
   
-  const navigateToPage = (path) => {
-    router.push(path);
+  const navigateToFirstResult = () => {
+    if (filteredPages.value.length > 0) {
+      router.push(filteredPages.value[0].path);
+    }
   };
   </script>
   
-  <style scoped>
-  /* เพิ่มสไตล์ตามต้องการ */
-  </style>
