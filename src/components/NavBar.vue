@@ -129,6 +129,15 @@
                           <v-list-item-title>Edit Profile</v-list-item-title>
                         </v-list-item>
                       </router-link>
+
+                      <router-link
+                        v-if="userStore.user.resutl.role === 'user'"
+                        to="/message"
+                      >
+                        <v-list-item>
+                          <v-list-item-title>Message</v-list-item-title>
+                        </v-list-item>
+                      </router-link>
                       <v-list-item @click="logoutBtn">
                         <v-list-item-title>Logout</v-list-item-title>
                       </v-list-item>
