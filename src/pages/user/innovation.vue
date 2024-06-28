@@ -70,6 +70,18 @@
         </v-container>
       </v-container>
 
+      <div class="text-center">
+    <v-snackbar v-model="snackbar.show" :color="snackbar.color">
+      <p>{{ snackbar.message }}</p>
+
+      <template v-slot:actions>
+        <v-btn color="white" variant="text" @click="snackbar.show = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+  </div>
+
     </v-main>
     <Footer></Footer>
   </v-app>
@@ -82,6 +94,11 @@ export default {
   props: ["id"],
   data() {
     return {
+      snackbar: {
+      show: false,
+      message: "",
+      color: "success", // Default color
+    },
       research: null,
       isLoading: true,
     };
@@ -101,6 +118,9 @@ export default {
         console.log(this.research);
       } catch (error) {
         console.error("Error fetching data:", error);
+        this.snackbar.message = "Error Fetching data : " + error.message;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       } finally {
         this.isLoading = false;
       }
