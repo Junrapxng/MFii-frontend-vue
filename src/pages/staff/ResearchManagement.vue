@@ -161,6 +161,7 @@ export default {
         intelProp: '',
         industryType: '',
         filePath: null,
+        img:null,
         hilight: '',
         techReadiness: '',
         coop: [],
@@ -197,6 +198,7 @@ export default {
         intelProp: '',
         industryType: '',
         filePath: null,
+        img:null,
         hilight: '',
         techReadiness: '',
         coop: [],
@@ -207,7 +209,7 @@ export default {
       this.markedForDeletion = [];
     },
     handleFileUpload(event) {
-      this.currentResearch.filePath = Array.from(event.target.files);
+      this.currentResearch.img = Array.from(event.target.files);
     },
 
     handlePdfUpload(event) {
@@ -232,8 +234,8 @@ export default {
         formData.append('status', this.currentResearch.status);
         formData.append('ipType', this.currentResearch.ipType);
 
-        if (this.currentResearch.filePath.length) {
-          this.currentResearch.filePath.forEach((file, index) => {
+        if (this.currentResearch.img) {
+          this.currentResearch.img.forEach((file, index) => {
             formData.append(`file${index + 1}`, file);
           });
         }
