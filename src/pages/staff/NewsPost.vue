@@ -129,7 +129,7 @@ export default {
         }
       } catch (error) {
         console.error("Error :", error);
-        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.message = "Error adding News: " + error.response.data.description.description + " Code: " + error.response.status;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
 
@@ -142,7 +142,7 @@ export default {
         this.imgs = res.data.result;
       } catch (error) {
         console.log('Error: ' + error);
-        this.snackbar.message = "Error : " + error.response.data.description.description;
+        this.snackbar.message = "Error get News: " + error.response.data.description.description;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
 
@@ -173,7 +173,7 @@ export default {
         this.snackbar.show = true;
       } catch (error) {
         console.error('Error deleting image:', error);
-        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.message = "Error deleting image: " + error.response.data.description.description + " Code: " + error.response.status;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }

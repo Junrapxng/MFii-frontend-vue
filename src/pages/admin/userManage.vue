@@ -125,9 +125,9 @@
     </v-container>
   </admin-layout>
   <div class="text-center">
-    <v-snackbar v-model="snackbar.show" :color="snackbar.color">
+    <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+      <div class="text-subtitle-1 pb-2"></div>
       <p>{{ snackbar.message }}</p>
-
       <template v-slot:actions>
         <v-btn color="white" variant="text" @click="snackbar.show = false">
           Close
@@ -256,7 +256,7 @@ export default {
         console.log(this.users);
       } catch (error) {
         console.error("Error Fetching data :", error);
-        this.snackbar.message = "Error Fetching data : " + error.message;
+        this.snackbar.message = "Error getting user : " + error.response.data.description.description + " Code: " + error.response.status;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
@@ -287,9 +287,7 @@ export default {
         this.fectchUser();
       } catch (error) {
         console.error("Error deleting user:", error);
-        this.snackbar.message =
-          "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง): " +
-          error.message;
+        this.snackbar.message = "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง) : " + error.response.data.description.description + " Code: " + error.response.status;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
@@ -350,9 +348,7 @@ export default {
           this.fectchUser();
         } catch (error) {
           console.error("Error editing user:", error);
-          this.snackbar.message =
-            "Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " +
-            error.message;
+            this.snackbar.message = "Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " + error.response.data.description.description + " Code: " + error.response.status;
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
         }
@@ -408,9 +404,7 @@ export default {
           this.fectchUser();
         } catch (error) {
           console.error("Error Adding user:", error);
-          this.snackbar.message =
-            "Error Adding user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " +
-            error.message;
+            this.snackbar.message = "Error Adding user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " + error.response.data.description.description + " Code: " + error.response.status;   
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
         }

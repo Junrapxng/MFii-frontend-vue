@@ -47,6 +47,19 @@
 
       <!-- Add your admin panel components, tables, forms, etc. -->
     </v-container>
+
+    <div class="text-center">
+        <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+          <div class="text-subtitle-1 pb-2"></div>
+          <p>{{ snackbar.message }}</p>
+          <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar.show = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </div>
+
   </admin-layout>
 </template>
 
@@ -60,6 +73,11 @@ export default {
   },
   data() {
     return {
+      snackbar: {
+        show: false,
+        message: "",
+        color: "success", // Default color
+      },
       visitorsToday: 123,
       visitorsYesterday: 98,
       totalDownloads: 67,
@@ -95,7 +113,9 @@ export default {
         this.research = res.data.result
         console.log(this.research);
       } catch (error) {
-        console.log("Error" + error);
+        this.snackbar.message = "Error fetching research: " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
     }
 

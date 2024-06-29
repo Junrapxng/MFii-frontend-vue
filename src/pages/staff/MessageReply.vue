@@ -142,7 +142,7 @@ export default {
 
       } catch (error) {
         console.error("Error fetching research:", error);
-        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.message = "Error get detail: " + error.response.data.description.description + " Code: " + error.response.status;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
@@ -175,7 +175,7 @@ export default {
         this.replyText = '';
         // console.log(this.selectedMessage);
       } catch (error) {
-        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.message = "Error sending reply: " + error.response.data.description.description + " Code: " + error.response.status;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }

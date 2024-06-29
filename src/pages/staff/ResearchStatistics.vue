@@ -73,7 +73,7 @@ export default {
         
       } catch (error) {
         console.error("Error fetching research:", error);
-        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.message = "Error fetching research: " + error.response.data.description.description + " Code: " + error.response.status;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
