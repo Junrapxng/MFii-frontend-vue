@@ -261,18 +261,7 @@ export default {
             this.snackbar.message = "Edit research successfully";
             this.snackbar.color = "success";
           } catch (error) {
-            console.error("Error fetching research:", error);
-            if (error.response.status = 401) {
-              this.snackbar.message = "Error : " + error.response.data.description.description;
-            }
-            if (error.response.status = 404) {
-              this.snackbar.message = "Error : " + error.response.data.description.description;
-            }
-            if (error.response.status = 500) {
-              this.snackbar.message = "Error : " + error.response.data.description.description;
-            } else {
-              this.snackbar.message = "Error : " + error;
-            }
+            this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
             this.snackbar.color = "error"; // Set error color
             this.snackbar.show = true;
           }
@@ -291,20 +280,10 @@ export default {
         this.fetchResearches();
 
       } catch (error) {
-           console.error("Error fetching research:", error);
-            if (error.response.status = 401) {
-              this.snackbar.message = "Error : " + error.response.data.description.description;
-            }
-            if (error.response.status = 404) {
-              this.snackbar.message = "Error : " + error.response.data.description.description;
-            }
-            if (error.response.status = 500) {
-              this.snackbar.message = "Error : " + error.response.data.description.description;
-            } else {
-              this.snackbar.message = "Error : " + error;
-            }
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
+        console.error("Error fetching research:", error);
+        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
       this.dialog = false;
       this.resetCurrentResearch();
@@ -326,19 +305,9 @@ export default {
         this.fetchResearches();
 
       } catch (error) {
-            if (error.response.status = 401) {
-              this.snackbar.message = "Error : " + error.response.data.description.description;
-            }
-            if (error.response.status = 404) {
-              this.snackbar.message = "Error : " + error.response.data.description.description;
-            }
-            if (error.response.status = 500) {
-              this.snackbar.message = "Error : " + error.response.data.description.description;
-            } else {
-              this.snackbar.message = "Error : " + error;
-            }
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
+        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
     },
     markForDeletion(index) {
@@ -356,22 +325,12 @@ export default {
       try {
         const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
         this.researches = response.data;
-        
+
       } catch (error) {
         console.error("Error fetching research:", error);
-            if (error.response.status = 401) {
-              this.snackbar.message = "Error : " + error.response.data.description.description;
-            }
-            if (error.response.status = 404) {
-              this.snackbar.message = "Error : " + error.response.data.description.description;
-            }
-            if (error.response.status = 500) {
-              this.snackbar.message = "Error : " + error.response.data.description.description;
-            } else {
-              this.snackbar.message = "Error : " + error;
-            }
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
+        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
     }
 
