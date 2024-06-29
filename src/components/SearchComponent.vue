@@ -25,9 +25,26 @@ export default {
     return {
       search: "",
       pages: [
-        { name: "Home", path: "/" },
-        { name: "About", path: "/about" },
-        { name: "Contact", path: "/contact" },
+        { name: "หน้าหลัก", path: "/" },
+        { name: "ยกระดับงานวิจัยและนวัตกรรม", path: "/services/ups" },
+        { name: "ขั้นตอนการขออนุญาติใช้สิทธิ", path: "/services/lap" },
+        { name: "อบรมและให้คำปรึกษา", path: "/services/ipa" },
+        { name: "ยื่นขอรับความคุ้มครอง", path: "/services/ipp" },
+        { name: "ผลงานพร้อมถ่ายทอด", path: "/tt/all-categories" },
+        { name: "ระเบียบข้อบังคับ มฟล.", path: "/recmn/mfii/rule" },
+        { name: "จัดสรรผลประโยชน์", path: "/recmn/mfii/benefits" },
+        { name: "Q&A", path: "/recmn/mfii/q&a" },
+        { name: "แบบฟอร์มขอยื่นจด", path: "/recmn/downloads/request_form" },
+        { name: "เอกสารการอบรม", path: "/recmn/downloads/training" },
+        { name: "MRii", path: "/recmn/about/inside/MRii" },
+        { name: "MFii", path: "/recmn/about/inside/MFii" },
+        { name: "Research", path: "/recmn/about/inside/research" },
+        { name: "DIP", path: "/recmn/about/outside/DIP" },
+        { name: "WIPO", path: "/recmn/about/outside/WIPO" },
+        { name: "อวท.", path: "/recmn/about/outside/อวท" },
+        { name: "โครงสร้างองค์กร", path: "/about-us/ip-structure" },
+        { name: "บุคลากร", path: "/about-us/ip-staffs" },
+        { name: "ติดต่อเรา", path: "/about-us/contact" },
       ],
     };
   },
@@ -40,3 +57,7 @@ export default {
   },
 };
 </script>
+
+<style>
+
+</style>
