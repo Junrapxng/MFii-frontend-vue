@@ -53,7 +53,7 @@
                 </v-avatar>
               </div> -->
               <div>
-                <v-btn variant="outlined" rounded="xl" size="small" block>
+                <v-btn variant="outlined" rounded="xl" size="small" block @click="downloadPdf()">
                   <v-icon>mdi mdi-download</v-icon> Download PDF
                 </v-btn>
               </div>
@@ -71,16 +71,16 @@
       </v-container>
 
       <div class="text-center">
-    <v-snackbar v-model="snackbar.show" :color="snackbar.color">
-      <p>{{ snackbar.message }}</p>
+        <v-snackbar v-model="snackbar.show" :color="snackbar.color">
+          <p>{{ snackbar.message }}</p>
 
-      <template v-slot:actions>
-        <v-btn color="white" variant="text" @click="snackbar.show = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
-  </div>
+          <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar.show = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </div>
 
     </v-main>
     <Footer></Footer>
@@ -95,17 +95,17 @@ export default {
   data() {
     return {
       snackbar: {
-      show: false,
-      message: "",
-      color: "success", // Default color
-    },
+        show: false,
+        message: "",
+        color: "success", // Default color
+      },
       research: null,
       isLoading: true,
     };
   },
 
- async setup() {
-   
+  async setup() {
+
   },
 
   methods: {
@@ -125,16 +125,36 @@ export default {
         this.isLoading = false;
       }
     },
+
     // counter visitor
-    async counter(){
+    async counter() {
       try {
-      await axios.get(
-        "http://localhost:7770/product-visits/" + this.id
-      );
-    } catch (error) {
-      console.error(error);
-    }
-    }
+        await axios.get(
+          "http://localhost:7770/product-visits/" + this.id
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    downloadPdf() {
+      if (this.research.filePath && this.research.filePath.length > 0) {
+        const pdfPath = this.research.filePath.find(path => path.toLowerCase().endsWith('.pdf'));
+        if (pdfPath) {
+          window.open(`http://localhost:7770/${pdfPath}`, '_blank');
+        } else {
+          // Handle case where no PDF file is found
+          this.snackbar.message = 'No PDF file';
+          this.snackbar.color = 'error';
+          this.snackbar.show = true;
+        }
+      } else {
+        // Handle case where research data or file paths are not loaded
+        this.snackbar.message = 'No research data loaded.';
+        this.snackbar.color = 'error';
+        this.snackbar.show = true;
+      }
+    },
   },
   computed: {
     filteredFilePaths() {
