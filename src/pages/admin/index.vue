@@ -8,21 +8,7 @@
       <UserStatistics />
       <ResearchStatistics />
 
-
     </v-container>
-
-    <div class="text-center">
-        <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
-          <div class="text-subtitle-1 pb-2"></div>
-          <p>{{ snackbar.message }}</p>
-          <template v-slot:actions>
-            <v-btn color="white" variant="text" @click="snackbar.show = false">
-              Close
-            </v-btn>
-          </template>
-        </v-snackbar>
-      </div>
-
   </admin-layout>
 </template>
 
