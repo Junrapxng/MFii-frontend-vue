@@ -81,9 +81,14 @@
                   <v-container class="flex">
                     <v-card v-for="(img, index) in currentResearch.filePath" :key="index" class="mx-2"
                       style="position: relative;">
-                      <template v-if="img.toLowerCase().endsWith('.pdf')">
+                      <template v-if="typeof img === 'string' && img.toLowerCase().endsWith('.pdf')">
                         <v-icon size="100" color="red">mdi-file-pdf-box</v-icon>
                         <v-card-text class="text-center">{{ img.split('/').pop() }}</v-card-text>
+                      </template>
+                      <template v-else>
+                        <!-- Handle other file types or cases where img is not a string -->
+                        <v-img :src="`http://localhost:7770/${img}`" v-model="currentResearch.filePath" height="250px"
+                          width="300px" cover></v-img>
                       </template>
                       <v-img v-else :src="`http://localhost:7770/${img}`" v-model="currentResearch.filePath"
                         height="250px" width="300px" cover>
