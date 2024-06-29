@@ -6,24 +6,24 @@
         <v-row class="mx-5">
           <v-col cols="12" md="5" lg="5">
             <v-card class="rounded-xl max-h-fit bg-gray-100 pa-3 overflow-auto" height="500">
-           
+
               <div class="contents">
                 <ul class="py-3 font-bold text-xl">
-                  ชื่อผลงาน  {{ research.nameOnMedia }}
+                  ชื่อผลงาน {{ research.nameOnMedia }}
                 </ul>
                 <li>ผู้ประดิษฐ์</li>
-                <li v-for="( inventor, index ) in research.inventor" :key="index" class="pl-10" >{{ inventor }}</li>
+                <li v-for="( inventor, index ) in research.inventor" :key="index" class="pl-10">{{ inventor }}</li>
                 <li>สังกัด {{ research.major }}</li>
-                <li>ทรัพย์สินทางปัญญา  {{ research.intelProp }}</li>
-                <li>ประเภทอุตสาหกรรม   <span class="text-green-600">{{ research.industryType }}</span></li>
+                <li>ทรัพย์สินทางปัญญา {{ research.intelProp }}</li>
+                <li>ประเภทอุตสาหกรรม <span class="text-green-600">{{ research.industryType }}</span></li>
                 <li>รายละเอียดผลงาน
                   <dd class="pl-10">
-                    {{  research.descripton  }}
+                    {{ research.descripton }}
                   </dd>
                 </li>
                 <li>จุดเด่น</li>
                 <li class="pl-10">{{ research.hilight }}</li>
-                <li>ความพร้อมของเทคโนโลยี  <span class="text-pink-600">{{ research.techReadiness }}</span></li>
+                <li>ความพร้อมของเทคโนโลยี <span class="text-pink-600">{{ research.techReadiness }}</span></li>
                 <li>ความร่วมมือที่เสาะหา </li>
                 <li class="pl-10">{{ research.coop }}</li>
               </div>
@@ -31,12 +31,17 @@
           </v-col>
           <v-col cols="12" md="5" lg="5">
             <div class="d-flex justify-center items-center">
-              <v-carousel
-                show-arrows="hover"
-                cycle
-                hide-delimiter-background
-              >
-                <v-carousel-item v-for="( pic, index ) in research.filePath" :key="index" :src="`http://localhost:7770/${pic}`" fit ></v-carousel-item>
+              <v-carousel show-arrows="hover" cycle hide-delimiter-background>
+                <!-- If research.filePath has more than one item, display all items except the first one -->
+                <template v-if="research.filePath.length > 1">
+                  <v-carousel-item v-for="(pic, index) in research.filePath.slice(1)" :key="index"
+                    :src="`http://localhost:7770/${pic}`" fit></v-carousel-item>
+                </template>
+                <!-- If research.filePath has one or no items, display only the first item -->
+                <template v-else>
+                  <v-carousel-item v-if="research.filePath.length > 0"
+                    :src="`http://localhost:7770/${research.filePath[0]}`" fit></v-carousel-item>
+                </template>
               </v-carousel>
             </div>
           </v-col>
@@ -48,7 +53,7 @@
                 </v-avatar>
               </div> -->
               <div>
-                <v-btn variant="outlined" rounded="xl" size="small" block>
+                <v-btn variant="outlined" rounded="xl" size="small" block @click="downloadPdf">
                   <v-icon>mdi mdi-download</v-icon> Download PDF
                 </v-btn>
               </div>
@@ -64,7 +69,19 @@
           </p>
         </v-container>
       </v-container>
-      
+
+      <div class="text-center">
+        <v-snackbar v-model="snackbar.show" :color="snackbar.color">
+          <p>{{ snackbar.message }}</p>
+
+          <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar.show = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </div>
+
     </v-main>
     <Footer></Footer>
   </v-app>
@@ -77,15 +94,20 @@ export default {
   props: ["id"],
   data() {
     return {
+      snackbar: {
+        show: false,
+        message: "",
+        color: "success", // Default color
+      },
       research: null,
       isLoading: true,
     };
   },
-  mounted() {
-    console.log(this.id)
-    console.log(typeof(this.id))
-    this.fetchData();
+
+  async setup() {
+
   },
+
   methods: {
     async fetchData() {
       try {
@@ -96,20 +118,64 @@ export default {
         console.log(this.research);
       } catch (error) {
         console.error("Error fetching data:", error);
+        this.snackbar.message = "Error get Research: " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       } finally {
         this.isLoading = false;
       }
     },
+
+    downloadPdf() {
+      const baseUrl = 'http://localhost:7770';
+      try {
+        this.research.filePath.forEach(path => {
+          if (path.toLowerCase().endsWith('.pdf')) {
+            const fullUrl = `${baseUrl}/${path}`;
+            window.open(fullUrl, '_blank');
+          }
+        });
+      } catch (error) {
+        console.error("Error opening PDF:", error);
+        this.snackbar.message = "Error opening PDF: " + error.message;
+        this.snackbar.color = "error";
+        this.snackbar.show = true;
+      }
+    },
+    // counter visitor
+    async counter() {
+      try {
+        await axios.get(
+          "http://localhost:7770/product-visits/" + this.id
+        );
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  },
+  computed: {
+    filteredFilePaths() {
+      if (this.research.filePath.length > 1) {
+        // Return all elements except the first one if there are more than one
+        return this.research.filePath.slice(1);
+      } else {
+        // Return the first element if there is only one
+        return this.research.filePath;
+      }
+    },
+  },
+  mounted() {
+    console.log(this.id)
+    console.log(typeof (this.id))
+    this.fetchData();
+    this.counter();
   },
 
-  setup() {
-    return {};
-  },
-};
+}
 </script>
 
 <style scoped>
-li{
+li {
   font-weight: 600;
   padding: 5px;
 }

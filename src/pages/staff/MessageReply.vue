@@ -3,65 +3,89 @@
     <v-main>
       <staff-layout>
         <v-container>
+          <!-- Message list -->
           <v-card>
             <v-card-title>ข้อความและการตอบกลับ</v-card-title>
             <v-card-text>
               <v-list>
                 <v-list-item v-for="message in messages" :key="message.id" class="list-item-border my-2">
                   <v-list-item-content>
-                    <v-list-item-title>{{ message.title }}</v-list-item-title>
-                    <v-list-item-subtitle>{{ message.content }}</v-list-item-subtitle>
+                    <v-list-item-title>เทคโนโลยีที่สนใจ: {{ message.interestTech }}</v-list-item-title>
+                    <v-list-item-subtitle>ชื่อกิจการ: {{ message.businessName }}</v-list-item-subtitle>
+                    <v-list-item-subtitle>ผู้ส่ง: {{ message.firstName }} {{ message.lastName }}</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action class="my-2">
-                    <v-btn @click="openReplyDialog(message)">ตอบกลับ</v-btn>
+                    <v-btn @click="openReplyDialog(message._id)">ตอบกลับ</v-btn>
                   </v-list-item-action>
                 </v-list-item>
               </v-list>
             </v-card-text>
           </v-card>
+          <!-- ================================================================================ -->
 
+
+
+          <!-- Message Reply  -->
+          <!-- header ====================================================================================== -->
           <v-dialog v-model="isDialogOpen" max-width="800px">
-            <v-card>
-              <v-card-title class="headline">{{ selectedMessage.title }}</v-card-title>
+            <v-card v-for="selected in selectedMessage">
+              <v-card-title class="headline">{{ selected.businessName }}</v-card-title>
               <v-card-text>
-               <div class="chatbox">
-                <v-list class="">
-                  <v-list-item v-for="reply in selectedMessage.replies" :key="reply.id"
-                    :class="reply.sentByCurrentUser ? 'd-flex justify-end ' : 'd-flex justify-start'">
 
-                    <v-list-item-content>
-                      <v-list-item-subtitle v-if="!reply.sentByCurrentUser" class="grey--text ">  <v-avatar v-if="!reply.sentByCurrentUser" class="mr-3">
-                          <v-img src="https://via.placeholder.com/40" alt="User Avatar"></v-img>
-                        </v-avatar> {{ reply.sender }}
-                      </v-list-item-subtitle>
+                <!-- Chat box ====================================================================================== -->
+                <div class="chatbox">
+                  <v-list class="">
+                    <v-list-item v-for="reply in selected.messageReply"
+                      :class="reply.user === user._id ? 'd-flex justify-end' : 'd-flex justify-start'" :key="reply.id">
+                      <v-list-item-content>
 
-                      <v-list-item-subtitle v-if="reply.sentByCurrentUser" class="blue--text text-right align-self-start">{{ reply.sender }}
-                        <v-avatar v-if="reply.sentByCurrentUser" class="ml-3">
-                          <v-img src="https://via.placeholder.com/40" alt="User Avatar"></v-img>
-                        </v-avatar></v-list-item-subtitle>
+                        <!-- ชื่อผู้ส่ง -->
+                        <v-list-item-subtitle v-if="reply.user !== user._id" class="black--text">
+                          {{ selected.firstName }} {{ selected.lastName }}
+                        </v-list-item-subtitle>
+                        <v-list-item-subtitle v-else class="blue--text text-right align-self-start">
+                          Staff
+                        </v-list-item-subtitle>
 
-                      <v-list-item-subtitle :class="reply.sentByCurrentUser ? 'text-right' : 'text-left'">{{ reply.text
-                        }}</v-list-item-subtitle>
-                    </v-list-item-content>
-                  </v-list-item>
-                </v-list>
-               </div>
-                <v-textarea label="Your Reply" v-model="replyText" outlined></v-textarea>
+                        <!-- แสดงข้อความ -->
+                        <v-list-item-title :class="[reply.user === user._id ? 'text-right' : 'text-left',]">
+                          {{ reply.messages }}
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </div>
+                <v-textarea label="Your Reply" v-model="replyText" @keyup.enter="sendReply" outlined></v-textarea>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue darken-1" text @click="closeReplyDialog">Cancel</v-btn>
-                <v-btn color="blue darken-1" text @click="sendReply">Send</v-btn>
+                <v-btn color="blue darken-1" text @click="replyMessage(replyText, selected._id)">Send</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
         </v-container>
       </staff-layout>
+
+      <div class="text-center">
+        <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+          <div class="text-subtitle-1 pb-2"></div>
+          <p>{{ snackbar.message }}</p>
+          <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar.show = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </div>
+
     </v-main>
   </v-app>
 </template>
 
 <script>
+import { useUserStore } from "@/store/user";
+import axios from "axios";
 import StaffLayout from "@/layouts/staff.vue";
 export default {
   name: "staff-MessageReply-page",
@@ -70,51 +94,122 @@ export default {
   },
   data() {
     return {
+      snackbar: {
+        show: false,
+        message: "",
+        color: "success", // Default color
+      },
       isDialogOpen: false,
       selectedMessage: {},
       replyText: '',
-      messages: [
-        { id: 1, title: 'Message 1', content: 'Content of message 1', sender: 'Sender A', replies: [{sender:"Kim", text: "สวัสดีครับ"}] },
-        { id: 2, title: 'Message 2', content: 'Content of message 2', sender: 'Sender B', replies: [] },
-        // Add more messages as needed
-      ],
+      messages: [],
+      user: {
+        _id: ''
+      },
     };
   },
-  created() {
+  async created() {
     this.fetchMessages();
+
+    // get user info from pinia store/user.js
+    const userStore = useUserStore();
+    try {
+      if (!userStore.user) {
+        await userStore.fetchUser();
+      }
+      if (userStore.user) {
+        this.user = userStore.user.resutl;
+      }
+    } catch (error) {
+      this.snackbar.message = "Error : " + error;
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
+    }
+
   },
   methods: {
-    openReplyDialog(message) {
-      this.selectedMessage = message;
-      this.replyText = ''; // Clear previous reply text
-      this.isDialogOpen = true;
+    async openReplyDialog(id) {
+      try {
+        const response = await axios.get('http://localhost:7770/mesDetail/' + id, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        })
+        this.selectedMessage = response.data.result;
+        // console.log(this.selectedMessage);
+        this.replyText = ''; // Clear previous reply text
+        this.isDialogOpen = true;
+
+      } catch (error) {
+        console.error("Error fetching research:", error);
+        this.snackbar.message = "Error get detail: " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+      }
     },
-    closeReplyDialog() {
-      this.isDialogOpen = false;
-    },
+    // Reply by enter
     sendReply() {
       if (this.replyText.trim()) {
-        const newReply = {
-          id: Date.now(),
-          text: this.replyText,
-          sentByCurrentUser: true, // Assuming current user is sending the reply
-          sender: 'Current User', // Replace with actual user information
-        };
-        this.selectedMessage.replies.push(newReply);
-        this.replyText = ''; // Clear the input after sending
+        this.replyMessage(this.replyText, this.selectedMessage[0]._id);
       }
     },
 
+    // reply Message
+    async replyMessage(message, id) {
+      try {
+        const response = await axios.patch('http://localhost:7770/mesReplyUpdate/' + id, {
+          messages: message,
+          user: this.user._id // Assuming you have the user object available
+        }, {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        });
+        // Add the new reply to the selected message's messageReply array
+        this.selectedMessage[0].messageReply.push({
+          messages: message,
+          user: this.user._id,
+          id: Date.now() // Generate a unique id for the new reply
+        });
+        // Clear the reply text
+        this.replyText = '';
+        // console.log(this.selectedMessage);
+      } catch (error) {
+        this.snackbar.message = "Error sending reply: " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+      }
+    },
 
-    fetchMessages() {
-      // logic to fetch messages
+    async fetchMessages() {
+      try {
+        const response = await axios.get('http://localhost:7770/mesGetData', {
+          headers: {
+            Authorization: localStorage.getItem("token"),
+          },
+        });
+        this.messages = response.data.result
+        this.replyMessage
+        console.log(this.messages);
+      } catch (error) {
+        console.error("Error fetching product counts:", error);
+        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+      }
+
     },
-    replyMessage(message) {
-      // logic to reply message
+
+    closeReplyDialog() {
+      this.isDialogOpen = false;
     },
+
   },
 };
 </script>
+
+
+
 
 <style scoped>
 .list-item-border {
@@ -125,10 +220,16 @@ export default {
 .text-right {
   text-align: right;
 }
+
 .text-left {
   text-align: left
 }
-.chatbox{
+
+.chatbox {
   overflow: auto;
+}
+
+.black-text {
+  color: black;
 }
 </style>

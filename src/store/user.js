@@ -15,22 +15,25 @@ export const useUserStore = defineStore('user', {
     async fetchUser() {
       this.loading = true;
       this.error = null;
-      try {
-        const response = await axios.get('http://localhost:7770/getUser', {
-          headers: {
-            Authorization: localStorage.getItem('token'),
-          },
-        });
-        this.user = response.data;
-      } catch (error) {
-        this.error = error;
-      } finally {
-        this.loading = false;
+      if(localStorage.getItem('token')){
+        try {
+          const response = await axios.get('http://localhost:7770/getUser', {
+            headers: {
+              Authorization: localStorage.getItem('token'),
+            },
+          });
+          this.user = response.data;
+        } catch (error) {
+          this.error = error;
+        } finally {
+          this.loading = false;
+        }
       }
     },
     logout() {
       this.user = null;
       localStorage.removeItem('token');
+      window.location.reload();
     },
   },
 });

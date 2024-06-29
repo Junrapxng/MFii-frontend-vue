@@ -25,6 +25,7 @@ import MessageReply from '@/pages/staff/MessageReply.vue'
 import Notfound from '../pages/NotFound.vue'
 import UserEditProfile from '../pages/user/userEditProfile.vue'
 import { useUserStore } from '@/store/user'
+import MessagePage from '../pages/user/userMessagePage.vue'
 
 
 const routes = [
@@ -117,6 +118,12 @@ const routes = [
     name: 'Profile',
     component: UserEditProfile,
     meta: { requiresAuth: true , role: 'user'},
+  },
+  {
+    path: '/message',
+    name: 'Message',
+    component: MessagePage,
+    meta: { requiresAuth: true },
   },
 
 

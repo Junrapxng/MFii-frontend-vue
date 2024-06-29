@@ -1,25 +1,32 @@
 <template>
-  <div class="mb-10">
-    <div class="header">
+  <div class="mb-10 mt-3">
+    <div class="header flex-wrap">
       <!-- Logo, Title, and Buttons Section -->
       <v-row>
         <!-- Logo column -->
-        <v-col cols="9">
-          <v-container class="d-flex justify-start align-center font-noto-sans-thai">
-            <div class="head-logo">
-              <a href="https://mfu.ac.th" title="มหาวิทยาลัยแม่ฟ้าหลวง Mae Fah Luang University">
-                <v-img :width="130" cover src="../assets/mfu_logo.png"
-                  alt="มหาวิทยาลัยแม่ฟ้าหลวง Mae Fah Luang University"></v-img>
+        <v-col cols="12" lg="9" md="9" sm="9">
+          <v-container
+            class="header-title flex justify-start items-center font-noto-sans-thai p-0"
+          >
+            <div class="head-logo mb-2 mb-md-0">
+              <a
+                href="/"
+                title="มหาวิทยาลัยแม่ฟ้าหลวง Mae Fah Luang University"
+              >
+                <v-img
+                  :width="120"
+                  cover
+                  src="../assets/mfu_logo.png"
+                  alt="มหาวิทยาลัยแม่ฟ้าหลวง Mae Fah Luang University"
+                ></v-img>
               </a>
             </div>
-            <v-divider :thickness="10" vertical color="#ff0000" class="border-opacity-100 mx-4 my-2"></v-divider>
             <!-- Title and subtitle column -->
-            <div>
-
-              <h1 class="text-3xl">
+            <div class="title text-center text-md-left">
+              <h1 class="text-2xl md:text-3xl">
                 ฝ่ายจัดการทรัพย์สินทางปัญญา มหาวิทยาลัยแม่ฟ้าหลวง
               </h1>
-              <h2 class="text-2xl">
+              <h2 class="text-xl md:text-2xl">
                 MFU Intellectual Property Management and Technology Transfer
               </h2>
             </div>
@@ -27,62 +34,180 @@
         </v-col>
 
         <!-- Register and login buttons column -->
-        <v-col cols="3" class="font-noto-sans-thai head-right"
-          style="display: flex; justify-content: center; align-items: center">
-         <v-container>
-          <!-- if user not loggedin -->
-          <v-container v-if="userStore.error || userStore.loading">
-            <v-btn class="mr-4 bg-black text-white py-2 px-4 rounded-xl border w-32 h-14"
-              to="/register">สมัครสมาชิก</v-btn>
-            <v-btn class="py-2 px-4 text-black rounded-xl border border-black w-32 h-14" to="/login">เข้าสู่ระบบ</v-btn>
+        <v-col
+          cols="12"
+          lg="3"
+          md="3"
+          sm="3"
+          class="font-noto-sans-thai"
+        >
+          <v-container class="p-0 m-0">
+            <search-component  class="btn-search"></search-component>
+            <router-view></router-view>
+            <!-- <v-text-field
+                    v-model="search"
+                    density="comfortable"
+                    placeholder="Search"
+                    prepend-inner-icon="mdi-magnify"
+                    style="max-width: 270px"
+                    variant="solo"
+                    clearable
+                    @click:clear="clearSearch"
+                    hide-details
+                    rounded 
+                    class="py-3 btn-search"
+                  ></v-text-field> -->
+            <!-- if user not loggedin -->
+            <v-container
+              v-if="userStore.error || userStore.loading"
+              class="p-0 m-0"
+            >
+              <v-btn
+                class="mr-2  bg-black text-white rounded-xl border w-32 h-14 btn-nav"
+                to="/register"
+                >สมัครสมาชิก</v-btn
+              >
+              <v-btn
+                class="ml-2 text-black rounded-xl border border-black w-32 h-14 btn-nav"
+                to="/login"
+                >เข้าสู่ระบบ</v-btn
+              >
+            </v-container>
+
+            <!-- if user loggedin -->
+            <v-container v-if="!userStore.loading && !userStore.error"
+            class="flex align-center justify-center p-0">
+                  <h1 class=" mx-4">
+                    สวัสดี, คุณ {{ userStore.user.resutl.firstName }}
+                    {{ userStore.user.resutl.lastName }}
+                  </h1>
+
+                  <v-menu transition="slide-x-transition">
+                    <template v-slot:activator="{ props }">
+                      <v-btn
+                        v-bind="props"
+                        icon
+                        size="48px"
+                        class="hover:bg-gray-200"
+                      >
+                        <v-avatar size="48px">
+                          <v-icon
+                            v-if="!userStore.user.resutl.img"
+                            icon="mdi-account-circle"
+                            size="58px"
+                          ></v-icon>
+                          <v-img
+                            v-else
+                            alt="John"
+                            src="https://cdn.vuetifyjs.com/images/john.jpg"
+                            cover
+                          ></v-img>
+                        </v-avatar>
+                      </v-btn>
+                    </template>
+
+                    <v-list>
+                      <router-link
+                        v-if="userStore.user.resutl.role === 'staff'"
+                        to="/staff"
+                      >
+                        <v-list-item>
+                          <v-list-item-title>Staff Page</v-list-item-title>
+                        </v-list-item>
+                      </router-link>
+                      <router-link
+                        v-if="userStore.user.resutl.role === 'admin'"
+                        to="/admin"
+                      >
+                        <v-list-item>
+                          <v-list-item-title>Admin Page</v-list-item-title>
+                        </v-list-item>
+                      </router-link>
+                      <router-link
+                        v-if="userStore.user.resutl.role === 'user'"
+                        to="/profile"
+                      >
+                        <v-list-item>
+                          <v-list-item-title>Edit Profile</v-list-item-title>
+                        </v-list-item>
+                      </router-link>
+
+                      <router-link
+                        v-if="userStore.user.resutl.role === 'user'"
+                        to="/message"
+                      >
+                        <v-list-item>
+                          <v-list-item-title>Message</v-list-item-title>
+                        </v-list-item>
+                      </router-link>
+                      <v-list-item @click="logoutBtn">
+                        <v-list-item-title>Logout</v-list-item-title>
+                      </v-list-item>
+                    </v-list>
+                  </v-menu>
+            </v-container>
           </v-container>
-          <!-- if user loggedin -->
-          <v-container v-if="!userStore.loading && !userStore.error ">
-            <h1>Hello, {{ userStore.user.resutl.email }}</h1>
-            <v-btn @click="logoutBtn">Logout</v-btn>
-          </v-container>
-         </v-container>
-        
         </v-col>
       </v-row>
     </div>
 
     <!-- Header Menu Bar -->
-    <v-app-bar :elevation="2" app color="#D02630" style="
-        background-color: #d02630;
-        height: 80px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      " class="font-noto-sans-thai mt-40 h-fit w-fit Navbar">
+    <v-app-bar
+      :elevation="2"
+      app
+      color="#D02630"
+      class="font-noto-sans-thai mt-36"
+    >
       <v-spacer></v-spacer>
 
       <div class="text-center">
-        <v-menu v-for="item in menuItems" :key="item.title" :location="bottom" :to="item.route">
+        <v-menu
+          v-for="item in menuItems"
+          :key="item.title"
+          :location="bottom"
+          :to="item.route"
+        >
           <template v-slot:activator="{ props }">
-            <v-btn dark v-bind="props" class="mx-2 rounded-lg hover:bg-white hover:text-red-500" v-if="
-              item.title !== 'หน้าหลัก' && item.title !== 'ผลงานพร้อมถ่ายทอด'
-            ">
+            <v-btn
+              dark
+              v-bind="props"
+              class="mx-2 rounded-lg hover:bg-white hover:text-red-500"
+              v-if="
+                item.title !== 'หน้าหลัก' && item.title !== 'ผลงานพร้อมถ่ายทอด'
+              "
+            >
               <router-link :to="item.route">
                 {{ item.title }}
                 <v-icon>mdi-menu-down</v-icon>
               </router-link>
             </v-btn>
-            <v-btn dark v-bind="props" class="mx-2 rounded-lg hover:bg-white hover:text-red-500" v-else>
-              <router-link :to="item.route">
-                {{ item.title }}
-              </router-link>
+            <v-btn
+              dark
+              v-bind="props"
+              class="mx-2 rounded-lg hover:bg-white hover:text-red-500"
+              :to="item.route"
+              v-else
+            >
+              {{ item.title }}
             </v-btn>
           </template>
 
-          <v-list v-if="
-            item.title !== 'หน้าหลัก' && item.title !== 'ผลงานพร้อมถ่ายทอด'
-          ">
+          <v-list
+            v-if="
+              item.title !== 'หน้าหลัก' && item.title !== 'ผลงานพร้อมถ่ายทอด'
+            "
+          >
             <template v-for="subItem in item.subItems">
-              <v-menu v-if="subItem.subItems && subItem.subItems.length" :key="subItem.title" :location="bottom">
+              <v-menu
+                v-if="subItem.subItems && subItem.subItems.length"
+                :key="subItem.title"
+                :location="bottom"
+              >
                 <template v-slot:activator="{ props }">
                   <v-list-item v-bind="props">
-                    <v-list-item-title :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }">
+                    <v-list-item-title
+                      :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }"
+                    >
                       {{ subItem.title }} <v-icon>mdi-chevron-right</v-icon>
                     </v-list-item-title>
                   </v-list-item>
@@ -90,13 +215,18 @@
 
                 <v-list>
                   <template v-for="nestedItem in subItem.subItems">
-                    <v-menu v-if="nestedItem.subItems && nestedItem.subItems.length" :key="nestedItem.title"
-                      :location="bottom">
+                    <v-menu
+                      v-if="nestedItem.subItems && nestedItem.subItems.length"
+                      :key="nestedItem.title"
+                      :location="bottom"
+                    >
                       <template v-slot:activator="{ props }">
                         <v-list-item v-bind="props">
-                          <v-list-item-title :style="{
-                            fontFamily: 'Noto Sans Thai, sans-serif',
-                          }">
+                          <v-list-item-title
+                            :style="{
+                              fontFamily: 'Noto Sans Thai, sans-serif',
+                            }"
+                          >
                             {{ nestedItem.title }}
                             <v-icon>mdi-chevron-right</v-icon>
                           </v-list-item-title>
@@ -105,15 +235,21 @@
                       <!-- เพิ่มโค้ดสำหรับ nestedItem ที่อยู่ใน nestedItem ที่นี่ -->
                       <v-list>
                         <template v-for="subNestedItem in nestedItem.subItems">
-                          <v-menu v-if="
-                            subNestedItem.subItems &&
-                            subNestedItem.subItems.length
-                          " :key="subNestedItem.title" :location="bottom">
+                          <v-menu
+                            v-if="
+                              subNestedItem.subItems &&
+                              subNestedItem.subItems.length
+                            "
+                            :key="subNestedItem.title"
+                            :location="bottom"
+                          >
                             <template v-slot:activator="{ props }">
                               <v-list-item v-bind="props">
-                                <v-list-item-title :style="{
-                                  fontFamily: 'Noto Sans Thai, sans-serif',
-                                }">
+                                <v-list-item-title
+                                  :style="{
+                                    fontFamily: 'Noto Sans Thai, sans-serif',
+                                  }"
+                                >
                                   {{ subNestedItem.title }}
                                   <v-icon>mdi-chevron-right</v-icon>
                                 </v-list-item-title>
@@ -121,11 +257,17 @@
                             </template>
                             <!-- เพิ่มโค้ดสำหรับ subNestedItem ที่อยู่ใน subNestedItem ที่นี่ -->
                           </v-menu>
-                          <router-link v-else :key="subNestedItem" :to="subNestedItem.route">
+                          <router-link
+                            v-else
+                            :key="subNestedItem"
+                            :to="subNestedItem.route"
+                          >
                             <v-list-item>
-                              <v-list-item-title :style="{
-                                fontFamily: 'Noto Sans Thai, sans-serif',
-                              }">
+                              <v-list-item-title
+                                :style="{
+                                  fontFamily: 'Noto Sans Thai, sans-serif',
+                                }"
+                              >
                                 {{ subNestedItem.title }}
                               </v-list-item-title>
                             </v-list-item>
@@ -133,9 +275,15 @@
                         </template>
                       </v-list>
                     </v-menu>
-                    <router-link v-else :key="nestedItem" :to="nestedItem.route">
+                    <router-link
+                      v-else
+                      :key="nestedItem"
+                      :to="nestedItem.route"
+                    >
                       <v-list-item>
-                        <v-list-item-title :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }">
+                        <v-list-item-title
+                          :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }"
+                        >
                           {{ nestedItem.title }}
                         </v-list-item-title>
                       </v-list-item>
@@ -145,7 +293,9 @@
               </v-menu>
               <router-link v-else :key="subItem" :to="subItem.route">
                 <v-list-item>
-                  <v-list-item-title :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }">
+                  <v-list-item-title
+                    :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }"
+                  >
                     {{ subItem.title }}
                   </v-list-item-title>
                 </v-list-item>
@@ -159,11 +309,14 @@
     </v-app-bar>
   </div>
 </template>
-
 <script>
-import { useUserStore } from '@/store/user';
+import { useUserStore } from "@/store/user";
+import SearchComponent from '../components/SearchComponent.vue';
 export default {
   name: "NavBar",
+  components: {
+    SearchComponent
+  },
   data() {
     return {
       loggedIn: false,
@@ -251,19 +404,19 @@ export default {
       this.$router.push(link);
     },
 
-    logoutBtn(){
-      localStorage.removeItem('token')
-      this.$router.push('/').then(() => {
-    window.location.reload();
-  });
-    }
+    logoutBtn() {
+      localStorage.removeItem("token");
+      this.$router.push("/").then(() => {
+        window.location.reload();
+      });
+    },
   },
+  // fetch User prom state management
   setup() {
     const userStore = useUserStore();
     userStore.fetchUser();
-
-    return { userStore }
-  }
+    return { userStore };
+  },
 };
 </script>
 
@@ -272,23 +425,91 @@ export default {
   font-family: "Noto Sans Thai", sans-serif;
 }
 
-@media (max-width: 768px) {
-  .head-logo {
-    width: 100%;
-    text-align: center;
-  }
-
+@media (max-width: 1200px) {
   .text-3xl {
-    font-size: 1.5rem;
+    font-size: 10px;
+  }
+  .text-2xl {
+    font-size: 24px;
+  }
+  .text-xl {
+    font-size: 16px;
+  }
+  .btn-nav {
+    width: 95px; 
+    height: 40px; 
+    font-size: 12px;
+  }
+  .v-app-bar {
+    margin-top: 15%;
+  }
+}
+
+@media (max-width: 900px) {
+  .text-3xl {
+    font-size: 10px;
+  }
+  .text-2xl {
+    font-size: 20px;
+  }
+  .text-xl {
+    font-size: 14px;
+  }
+  .header {
+    display: block;
+  }
+  .head-logo {
+    justify-content: center;
+    display: flex;
+    margin-bottom: 10px;
+  }
+  /* .btn-top {
+    display: block;
+    justify-content: center; 
+    align-items: center; 
+  } */
+  .btn-nav {
+    width: 79px; 
+    height: 40px; 
+    font-size: 10px;
+  }
+  .v-app-bar {
+    margin-top: 20%;
+  }
+}
+
+@media (max-width: 600px) {
+  .text-3xl {
+    font-size: 20px;
+    margin-bottom: 10px;
   }
 
   .text-2xl {
-    font-size: 1.25rem;
+    font-size: 16px;
+    margin-bottom: 4px;
   }
 
-  .head-left,
-  .head-right {
-    text-align: center;
+  .text-xl {
+    font-size: 10px;
+    margin-bottom: 3px;
+  }
+
+  .head-logo {
+    justify-content: center;
+    display: flex;
+    margin-bottom: 5px;
+  }
+
+  .header-title {
+    display: block;
+  }
+
+  .v-app-bar {
+    margin-top: 75%;
   }
 }
+
+/* .v-app-bar {
+    margin-top: 10%;
+  } */
 </style>
