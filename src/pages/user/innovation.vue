@@ -118,7 +118,7 @@ export default {
         console.log(this.research);
       } catch (error) {
         console.error("Error fetching data:", error);
-        this.snackbar.message = "Error Fetching data : " + error.message;
+        this.snackbar.message = "Error get Research: " + error.response.data.description.description + " Code: " + error.response.status;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       } finally {

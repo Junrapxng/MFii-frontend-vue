@@ -118,7 +118,7 @@ export default {
             }
         } catch (error) {
             console.log(error)
-            this.snackbar.message = "Error Fetching data : " + error;
+            this.snackbar.message = "Error Fetching user data : " + error;
             this.snackbar.color = "error"; // Set error color
             this.snackbar.show = true;
         }
@@ -139,17 +139,7 @@ export default {
                 this.replyText = ''; // Clear previous reply text
                 this.isDialogOpen = true;
             } catch (error) {
-                if (error.response.status = 401) {
-                    this.snackbar.message = "Error : " + error.response.data.description.description;
-                }
-                if (error.response.status = 404) {
-                    this.snackbar.message = "Error : " + error.response.data.description.description;
-                }
-                if (error.response.status = 500) {
-                    this.snackbar.message = "Error : " + error.response.data.description.description;
-                } else {
-                    this.snackbar.message = "Error : " + error;
-                }
+                this.snackbar.message = "Error get message: " + error.response.data.description.description + " Code: " + error.response.status;
                 this.snackbar.color = "error"; // Set error color
                 this.snackbar.show = true;
             }
@@ -176,17 +166,7 @@ export default {
                 console.log(this.selectedMessage);
             } catch (error) {
                 console.error("Error sending reply:", error);
-                if (error.response.status = 401) {
-                    this.snackbar.message = "Error : " + error.response.data.description.description;
-                }
-                if (error.response.status = 404) {
-                    this.snackbar.message = "Error : " + error.response.data.description.description;
-                }
-                if (error.response.status = 500) {
-                    this.snackbar.message = "Error : " + error.response.data.description.description;
-                } else {
-                    this.snackbar.message = "Error : " + error;
-                }
+                this.snackbar.message = "Error sending reply: " + error.response.data.description.description + " Code: " + error.response.status;
                 this.snackbar.color = "error"; // Set error color
                 this.snackbar.show = true;
             }
@@ -203,17 +183,7 @@ export default {
                 });
                 this.messages = response.data.result
             } catch (error) {
-                if (error.response.status = 401) {
-                    this.snackbar.message = "Error : " + error.response.data.description.description;
-                }
-                if (error.response.status = 404) {
-                    this.snackbar.message = "Error : " + error.response.data.description.description;
-                }
-                if (error.response.status = 500) {
-                    this.snackbar.message = "Error : " + error.response.data.description.description;
-                } else {
-                    this.snackbar.message = "Error : " + error;
-                }
+                this.snackbar.message = "Error fetch: " + error.response.data.description.description + " Code: " + error.response.status;
                 this.snackbar.color = "error"; // Set error color
                 this.snackbar.show = true;
             }

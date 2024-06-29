@@ -100,17 +100,7 @@ export default {
         }, 1000);
       } catch (error) {
         console.log("Error", error);
-        if (error.response.status = 401) {
-          this.snackbar.message = "Error : " + error.response.data.description.description;
-        }
-        if (error.response.status = 404) {
-          this.snackbar.message = "Error : " + error.response.data.description.description;
-        }
-        if (error.response.status = 500) {
-          this.snackbar.message = "Error : " + error.response.data.description.description;
-        } else {
-          this.snackbar.message = "Error : " + error;
-        }
+        this.snackbar.message = "Error saving profile: " + error.response.data.description.description + " Code: " + error.response.status;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
