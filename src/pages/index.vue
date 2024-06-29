@@ -172,7 +172,7 @@ export default defineComponent({
         })
       } catch (error) {
         console.error('Error fetching global visitor count:', error)
-        this.snackbar.message = "Error Fetching data : " + error.message;
+        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
