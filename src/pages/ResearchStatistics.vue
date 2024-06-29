@@ -10,6 +10,19 @@
       </v-card-text>
     </v-card>
   </v-container>
+
+  <div class="text-center">
+        <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+          <div class="text-subtitle-1 pb-2"></div>
+          <p>{{ snackbar.message }}</p>
+          <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar.show = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </div>
+
 </template>
 
 <script>
@@ -17,6 +30,15 @@ import axios from "axios";
 import { ref, computed } from "vue";
 
 export default {
+  data(){
+    return{
+      snackbar: {
+        show: false,
+        message: "",
+        color: "success", // Default color
+      },
+    }
+  },
   setup() {
     const productCounts = ref({});
     const research = ref([]);
@@ -38,7 +60,9 @@ export default {
         const response = await axios.get('http://localhost:7770/all-product-counts');
         productCounts.value = response.data.productCounts;
       } catch (error) {
-        console.error("Error fetching product counts:", error);
+        this.snackbar.message = "Error: " + error;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
     };
 
@@ -46,8 +70,12 @@ export default {
       try {
         const res = await axios.get('http://localhost:7770/getsResearch/all/all/all');
         research.value = res.data.result;
+        
       } catch (error) {
         console.error("Error fetching research:", error);
+        this.snackbar.message = "Error fetching research: " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
     };
 

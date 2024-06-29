@@ -92,6 +92,19 @@
         <!-- Pagination -->
         <v-pagination v-model="currentPage" :length="totalPages" class="pt-6" @input="paginate"></v-pagination>
       </v-container>
+
+
+      <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+        <div class="text-subtitle-1 pb-2"></div>
+        <p>{{ snackbar.message }}</p>
+        <template v-slot:actions>
+          <v-btn color="white" variant="text" @click="snackbar.show = false">
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
+
+
     </v-main>
     <Footer></Footer>
     <router-view></router-view>
@@ -107,7 +120,12 @@ import axios from "axios";
 export default defineComponent({
   name: "index-page",
   data() {
-    return {
+    return { 
+      snackbar: {
+      show: false,
+      message: "",
+      color: "success", // Default color
+    },
       search: "",
       userId: ref(null),
       userinfo: ref(null),
@@ -154,7 +172,9 @@ export default defineComponent({
         })
       } catch (error) {
         console.error('Error fetching global visitor count:', error)
-        alert(error)
+        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
     }
     onMounted(fetchGlobalCount)
@@ -180,6 +200,9 @@ export default defineComponent({
           console.log("images is " + this.images.result)
         } else {
           console.log("No active data found");
+          this.snackbar.message = "No active data found : " + error.message;
+          this.snackbar.color = "error"; // Set error color
+          this.snackbar.show = true;
         }
       } else {
         this.error = new Error("One or both API responses are not OK");
@@ -193,7 +216,9 @@ export default defineComponent({
     } catch (error) {
       this.error = error;
       console.error("Error fetching data:", error);
-      alert("Error fetching data:", error)
+      this.snackbar.message = "Error Fetching data : " + error.message;
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
     } finally {
       this.loading = false;
     }

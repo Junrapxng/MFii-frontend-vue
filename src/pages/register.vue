@@ -101,15 +101,25 @@ export default {
     async register() {
       const { valid } = await this.$refs.form.validate();
       if (valid) {
+        const options = {
+          timeZone: 'Asia/Bangkok',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+          hour12: false,
+        };
+        const formatter = new Intl.DateTimeFormat('en-GB', options);
+        const parts = formatter.formatToParts(new Date());
+        const createDate = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}T${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}:${parts.find(p => p.type === 'second').value}.000Z`;
         try {
-          const formatter = new Intl.DateTimeFormat('en-GB', options);
-          const parts = formatter.formatToParts(new Date());
-          const createDate = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}T${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}:${parts.find(p => p.type === 'second').value}.000Z`;
           const response = await axios.post("http://localhost:7770/register", {
             email: this.form.email.trim(),
             password: this.form.password.trim(),
             firstName: this.form.firstName.trim(),
-            lastName: this.form.lastName.trim(),
+            lastName: this.form.lastName.trim() ,
             phoneNumber: this.form.phone.trim(),
             createDate: createDate, // Set create date
           });
@@ -117,7 +127,7 @@ export default {
           this.$router.push("/");
         } catch (error) {
           console.error("Error registering:", error);
-          this.responseMessage = error;
+          this.responseMessage = error;  
           if (
             error.response &&
             error.response.data &&

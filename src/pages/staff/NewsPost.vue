@@ -53,6 +53,20 @@
 
       </staff-layout>
     </v-main>
+
+    <div class="text-center">
+      <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+        <div class="text-subtitle-1 pb-2"></div>
+        <p>{{ snackbar.message }}</p>
+        <template v-slot:actions>
+          <v-btn color="white" variant="text" @click="snackbar.show = false">
+            Close
+          </v-btn>
+        </template>
+
+      </v-snackbar>
+    </div>
+
   </v-app>
 </template>
 
@@ -67,6 +81,11 @@ export default {
   },
   data() {
     return {
+      snackbar: {
+        show: false,
+        message: "",
+        color: "success", // Default color
+      },
       news: {
         url: "",
         images: [],
@@ -80,7 +99,6 @@ export default {
   },
   methods: {
     async addNews() {
-      console.log('uploadNews method called.');
       try {
         const formData = new FormData();
         formData.append('url', this.news.url);
@@ -101,15 +119,20 @@ export default {
             }
           });
           console.log(response.data);
-          alert('News and images uploaded successfully!');
           this.fetchImg(); // Reload images after upload
           this.news.images = [];
+          this.snackbar.message = "News and images uploaded successfully!";
+          this.snackbar.color = "success";
+          this.snackbar.show = true;
         } else {
           alert('No images selected or all selected images are empty.');
         }
       } catch (error) {
-        console.error(error);
-        alert('Failed to upload news and images.');
+        console.error("Error :", error);
+        this.snackbar.message = "Error adding News: " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+
       }
     },
     async fetchImg() {
@@ -117,9 +140,12 @@ export default {
       try {
         const res = await axios.get('http://localhost:7770/getsNews');
         this.imgs = res.data.result;
-        console.log(this.imgs);
       } catch (error) {
         console.log('Error: ' + error);
+        this.snackbar.message = "Error get News: " + error.response.data.description.description;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+
       }
     },
 
@@ -142,14 +168,19 @@ export default {
         console.log(response.data);
         this.imgs[this.deleteIndex].filePath.splice(this.deleteIndex, 1);
         this.dialog = false; // Close dialog
+        this.snackbar.message = "Delete successfully";
+        this.snackbar.color = "success";
+        this.snackbar.show = true;
       } catch (error) {
         console.error('Error deleting image:', error);
-        alert('Failed to delete image.');
+        this.snackbar.message = "Error deleting image: " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
     },
   },
   mounted() {
-    console.log('Component mounted.');
+
     this.fetchImg(); // Call fetchImg when the component is mounted
   }
 };

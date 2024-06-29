@@ -233,12 +233,12 @@ export default {
 
 <style scoped>
 .list-item-border {
-  border: 1px solid #ccc;
-  border-radius: 4px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .text-right {
-  text-align: right;
+    text-align: right;
 }
 
 .text-left {
@@ -246,10 +246,10 @@ export default {
 }
 
 .chatbox {
-  overflow: auto;
+    overflow: auto;
 }
 
 .black-text {
-  color: black;
+    color: black;
 }
 </style>

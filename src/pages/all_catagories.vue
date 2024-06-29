@@ -83,7 +83,7 @@
 
         <!-- Cards Section -->
         <v-container>
-        <div v-if="loading">Loading....</div>
+          <div v-if="loading" class="justify-center">Loading....</div>
           <v-row v-else>
             <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
               <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
@@ -97,18 +97,18 @@
                   </v-img>
                   <v-card-title class="text-lg">{{
                     item.nameOnMedia
-                    }}</v-card-title>
+                  }}</v-card-title>
                   <v-card-subtitle class="text-sm">{{
                     item.industryType
-                    }}</v-card-subtitle>
+                  }}</v-card-subtitle>
                   <v-card-actions>
                     <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
-                        ? 'purple'
-                        : item.techReadiness === 'ระดับต้นแบบ'
-                          ? 'blue'
-                          : item.techReadiness === 'ระดับถ่ายทอด'
-                            ? 'orange'
-                            : 'default'
+                      ? 'purple'
+                      : item.techReadiness === 'ระดับต้นแบบ'
+                        ? 'blue'
+                        : item.techReadiness === 'ระดับถ่ายทอด'
+                          ? 'orange'
+                          : 'default'
                       ">
                       {{ item.techReadiness }}
                     </v-chip>
@@ -123,6 +123,17 @@
         <!-- Pagination -->
         <v-pagination v-model="currentPage" :length="totalPages" class="pt-6" @input="paginate"></v-pagination>
       </v-container>
+
+      <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+        <div class="text-subtitle-1 pb-2"></div>
+        <p>{{ snackbar.message }}</p>
+        <template v-slot:actions>
+          <v-btn color="white" variant="text" @click="snackbar.show = false">
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
+
     </v-main>
     <Footer></Footer>
   </v-app>
@@ -134,6 +145,11 @@ export default {
   name: "all-categories-page",
   data() {
     return {
+      snackbar: {
+        show: false,
+        message: "",
+        color: "success", // Default color
+      },
       search: "",
       Industry_type: 'ทั้งหมด',
       Intellectual_property_type: 'ทั้งหมด',
@@ -227,16 +243,13 @@ export default {
         }
       } else {
         this.error = new Error("One or both API responses are not OK");
-        console.error(
-          "API responses:",
-          api1Response.status,
-          api2Response.status
-        );
       }
     } catch (error) {
       this.error = `'Error fetching data: ${error}'`;
       console.error("Error fetching data:", error);
-      alert("Error fetching data:" + error)
+      this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
     } finally {
       this.loading = false;
     }
