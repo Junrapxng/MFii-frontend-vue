@@ -32,16 +32,8 @@
           <v-col cols="12" md="5" lg="5">
             <div class="d-flex justify-center items-center">
               <v-carousel show-arrows="hover" cycle hide-delimiter-background>
-                <!-- If research.filePath has more than one item, display all items except the first one -->
-                <template v-if="research.filePath.length > 1">
-                  <v-carousel-item v-for="(pic, index) in research.filePath.slice(1)" :key="index"
-                    :src="`http://localhost:7770/${pic}`" fit></v-carousel-item>
-                </template>
-                <!-- If research.filePath has one or no items, display only the first item -->
-                <template v-else>
-                  <v-carousel-item v-if="research.filePath.length > 0"
-                    :src="`http://localhost:7770/${research.filePath[0]}`" fit></v-carousel-item>
-                </template>
+                <v-carousel-item v-for="(pic, index) in filteredImages" :key="index"
+                  :src="`http://localhost:7770/${pic}`" fit></v-carousel-item>
               </v-carousel>
             </div>
           </v-col>
@@ -157,19 +149,14 @@ export default {
     },
   },
   computed: {
-    filteredFilePaths() {
-      if (this.research.filePath.length > 1) {
-        // Return all elements except the first one if there are more than one
-        return this.research.filePath.slice(1);
-      } else {
-        // Return the first element if there is only one
-        return this.research.filePath;
+    filteredImages() {
+      if (this.research) {
+        return this.research.filePath.filter(pic => !pic.toLowerCase().endsWith('.pdf'));
       }
+      return [];
     },
   },
   mounted() {
-    console.log(this.id)
-    console.log(typeof (this.id))
     this.fetchData();
     this.counter();
   },
