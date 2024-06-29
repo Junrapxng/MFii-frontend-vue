@@ -2,12 +2,12 @@
   <v-app>
     <v-main>
       <staff-layout>
-        <v-container>
+        <v-container class="font-noto-sans-thai">
           <!-- Message list -->
-          <v-card>
+          <v-card class="rounded-xl pa-2 mb-2 bg-gray-200">
             <v-card-title>ข้อความและการตอบกลับ</v-card-title>
             <v-card-text>
-              <v-list>
+              <v-list class="rounded-lg">
                 <v-list-item v-for="message in messages" :key="message.id" class="list-item-border my-2">
                   <v-list-item-content>
                     <v-list-item-title>เทคโนโลยีที่สนใจ: {{ message.interestTech }}</v-list-item-title>
@@ -15,7 +15,7 @@
                     <v-list-item-subtitle>ผู้ส่ง: {{ message.firstName }} {{ message.lastName }}</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action class="my-2">
-                    <v-btn @click="openReplyDialog(message._id)">ตอบกลับ</v-btn>
+                    <v-btn @click="openReplyDialog(message._id)" class="bg-slate-800 text-white">ตอบกลับ</v-btn>
                   </v-list-item-action>
                 </v-list-item>
               </v-list>
@@ -23,13 +23,11 @@
           </v-card>
           <!-- ================================================================================ -->
 
-
-
           <!-- Message Reply  -->
           <!-- header ====================================================================================== -->
-          <v-dialog v-model="isDialogOpen" max-width="800px">
-            <v-card v-for="selected in selectedMessage">
-              <v-card-title class="headline">{{ selected.businessName }}</v-card-title>
+          <v-dialog v-model="isDialogOpen" max-width="800px" class="font-noto-sans-thai">
+            <v-card v-for="selected in selectedMessage" :key="selected._id" class="rounded-xl">
+              <v-card-title class="headline text-lg-h5 font-semibold">เทคโนโลยีที่สนใจ: {{ selected.businessName }}</v-card-title>
               <v-card-text>
 
                 <!-- Chat box ====================================================================================== -->
@@ -59,8 +57,8 @@
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="closeReplyDialog">Cancel</v-btn>
-                <v-btn color="blue darken-1" text @click="replyMessage(replyText, selected._id)">Send</v-btn>
+                <v-btn color="red darken-1" text @click="closeReplyDialog">Cancel</v-btn>
+                <v-btn color="blue darken-1" text :disabled="!replyText.trim()" @click="replyMessage(replyText, selected._id)">Send</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -125,10 +123,13 @@ export default {
       if (this.replyText.trim()) {
         this.replyMessage(this.replyText, this.selectedMessage[0]._id);
       }
+      else {
+        console.warn("Cannot send an empty message");
+      }
     },
     async replyMessage(message, id) {
       try {
-        const response = await axios.patch('http://localhost:7770/mesReplyUpdate/' + id, {
+         await axios.patch('http://localhost:7770/mesReplyUpdate/' + id, {
           messages: message,
           user: this.user._id // Assuming you have the user object available
         }, {
