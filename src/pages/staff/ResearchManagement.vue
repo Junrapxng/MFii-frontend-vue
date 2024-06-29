@@ -75,12 +75,19 @@
                     prepend-icon="mdi-camera"></v-file-input>
 
                   <v-container class="flex">
-                    <v-card v-for="(img, index) in currentResearch.filePath" :key="index" class="mx-2">
-                      <v-img :src="`http://localhost:7770/${img}`" v-model="currentResearch.filePath" height="250px"
-                        width="300px" cover>
-                        <v-btn v-if="isEdit" @click="markForDeletion(index)"
-                          :class="{ 'marked-for-deletion': markedForDeletion.includes(index) }"
-                          :icon="markedForDeletion.includes(index) ? 'mdi-check' : 'mdi-delete'"></v-btn>
+                    <v-card v-for="(img, index) in currentResearch.filePath" :key="index" class="mx-2"
+                      style="position: relative;">
+                      <template v-if="typeof img === 'string' && img.toLowerCase().endsWith('.pdf')">
+                        <v-icon size="100" color="red">mdi-file-pdf-box</v-icon>
+                        <v-card-text class="text-center">{{ img.split('/').pop() }}</v-card-text>
+                      </template>
+                      <template v-else>
+                        <!-- Handle other file types or cases where img is not a string -->
+                        <v-img :src="`http://localhost:7770/${img}`" v-model="currentResearch.filePath" height="250px"
+                          width="300px" cover></v-img>
+                      </template>
+                      <v-img v-else :src="`http://localhost:7770/${img}`" v-model="currentResearch.filePath"
+                        height="250px" width="300px" cover>
                       </v-img>
                     </v-card>
                   </v-container>
@@ -145,6 +152,7 @@ export default {
         intelProp: '',
         industryType: '',
         filePath: null,
+        img:null,
         hilight: '',
         techReadiness: '',
         coop: [],
@@ -181,6 +189,7 @@ export default {
         intelProp: '',
         industryType: '',
         filePath: null,
+        img:null,
         hilight: '',
         techReadiness: '',
         coop: [],
@@ -189,6 +198,9 @@ export default {
         ipType: '',
       };
       this.markedForDeletion = [];
+    },
+    handleFileUpload(event) {
+      this.currentResearch.filePath = Array.from(event.target.files);
     },
 
 
@@ -210,8 +222,8 @@ export default {
         formData.append('status', this.currentResearch.status);
         formData.append('ipType', this.currentResearch.ipType);
 
-        if (this.currentResearch.filePath.length) {
-          this.currentResearch.filePath.forEach((file, index) => {
+        if (this.currentResearch.img) {
+          this.currentResearch.img.forEach((file, index) => {
             formData.append(`file${index + 1}`, file);
           });
         }
