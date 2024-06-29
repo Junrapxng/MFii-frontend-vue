@@ -1,10 +1,10 @@
 <template>
-    <v-combobox
-      v-model="searchQuery"
+    <v-autocomplete
+      v-model="search"
+      :items="pages"
       label="ค้นหา"
-      :items="filteredPages.map(page => page.name)"
-      item-text="name"
       item-value="path"
+      item-title="name"
       density="comfortable"
       prepend-inner-icon="mdi-magnify"
       style="max-width: 270px"
@@ -14,30 +14,50 @@
       rounded
       class="py-3"
       no-data-text="ไม่พบผลลัพธ์"
-      @input="updateSearchQuery"
-      @keydown.enter="navigateToFirstResult"
-    ></v-combobox>
-  </template>
-  
-  <script setup>
-  import { ref, computed } from "vue";
-  import { usePageStore } from "@/store/search";
-  import { useRouter } from "vue-router";
-  
-  const pageStore = usePageStore();
-  const router = useRouter();
-  const searchQuery = ref(pageStore.searchQuery);
-  
-  const updateSearchQuery = (event) => {
-    pageStore.setSearchQuery(event.target.value);
-  };
-  
-  const filteredPages = computed(() => pageStore.filteredPages);
-  
-  const navigateToFirstResult = () => {
-    if (filteredPages.value.length > 0) {
-      router.push(filteredPages.value[0].path);
-    }
-  };
-  </script>
-  
+      @change="navigateToPage"
+      @keydown.enter="navigateToPage"
+    ></v-autocomplete>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      search: "",
+      pages: [
+        { name: "หน้าหลัก", path: "/" },
+        { name: "ยกระดับงานวิจัยและนวัตกรรม", path: "/services/ups" },
+        { name: "ขั้นตอนการขออนุญาติใช้สิทธิ", path: "/services/lap" },
+        { name: "อบรมและให้คำปรึกษา", path: "/services/ipa" },
+        { name: "ยื่นขอรับความคุ้มครอง", path: "/services/ipp" },
+        { name: "ผลงานพร้อมถ่ายทอด", path: "/tt/all-categories" },
+        { name: "ระเบียบข้อบังคับ มฟล.", path: "/recmn/mfii/rule" },
+        { name: "จัดสรรผลประโยชน์", path: "/recmn/mfii/benefits" },
+        { name: "Q&A", path: "/recmn/mfii/q&a" },
+        { name: "แบบฟอร์มขอยื่นจด", path: "/recmn/downloads/request_form" },
+        { name: "เอกสารการอบรม", path: "/recmn/downloads/training" },
+        { name: "MRii", path: "/recmn/about/inside/MRii" },
+        { name: "MFii", path: "/recmn/about/inside/MFii" },
+        { name: "Research", path: "/recmn/about/inside/research" },
+        { name: "DIP", path: "/recmn/about/outside/DIP" },
+        { name: "WIPO", path: "/recmn/about/outside/WIPO" },
+        { name: "อวท.", path: "/recmn/about/outside/อวท" },
+        { name: "โครงสร้างองค์กร", path: "/about-us/ip-structure" },
+        { name: "บุคลากร", path: "/about-us/ip-staffs" },
+        { name: "ติดต่อเรา", path: "/about-us/contact" },
+      ],
+    };
+  },
+  methods: {
+    navigateToPage() {
+      if (this.search) {
+        this.$router.push(this.search);
+      }
+    },
+  },
+};
+</script>
+
+<style>
+
+</style>

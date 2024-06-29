@@ -42,21 +42,10 @@
           class="font-noto-sans-thai"
         >
           <v-container class="p-0 m-0">
+            <!-- Search Navbar -->
             <search-component  class="btn-search"></search-component>
             <router-view></router-view>
-            <!-- <v-text-field
-                    v-model="search"
-                    density="comfortable"
-                    placeholder="Search"
-                    prepend-inner-icon="mdi-magnify"
-                    style="max-width: 270px"
-                    variant="solo"
-                    clearable
-                    @click:clear="clearSearch"
-                    hide-details
-                    rounded 
-                    class="py-3 btn-search"
-                  ></v-text-field> -->
+      
             <!-- if user not loggedin -->
             <v-container
               v-if="userStore.error || userStore.loading"

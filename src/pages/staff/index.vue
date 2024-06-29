@@ -4,11 +4,8 @@
       <staff-layout>
         <!-- Content for staff page goes here -->
         <v-container class="font-noto-sans-thai">
-
           <UserStatistics />
           <ResearchStatistics />
-
-
         </v-container>
       </staff-layout>
     </v-main>
@@ -17,10 +14,8 @@
 
 <script>
 import StaffLayout from "@/layouts/staff.vue";
-
-import UserStatistics from '@/pages/staff/UserStatistics.vue'
-import ResearchStatistics from '@/pages/staff/ResearchStatistics.vue'
-
+import UserStatistics from "@/pages/UserStatistics.vue";
+import ResearchStatistics from "@/pages/ResearchStatistics.vue";
 
 export default {
   name: "staff-index-page",
@@ -30,8 +25,7 @@ export default {
     ResearchStatistics,
   },
   data() {
-    return {
-    }
+    return {};
   },
 };
 </script>
