@@ -53,7 +53,7 @@
                 </v-avatar>
               </div> -->
               <div>
-                <v-btn variant="outlined" rounded="xl" size="small" block>
+                <v-btn variant="outlined" rounded="xl" size="small" block @click="downloadPdf">
                   <v-icon>mdi mdi-download</v-icon> Download PDF
                 </v-btn>
               </div>
@@ -71,16 +71,16 @@
       </v-container>
 
       <div class="text-center">
-    <v-snackbar v-model="snackbar.show" :color="snackbar.color">
-      <p>{{ snackbar.message }}</p>
+        <v-snackbar v-model="snackbar.show" :color="snackbar.color">
+          <p>{{ snackbar.message }}</p>
 
-      <template v-slot:actions>
-        <v-btn color="white" variant="text" @click="snackbar.show = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
-  </div>
+          <template v-slot:actions>
+            <v-btn color="white" variant="text" @click="snackbar.show = false">
+              Close
+            </v-btn>
+          </template>
+        </v-snackbar>
+      </div>
 
     </v-main>
     <Footer></Footer>
@@ -95,17 +95,17 @@ export default {
   data() {
     return {
       snackbar: {
-      show: false,
-      message: "",
-      color: "success", // Default color
-    },
+        show: false,
+        message: "",
+        color: "success", // Default color
+      },
       research: null,
       isLoading: true,
     };
   },
 
- async setup() {
-   
+  async setup() {
+
   },
 
   methods: {
@@ -125,15 +125,32 @@ export default {
         this.isLoading = false;
       }
     },
-    // counter visitor
-    async counter(){
+
+    downloadPdf() {
+      const baseUrl = 'http://localhost:7770';
       try {
-      await axios.get(
-        "http://localhost:7770/product-visits/" + this.id
-      );
-    } catch (error) {
-      console.error(error);
-    }
+        this.research.filePath.forEach(path => {
+          if (path.toLowerCase().endsWith('.pdf')) {
+            const fullUrl = `${baseUrl}/${path}`;
+            window.open(fullUrl, '_blank');
+          }
+        });
+      } catch (error) {
+        console.error("Error opening PDF:", error);
+        this.snackbar.message = "Error opening PDF: " + error.message;
+        this.snackbar.color = "error";
+        this.snackbar.show = true;
+      }
+    },
+    // counter visitor
+    async counter() {
+      try {
+        await axios.get(
+          "http://localhost:7770/product-visits/" + this.id
+        );
+      } catch (error) {
+        console.error(error);
+      }
     }
   },
   computed: {

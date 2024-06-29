@@ -74,14 +74,25 @@
                   <v-file-input label="Upload Images" multiple @change="handleFileUpload" accept="image/*"
                     prepend-icon="mdi-camera"></v-file-input>
 
+
+                  <v-file-input label="Upload PDF" @change="handlePdfUpload" accept="application/pdf"
+                    prepend-icon="mdi-file-pdf-box"></v-file-input>
+
                   <v-container class="flex">
-                    <v-card v-for="(img, index) in currentResearch.filePath" :key="index" class="mx-2">
-                      <v-img :src="`http://localhost:7770/${img}`" v-model="currentResearch.filePath" height="250px"
-                        width="300px" cover>
-                        <v-btn v-if="isEdit" @click="markForDeletion(index)"
-                          :class="{ 'marked-for-deletion': markedForDeletion.includes(index) }"
-                          :icon="markedForDeletion.includes(index) ? 'mdi-check' : 'mdi-delete'"></v-btn>
+                    <v-card v-for="(img, index) in currentResearch.filePath" :key="index" class="mx-2"
+                      style="position: relative;">
+                      <template v-if="img.toLowerCase().endsWith('.pdf')">
+                        <v-icon size="100" color="red">mdi-file-pdf-box</v-icon>
+                        <v-card-text class="text-center">{{ img.split('/').pop() }}</v-card-text>
+                      </template>
+                      <v-img v-else :src="`http://localhost:7770/${img}`" v-model="currentResearch.filePath"
+                        height="250px" width="300px" cover>
                       </v-img>
+                      <v-btn v-if="isEdit" @click="markForDeletion(index)"
+                        :class="{ 'marked-for-deletion': markedForDeletion.includes(index) }"
+                        :icon="markedForDeletion.includes(index) ? 'mdi-check' : 'mdi-delete'"
+                        style="position: absolute; top: 5px; right: 5px;">
+                      </v-btn>
                     </v-card>
                   </v-container>
                   <!-- <input type="file" @change="handleFileUpload"> -->
@@ -190,7 +201,13 @@ export default {
       };
       this.markedForDeletion = [];
     },
+    handleFileUpload(event) {
+      this.currentResearch.filePath = Array.from(event.target.files);
+    },
 
+    handlePdfUpload(event) {
+      this.currentResearch.pdfPath = event.target.files[0];
+    },
 
     //  Add and Edit Research ===============================================================================
     async saveResearch() {
@@ -215,6 +232,11 @@ export default {
             formData.append(`file${index + 1}`, file);
           });
         }
+
+        if (this.currentResearch.pdfPath) {
+          formData.append('pdf', this.currentResearch.pdfPath);
+        }
+
         // Edit
         if (this.isEdit) {
           try {
@@ -288,9 +310,8 @@ export default {
       this.dialog = false;
       this.resetCurrentResearch();
     },
-    handleFileUpload(event) {
-      this.currentResearch.filePath = Array.from(event.target.files);
-    },
+
+
     // =====================================================================================================
 
 
@@ -328,7 +349,7 @@ export default {
 
       } catch (error) {
         console.error("Error fetching research:", error);
-        this.snackbar.message = "Error fetching research: " + error.response.data.description.description + " Code: " + error.response.status;
+        this.snackbar.message = "Error fetching : " + error.response.data.description.description + " Code: " + error.response.status;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
