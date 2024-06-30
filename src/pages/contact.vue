@@ -42,7 +42,7 @@
                   <v-form>
                     <v-row>
                       <v-col cols="12" lg="6" md="6" sm="12">
-                        <div>
+                        <!-- <div>
                           <v-text-field v-model="form.firstName" label="ชื่อ" variant="outlined" outlined
                             color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ชื่อ']" required></v-text-field>
                         </div>
@@ -69,16 +69,16 @@
                                 /.+@.+\..+/.test(v) ||
                                 'กรุณากรอกอีเมลให้ถูกต้อง',
                             ]" required></v-text-field>
-                        </div>
+                        </div> -->
                       </v-col>
 
                       <v-col cols="12" md="12" lg="12">
                         <div>
                           <h1>ประเภทธุรกิจ</h1>
-                          <v-radio-group inline :rules="[(v) => !!v || 'กรุณาเลือก ประเภทธุรกิจ']" color="#BA984C"
+                          <v-radio-group inline :rules="[(v) => !!v || 'กรุณาเลือก ประเภทธุรกิจ']" color="#BA984C" v-model="form.businessType"
                             required>
-                            <v-radio label="บุคคลธรรมดา " value="บุคคลธรรมดา " v-model="form.businessType"></v-radio>
-                            <v-radio label=" นิติบุคคล" value="นิติบุคคล" v-model="form.businessType"></v-radio>
+                            <v-radio label="บุคคลธรรมดา" value="บุคคลธรรมดา" ></v-radio>
+                            <v-radio label=" นิติบุคคล" value="นิติบุคคล"></v-radio>
                           </v-radio-group>
                         </div>
 
@@ -92,9 +92,14 @@
                             required></v-text-field>
                         </div>
                         <div>
-                          <v-text-field v-model="form.scope" label="ขอบเขตการใช้ผลงาน" variant="outlined" outlined
+                          <v-text-field v-model="form.usesScope" label="ขอบเขตการใช้ผลงาน" variant="outlined" outlined
                             color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ขอบเขตการใช้ผลงาน']"
                             required></v-text-field>
+
+                            <v-textarea v-model="form.messageReply.messages" label="ข้อความ" variant="outlined" outlined
+                            color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ข้อความ']"
+                            required></v-textarea>
+
                         </div>
                         <div class="text-center">
                           <v-btn class="bg-red-600 text-white" type="submit" @click="sendRequest">ส่ง</v-btn>
@@ -138,17 +143,13 @@ export default {
       },
       user: [],
       form: {
-        email: "",
-        phone: "",
-        firstName: "",
-        lastName: "",
-        businessType: "",
+        businessType: null,
         businessName: "",
         interestTech: "",
-        scope: "",
+        usesScope: "",
         messageReply: {
           "user": "",
-          "messages": "Hello",
+          "messages": "",
         },
       },
     };
@@ -168,13 +169,13 @@ export default {
         this.snackbar.color = "success"; // Set error color
         this.snackbar.show = true;
       } catch (error) {
-        if(!error.response){
-        this.snackbar.message = "Error Sending request: " + error;
-      } else {
-        this.snackbar.message = "Error Sending request: " + error.response.data.description.description + " Code: " + error.response.status;
-      }
-      this.snackbar.color = "error"; // Set error color
-      this.snackbar.show = true;
+        if (!error.response) {
+          this.snackbar.message = "Error Sending request: " + error;
+        } else {
+          this.snackbar.message = "Error Sending request: " + error.response.data.description.description + " Code: " + error.response.status;
+        }
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
     },
 
@@ -189,13 +190,13 @@ export default {
           this.user = userStore.user.resutl;
         }
       } catch (error) {
-        if(!error.response){
-        this.snackbar.message = "Error getting user : " + error;
-      } else {
-        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
-      }
-      this.snackbar.color = "error"; // Set error color
-      this.snackbar.show = true;
+        if (!error.response) {
+          this.snackbar.message = "Error getting user : " + error;
+        } else {
+          this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+        }
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
     }
   },

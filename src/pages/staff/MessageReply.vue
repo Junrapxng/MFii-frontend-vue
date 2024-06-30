@@ -27,8 +27,17 @@
           <!-- header ====================================================================================== -->
           <v-dialog v-model="isDialogOpen" max-width="800px" class="font-noto-sans-thai">
             <v-card v-for="selected in selectedMessage" :key="selected._id" class="rounded-xl">
-              <v-card-title class="headline text-lg-h5 font-semibold">เทคโนโลยีที่สนใจ: {{ selected.businessName
+              <v-card-title class="headline text-lg-h5 font-semibold">เทคโนโลยีที่สนใจ: {{ selected.interestTech
                 }}</v-card-title>
+              <v-card-subtitle>
+                ธุรกิจ : {{ selected.businessName }} 
+              </v-card-subtitle>
+              <v-card-subtitle>
+                ประเภทธุรกิจ : {{ selected.businessType }} 
+              </v-card-subtitle>
+              <v-card-subtitle>
+                ผู้ส่ง : {{ selected.firstName }} {{ selected.lastName }} อีเมล: {{ selected.email }}
+              </v-card-subtitle>
               <v-card-text>
 
                 <!-- Chat box ====================================================================================== -->
@@ -37,7 +46,6 @@
                     <v-list-item v-for="reply in selected.messageReply"
                       :class="reply.user === user._id ? 'd-flex justify-end' : 'd-flex justify-start'" :key="reply.id">
                       <v-list-item-content>
-
                         <!-- ชื่อผู้ส่ง -->
                         <v-list-item-subtitle v-if="reply.user !== user._id" class="black--text">
                           {{ selected.firstName }} {{ selected.lastName }}
@@ -45,11 +53,16 @@
                         <v-list-item-subtitle v-else class="blue--text text-right align-self-start">
                           Staff
                         </v-list-item-subtitle>
-
+                        <!-- <v-list-item-subtitle>
+                          ส่งเมื่อ {{ reply.date }}
+                        </v-list-item-subtitle> -->
                         <!-- แสดงข้อความ -->
-                        <v-list-item-title :class="[reply.user === user._id ? 'text-right' : 'text-left',]">
+                        <v-list-item-title :class="[
+                          reply.user === user._id ? 'text-right chat-bubble chat-bubble--user' : 'text-left chat-bubble chat-bubble--other',
+                        ]">
                           {{ reply.messages }}
                         </v-list-item-title>
+
                       </v-list-item-content>
                     </v-list-item>
                   </v-list>
@@ -84,7 +97,9 @@
 </template>
 
 <script>
-import { useUserStore } from "@/store/user";
+import {
+  useUserStore
+} from "@/store/user";
 import axios from "axios";
 import StaffLayout from "@/layouts/staff.vue";
 export default {
@@ -139,7 +154,6 @@ export default {
         // console.log(this.selectedMessage);
         this.replyText = ''; // Clear previous reply text
         this.isDialogOpen = true;
-
       } catch (error) {
         console.error("Error getting detail message:", error);
         if (!error.response) {
@@ -155,8 +169,7 @@ export default {
     sendReply() {
       if (this.replyText.trim()) {
         this.replyMessage(this.replyText, this.selectedMessage[0]._id);
-      }
-      else {
+      } else {
         console.warn("Cannot send an empty message");
       }
     },
@@ -200,17 +213,16 @@ export default {
           },
         });
         this.messages = response.data.result
-        this.replyMessage
-        console.log(this.messages);
+        // console.log(this.messages);
       } catch (error) {
         console.error("Error fetching message data:", error);
         if (!error.response) {
-        this.snackbar.message = "Error message data: " + error;
-      } else {
-        this.snackbar.message = "Error message data: " + error.response.data.description.description + " Code: " + error.response.status;
-      }
-      this.snackbar.color = "error"; // Set error color
-      this.snackbar.show = true;
+          this.snackbar.message = "Error message data: " + error;
+        } else {
+          this.snackbar.message = "Error message data: " + error.response.data.description.description + " Code: " + error.response.status;
+        }
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
 
     },
@@ -222,9 +234,6 @@ export default {
   },
 };
 </script>
-
-
-
 
 <style scoped>
 .list-item-border {

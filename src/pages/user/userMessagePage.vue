@@ -25,8 +25,12 @@
         <!-- Message Reply -->
         <v-dialog v-model="isDialogOpen" max-width="800px" class="font-noto-sans-thai">
           <v-card v-for="selected in selectedMessage" :key="selected._id" class="rounded-xl">
-            <v-card-title class="headline">{{ selected.email }}</v-card-title>
+            <v-card-title class="headline">ชื่อกิจการของคุณ: {{ selected.businessName }}</v-card-title>
+            <v-card-subtitle class="headline">เทคโนโลยีที่คุณสนใจ: {{ selected.interestTech }}</v-card-subtitle>
+            <v-card-subtitle class="headline">ประเภทธุรกิจของคุณ: {{ selected.businessType }}</v-card-subtitle>
             <v-card-text>
+
+
               <div class="chatbox">
                 <v-list class="">
                   <v-list-item v-for="reply in selected.messageReply" :class="reply.user === user._id
