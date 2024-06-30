@@ -172,9 +172,6 @@ export default defineComponent({
         })
       } catch (error) {
         console.error('Error fetching global visitor count:', error)
-        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
       }
     }
     onMounted(fetchGlobalCount)
@@ -216,7 +213,11 @@ export default defineComponent({
     } catch (error) {
       this.error = error;
       console.error("Error fetching data:", error);
-      this.snackbar.message = "Error Fetching data : " + error.message;
+      if(!error.response){
+        this.snackbar.message = "Error fetching data: " + error;
+      } else {
+        this.snackbar.message = "Error fetching data: " + error.response.data.description.description + " Code: " + error.response.status;
+      }
       this.snackbar.color = "error"; // Set error color
       this.snackbar.show = true;
     } finally {

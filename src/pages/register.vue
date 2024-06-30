@@ -119,7 +119,7 @@ export default {
             email: this.form.email.trim(),
             password: this.form.password.trim(),
             firstName: this.form.firstName.trim(),
-            lastName: this.form.lastName.trim() ,
+            lastName: this.form.lastName.trim(),
             phoneNumber: this.form.phone.trim(),
             createDate: createDate, // Set create date
           });
@@ -127,14 +127,14 @@ export default {
           this.$router.push("/");
         } catch (error) {
           console.error("Error registering:", error);
-          this.responseMessage = error;  
-          if (
-            error.response &&
-            error.response.data &&
-            error.response.data.description
-          ) {
-            this.responseMessage = error.response.data.description.description;
+          this.responseMessage = error;
+          if (!error.response) {
+            this.snackbar.message = "Error registering: " + error;
+          } else {
+            this.snackbar.message = "Error registering: " + error.response.data.description.description + " Code: " + error.response.status;
           }
+          this.snackbar.color = "error"; // Set error color
+          this.snackbar.show = true;
         }
       } else {
         console.log("Form is not valid");

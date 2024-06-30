@@ -164,13 +164,17 @@ export default {
             Authorization: localStorage.getItem("token"),
           },
         })
-        this.snackbar.message = "Success"
+        this.snackbar.message = "Requested Success!"
         this.snackbar.color = "success"; // Set error color
         this.snackbar.show = true;
       } catch (error) {
-        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
-        this.snackbar.color = "error";
-        this.snackbar.show = true;
+        if(!error.response){
+        this.snackbar.message = "Error Sending request: " + error;
+      } else {
+        this.snackbar.message = "Error Sending request: " + error.response.data.description.description + " Code: " + error.response.status;
+      }
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
       }
     },
 
@@ -185,9 +189,13 @@ export default {
           this.user = userStore.user.resutl;
         }
       } catch (error) {
-        this.snackbar.message = "Error Cannot get: " + error.response.data.description.description + " Code: " + error.response.status;
-        this.snackbar.color = "error";
-        this.snackbar.show = true;
+        if(!error.response){
+        this.snackbar.message = "Error getting user : " + error;
+      } else {
+        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+      }
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
       }
     }
   },
