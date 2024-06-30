@@ -6,7 +6,7 @@
  */
 
 // Composables
-import { createRouter, createWebHistory,} from 'vue-router'
+import { createRouter, createWebHistory, } from 'vue-router'
 import Home from '../pages/index.vue'
 import Contact from '../pages/contact.vue'
 import Register from '../pages/register.vue'
@@ -29,7 +29,7 @@ import MessagePage from '../pages/user/userMessagePage.vue'
 
 
 const routes = [
-    {
+  {
     path: '/',
     name: 'Home',
     component: Home
@@ -63,7 +63,7 @@ const routes = [
     path: '/tt/all-categories',
     name: 'All_Catagories',
     component: All_Catagories,
-    
+
   },
   {
     path: '/user/innovation/:id',
@@ -93,52 +93,55 @@ const routes = [
     path: '/staff/',
     name: 'Staff',
     component: Staff,
-    meta: { requiresAuth: true, role: 'staff' },
+    meta: {
+      requiresAuth: true,
+      roles: ['staff', 'admin']
+    },
   },
   {
     path: '/staff/newPost',
     name: 'newPost',
     component: newPost,
-    meta: { requiresAuth: true, role: 'staff' },
+    meta: { requiresAuth: true, roles: ['staff', 'admin'] },
   },
   {
     path: '/staff/researchManagement',
     name: 'ResearchManagement',
     component: ResearchManagement,
-    meta: { requiresAuth: true, role: 'staff' },
+    meta: { requiresAuth: true, roles: ['staff', 'admin'] },
   },
   {
     path: '/staff/messageReply',
     name: 'MessageReply',
     component: MessageReply,
-    meta: { requiresAuth: true, role: 'staff' },
+    meta: { requiresAuth: true, roles: ['staff', 'admin'] },
   },
   {
     path: '/profile',
     name: 'Profile',
     component: UserEditProfile,
-    meta: { requiresAuth: true , role: 'user'},
+    meta: { requiresAuth: true, role: 'user' },
   },
   {
     path: '/message',
     name: 'Message',
     component: MessagePage,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, role: 'user' },
   },
 
 
   // catch all 404
- {
-  path: '/:catchAll(.*)',
-  name: 'NotFound',
-  component: Notfound
- }
+  {
+    path: '/:catchAll(.*)',
+    name: 'NotFound',
+    component: Notfound
+  }
 ]
 
 
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),routes
+  history: createWebHistory(import.meta.env.BASE_URL), routes
 });
 // navigation path check role
 router.beforeEach(async (to, from, next) => {
