@@ -18,7 +18,7 @@
                 <li>ประเภทอุตสาหกรรม <span class="text-green-600">{{ research.industryType }}</span></li>
                 <li>รายละเอียดผลงาน
                   <dd class="pl-10">
-                    {{ research.descripton }}
+                    {{ research.description }}
                   </dd>
                 </li>
                 <li>จุดเด่น</li>

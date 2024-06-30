@@ -111,7 +111,7 @@ export default {
       },
       user: [],
       form: {
-        businessType: null,
+        businessType: "",
         businessName: "",
         interestTech: "",
         usesScope: "",
