@@ -18,7 +18,7 @@
                 <li>ประเภทอุตสาหกรรม <span class="text-green-600">{{ research.industryType }}</span></li>
                 <li>รายละเอียดผลงาน
                   <dd class="pl-10">
-                    {{ research.descripton }}
+                    {{ research.description }}
                   </dd>
                 </li>
                 <li>จุดเด่น</li>
@@ -133,7 +133,7 @@ export default {
         } else {
           // Handle case where no PDF file is found
           this.snackbar.message = 'No PDF file';
-          this.snackbar.color = 'error';
+          this.snackbar.color = 'default';
           this.snackbar.show = true;
         }
       } else {
