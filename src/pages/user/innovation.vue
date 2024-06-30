@@ -141,7 +141,7 @@ export default {
         } else {
           // Handle case where no PDF file is found
           this.snackbar.message = 'No PDF file';
-          this.snackbar.color = 'error';
+          this.snackbar.color = 'default';
           this.snackbar.show = true;
         }
       } else {
