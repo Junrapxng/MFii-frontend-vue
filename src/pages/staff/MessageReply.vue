@@ -30,10 +30,13 @@
               <v-card-title class="headline text-lg-h5 font-semibold">เทคโนโลยีที่สนใจ: {{ selected.interestTech
                 }}</v-card-title>
               <v-card-subtitle>
-                ธุรกิจ : {{ selected.businessName }} 
+                กิจการ : {{ selected.businessName }} 
               </v-card-subtitle>
               <v-card-subtitle>
-                ประเภทธุรกิจ : {{ selected.businessType }} 
+                ประเภทกิจการ : {{ selected.businessType }} 
+              </v-card-subtitle>
+              <v-card-subtitle>
+                ขอบเขตการใช้งาน : {{ selected.usesScope }} 
               </v-card-subtitle>
               <v-card-subtitle>
                 ผู้ส่ง : {{ selected.firstName }} {{ selected.lastName }} อีเมล: {{ selected.email }}

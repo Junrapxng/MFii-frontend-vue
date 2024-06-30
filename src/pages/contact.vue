@@ -42,36 +42,7 @@
                   <v-form>
                     <v-row>
                       <v-col cols="12" lg="6" md="6" sm="12">
-                        <!-- <div>
-                          <v-text-field v-model="form.firstName" label="ชื่อ" variant="outlined" outlined
-                            color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ชื่อ']" required></v-text-field>
-                        </div>
-                        <div>
-                          <v-text-field v-model="form.lastName" label="นามสกุล" variant="outlined" outlined
-                            color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก นามสกุล']" required></v-text-field>
-                        </div>
                       </v-col>
-                      <v-col cols="12" lg="6" md="6" sm="12">
-                        <div>
-                          <v-text-field v-model="form.phone" label="เบอร์โทรศัพท์" variant="outlined" outlined
-                            color="#BA984C" :rules="[
-                              (v) => !!v || 'กรุณากรอก เบอร์โทรศัพท์',
-                              (v) =>
-                                /^\d{10}$/.test(v) ||
-                                'กรุณากรอกเบอร์โทรศัพท์ 10 หลัก',
-                            ]" required></v-text-field>
-                        </div>
-                        <div>
-                          <v-text-field v-model="form.email" label="อีเมล" variant="outlined" outlined color="#BA984C"
-                            :rules="[
-                              (v) => !!v || 'กรุณากรอก อีเมล',
-                              (v) =>
-                                /.+@.+\..+/.test(v) ||
-                                'กรุณากรอกอีเมลให้ถูกต้อง',
-                            ]" required></v-text-field>
-                        </div> -->
-                      </v-col>
-
                       <v-col cols="12" md="12" lg="12">
                         <div>
                           <h1>ประเภทธุรกิจ</h1>

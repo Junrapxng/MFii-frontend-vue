@@ -10,9 +10,9 @@
             <v-list class="rounded-xl bg-white">
               <v-list-item v-for="message in filteredMessages" :key="message.id" class="list-item-border my-2">
                 <v-list-item-content>
-                  <v-list-item-title>ชื่อกิจการ: {{ message.businessName }}</v-list-item-title>
-                  <v-list-item-subtitle>เทคโนโลยีที่สนใจ:
-                    {{ message.interestTech }}</v-list-item-subtitle>
+                  <v-list-item-title>เทคโนโลยีที่คุณสนใจ: {{ message.interestTech }}</v-list-item-title>
+                  <v-list-item-subtitle>ชื่อกิจการของคุณ: {{ message.businessName }} </v-list-item-subtitle>
+                  <v-list-item-subtitle>ขอบเขตการใช้งานของคุณ: {{ message.usesScope }} </v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action class="my-2">
                   <v-btn @click="openReplyDialog(message._id)" class="bg-red-600 text-white">ตอบกลับ</v-btn>
@@ -25,9 +25,10 @@
         <!-- Message Reply -->
         <v-dialog v-model="isDialogOpen" max-width="800px" class="font-noto-sans-thai">
           <v-card v-for="selected in selectedMessage" :key="selected._id" class="rounded-xl">
-            <v-card-title class="headline">ชื่อกิจการของคุณ: {{ selected.businessName }}</v-card-title>
-            <v-card-subtitle class="headline">เทคโนโลยีที่คุณสนใจ: {{ selected.interestTech }}</v-card-subtitle>
+            <v-card-title class="headline">เทคโนโลยีที่คุณสนใจ: {{ selected.interestTech }}</v-card-title>
+            <v-card-subtitle class="headline">ชื่อกิจการของคุณ: {{ selected.businessName }} </v-card-subtitle>
             <v-card-subtitle class="headline">ประเภทธุรกิจของคุณ: {{ selected.businessType }}</v-card-subtitle>
+            <v-card-subtitle class="headline">ขอบเขตการใช้งานของคุณ: {{ selected.usesScope }}</v-card-subtitle>
             <v-card-text>
 
 
