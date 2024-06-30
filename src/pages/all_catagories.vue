@@ -30,7 +30,7 @@
           <v-card class="rounded-lg p-4 pt-10">
             <v-row>
               <v-col cols="12" sm="6" md="4" lg="3">
-                <v-combobox v-model="Industry_type" clearable @click:clear="clearSearch" chips variant="outlined"
+                <v-combobox v-model="Industry_type" clearable @click:clear="clearIndustryType" chips variant="outlined"
                   label="ประเภทอุตสาหกรรม " :items="[
                     'ทั้งหมด',
                     'เครื่องสำอาง',
@@ -48,7 +48,7 @@
                   ]"></v-combobox>
               </v-col>
               <v-col cols="12" sm="6" md="4" lg="3">
-                <v-combobox v-model="Intellectual_property_type" clearable @click:clear="clearSearch" chips
+                <v-combobox v-model="Intellectual_property_type" clearable @click:clear="clearIntellectualType" chips
                   variant="outlined" label="ทรัพย์สินทางปัญญา" :items="[
                     'ทั้งหมด',
                     'สิทธิบัตรการประดิษฐ์',
@@ -62,7 +62,7 @@
                   ]"></v-combobox>
               </v-col>
               <v-col cols="12" sm="6" md="4" lg="3">
-                <v-combobox v-model="Technology_type" clearable @click:clear="clearSearch" chips variant="outlined"
+                <v-combobox v-model="Technology_type" clearable @click:clear="clearTechnologyType" chips variant="outlined"
                   label="ความพร้อมเทคโนโลยี" :items="[
                     'ทั้งหมด',
                     'ระดับการทดลอง',
@@ -158,16 +158,6 @@ export default {
       images: [],
       loading: true,
       error: null,
-      filters: [
-        { text: "ดูทั้งหมด", color: "primary", icon: "mdi-menu" },
-        { text: "IOT", color: "blue", icon: "mdi-earth" },
-        { text: "Rubber", color: "green", icon: "mdi-leaf" },
-        { text: "Health", color: "red", icon: "mdi-hospital-box" },
-        { text: "Food", color: "yellow", icon: "mdi-food" },
-        { text: "Energy", color: "cyan", icon: "mdi-flash" },
-        { text: "other", color: "purple", icon: "mdi-dots-horizontal" },
-        { text: "Agri", color: "orange", icon: "mdi-sprout" },
-      ],
       currentPage: 1,
       itemsPerPage: 8, // จำนวนรายการต่อหน้า
     };
@@ -220,8 +210,14 @@ export default {
     clearSearch() {
       this.search = '';
       this.currentPage = '1';
+    },
+    clearIndustryType() {
       this.Industry_type = 'ทั้งหมด';
+    },
+    clearIntellectualType() {
       this.Intellectual_property_type = 'ทั้งหมด';
+    },
+    clearTechnologyType() {
       this.Technology_type = 'ทั้งหมด';
     },
   },
