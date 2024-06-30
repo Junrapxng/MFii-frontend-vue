@@ -100,9 +100,13 @@ export default {
         }, 1000);
       } catch (error) {
         console.log("Error", error);
+        if(!error.response){
+        this.snackbar.message = "Error saving profile: " + error;
+      } else {
         this.snackbar.message = "Error saving profile: " + error.response.data.description.description + " Code: " + error.response.status;
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
+      }
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
       }
     },
 
@@ -112,7 +116,11 @@ export default {
       try {
         this.user = userStore.user.resutl
       } catch (error) {
-        this.snackbar.message = "Error: " + error;
+        if (!error.response) {
+          this.snackbar.message = "Error getting user: " + error;
+        } else {
+          this.snackbar.message = "Error getting user: " + error.response.data.description.description + " Code: " + error.response.status;
+        }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
