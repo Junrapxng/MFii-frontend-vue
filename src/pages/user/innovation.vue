@@ -39,14 +39,10 @@
           </v-col>
           <v-col cols="12" md="2" lg="2">
             <v-container class="text-center">
-              <!-- <div class="d-flex align-center justify-space-around py-3">
-                <v-avatar color="grey" rounded="100" size="60">
-                  <v-img :src="research.pfp" cover></v-img>
-                </v-avatar>
-              </div> -->
               <div>
-                <v-btn variant="outlined" rounded="xl" size="small" block @click="downloadPdf()">
-                  <v-icon>mdi mdi-download</v-icon> Download PDF
+                <v-btn class="responsive-btn" variant="outlined" rounded="xl" size="small" block style="display: flex; align-items: center; justify-content: center;" @click="downloadPdf()">
+                  <v-icon left class="mr-1">mdi-download</v-icon>  
+                  <span>Download PDF</span>
                 </v-btn>
               </div>
             </v-container>
@@ -94,10 +90,6 @@ export default {
       research: null,
       isLoading: true,
     };
-  },
-
-  async setup() {
-
   },
 
   methods: {
@@ -172,5 +164,11 @@ export default {
 li {
   font-weight: 600;
   padding: 5px;
+}
+/* Smaller text for iPad screen sizes */
+@media (max-width: 1024px) {
+  .responsive-btn span, v-icon {
+    font-size: 8px;
+  }
 }
 </style>
