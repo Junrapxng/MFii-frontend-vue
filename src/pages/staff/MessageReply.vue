@@ -27,7 +27,8 @@
           <!-- header ====================================================================================== -->
           <v-dialog v-model="isDialogOpen" max-width="800px" class="font-noto-sans-thai">
             <v-card v-for="selected in selectedMessage" :key="selected._id" class="rounded-xl">
-              <v-card-title class="headline text-lg-h5 font-semibold">เทคโนโลยีที่สนใจ: {{ selected.businessName }}</v-card-title>
+              <v-card-title class="headline text-lg-h5 font-semibold">เทคโนโลยีที่สนใจ: {{ selected.businessName
+                }}</v-card-title>
               <v-card-text>
 
                 <!-- Chat box ====================================================================================== -->
@@ -58,7 +59,8 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="red darken-1" text @click="closeReplyDialog">Cancel</v-btn>
-                <v-btn color="blue darken-1" text :disabled="!replyText.trim()" @click="replyMessage(replyText, selected._id)">Send</v-btn>
+                <v-btn color="blue darken-1" text :disabled="!replyText.trim()"
+                  @click="replyMessage(replyText, selected._id)">Send</v-btn>
               </v-card-actions>
             </v-card>
           </v-dialog>
@@ -139,8 +141,12 @@ export default {
         this.isDialogOpen = true;
 
       } catch (error) {
-        console.error("Error fetching research:", error);
-        this.snackbar.message = "Error get detail: " + error.response.data.description.description + " Code: " + error.response.status;
+        console.error("Error getting detail message:", error);
+        if (!error.response) {
+          this.snackbar.message = "Error getting detail message: " + error;
+        } else {
+          this.snackbar.message = "Error getting detail message: " + error.response.data.description.description + " Code: " + error.response.status;
+        }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
@@ -158,7 +164,7 @@ export default {
     // reply Message
     async replyMessage(message, id) {
       try {
-         await axios.patch('http://localhost:7770/mesReplyUpdate/' + id, {
+        await axios.patch('http://localhost:7770/mesReplyUpdate/' + id, {
           messages: message,
           user: this.user._id // Assuming you have the user object available
         }, {
@@ -176,7 +182,11 @@ export default {
         this.replyText = '';
         // console.log(this.selectedMessage);
       } catch (error) {
-        this.snackbar.message = "Error sending reply: " + error.response.data.description.description + " Code: " + error.response.status;
+        if (!error.response) {
+          this.snackbar.message = "Error sending reply: " + error;
+        } else {
+          this.snackbar.message = "Error sending reply: " + error.response.data.description.description + " Code: " + error.response.status;
+        }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
@@ -193,10 +203,14 @@ export default {
         this.replyMessage
         console.log(this.messages);
       } catch (error) {
-        console.error("Error fetching product counts:", error);
-        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
+        console.error("Error fetching message data:", error);
+        if (!error.response) {
+        this.snackbar.message = "Error message data: " + error;
+      } else {
+        this.snackbar.message = "Error message data: " + error.response.data.description.description + " Code: " + error.response.status;
+      }
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
       }
 
     },

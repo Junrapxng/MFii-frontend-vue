@@ -128,10 +128,14 @@ export default {
           alert('No images selected or all selected images are empty.');
         }
       } catch (error) {
-        console.error("Error :", error);
+        console.error("Error adding News:", error);
+        if (!error.response) {
+        this.snackbar.message = "Error adding News: " + error;
+      } else {
         this.snackbar.message = "Error adding News: " + error.response.data.description.description + " Code: " + error.response.status;
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
+      }
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
 
       }
     },
@@ -141,10 +145,14 @@ export default {
         const res = await axios.get('http://localhost:7770/getsNews');
         this.imgs = res.data.result;
       } catch (error) {
-        console.log('Error: ' + error);
-        this.snackbar.message = "Error get News: " + error.response.data.description.description;
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
+        console.log('Error getting News: ' + error);
+        if (!error.response) {
+        this.snackbar.message = "Error getting News: " + error;
+      } else {
+        this.snackbar.message = "Error getting News: " + error.response.data.description.description + " Code: " + error.response.status;
+      }
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
 
       }
     },
@@ -173,14 +181,17 @@ export default {
         this.snackbar.show = true;
       } catch (error) {
         console.error('Error deleting image:', error);
+        if (!error.response) {
+        this.snackbar.message = "Error deleting image: " + error;
+      } else {
         this.snackbar.message = "Error deleting image: " + error.response.data.description.description + " Code: " + error.response.status;
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
+      }
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
       }
     },
   },
   mounted() {
-
     this.fetchImg(); // Call fetchImg when the component is mounted
   }
 };
