@@ -255,10 +255,14 @@ export default {
         this.users = response.data;
         console.log(this.users);
       } catch (error) {
-        console.error("Error Fetching data :", error);
-        this.snackbar.message = "Error getting user : " + error.response.data.description.description + " Code: " + error.response.status;
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
+        console.error("Error getting user :", error);
+        if (!error.response) {
+            this.snackbar.message = "Error getting user :  " + error;
+          } else {
+            this.snackbar.message = "Error getting user :  " + error.response.data.description.description + " Code: " + error.response.status;
+          }
+          this.snackbar.color = "error"; // Set error color
+          this.snackbar.show = true;
       }
     },
 
@@ -287,9 +291,13 @@ export default {
         this.fectchUser();
       } catch (error) {
         console.error("Error deleting user:", error);
-        this.snackbar.message = "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง) : " + error.response.data.description.description + " Code: " + error.response.status;
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
+        if (!error.response) {
+            this.snackbar.message = "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง) : " + error;
+          } else {
+            this.snackbar.message = "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง) : " + error.response.data.description.description + " Code: " + error.response.status;
+          }
+          this.snackbar.color = "error"; // Set error color
+          this.snackbar.show = true;
       }
       this.closeDelete();
     },
@@ -348,7 +356,11 @@ export default {
           this.fectchUser();
         } catch (error) {
           console.error("Error editing user:", error);
+          if (!error.response) {
+            this.snackbar.message = "Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " + error;
+          } else {
             this.snackbar.message = "Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " + error.response.data.description.description + " Code: " + error.response.status;
+          }
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
         }
@@ -404,7 +416,11 @@ export default {
           this.fectchUser();
         } catch (error) {
           console.error("Error Adding user:", error);
-            this.snackbar.message = "Error Adding user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " + error.response.data.description.description + " Code: " + error.response.status;   
+          if (!error.response) {
+            this.snackbar.message = "Error Adding user(ข้อมูลยังไม่ถูกเพิ่ม โปรดลองอีกครั้ง): " + error;
+          } else {
+            this.snackbar.message = "Error Adding user(ข้อมูลยังไม่ถูกเพิ่ม โปรดลองอีกครั้ง): " + error.response.data.description.description + " Code: " + error.response.status;
+          }
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
         }
