@@ -39,20 +39,19 @@
               class="font-noto-sans-thai rounded-xl flex justify-center items-center min-h-fit min-w-full bg-gray-100">
               <v-card class="w-full max-w-full rounded-xl ">
                 <v-card-text>
-                  <v-form>
+                  <v-form ref="form" v-model="formValid">
                     <v-row>
                       <v-col cols="12" lg="6" md="6" sm="12">
                       </v-col>
                       <v-col cols="12" md="12" lg="12">
                         <div>
                           <h1>ประเภทธุรกิจ</h1>
-                          <v-radio-group inline :rules="[(v) => !!v || 'กรุณาเลือก ประเภทธุรกิจ']" color="#BA984C" v-model="form.businessType"
-                            required>
-                            <v-radio label="บุคคลธรรมดา" value="บุคคลธรรมดา" ></v-radio>
-                            <v-radio label=" นิติบุคคล" value="นิติบุคคล"></v-radio>
+                          <v-radio-group :rules="[(v) => !!v || 'กรุณาเลือก ประเภทธุรกิจ']" color="#BA984C"
+                            v-model="form.businessType" required>
+                            <v-radio label="บุคคลธรรมดา" value="บุคคลธรรมดา"></v-radio>
+                            <v-radio label="นิติบุคคล" value="นิติบุคคล"></v-radio>
                           </v-radio-group>
                         </div>
-
                         <div>
                           <v-text-field v-model="form.businessName" label="ระบุ ชื่อกิจการ" variant="outlined" outlined
                             color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ชื่อกิจการ']" required></v-text-field>
@@ -66,14 +65,11 @@
                           <v-text-field v-model="form.usesScope" label="ขอบเขตการใช้ผลงาน" variant="outlined" outlined
                             color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ขอบเขตการใช้ผลงาน']"
                             required></v-text-field>
-
-                            <v-textarea v-model="form.messageReply.messages" label="ข้อความ" variant="outlined" outlined
-                            color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ข้อความ']"
-                            required></v-textarea>
-
+                          <v-textarea v-model="form.messageReply.messages" label="ข้อความ" variant="outlined" outlined
+                            color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ข้อความ']" required></v-textarea>
                         </div>
                         <div class="text-center">
-                          <v-btn class="bg-red-600 text-white" type="submit" @click="sendRequest">ส่ง</v-btn>
+                          <v-btn class="bg-red-600 text-white" @click="sendRequest">ส่ง</v-btn>
                         </div>
                       </v-col>
                     </v-row>
@@ -107,6 +103,7 @@ export default {
   name: "contact-page",
   data() {
     return {
+      formValid: false,
       snackbar: {
         show: false,
         message: "",
@@ -129,23 +126,34 @@ export default {
 
   methods: {
     async sendRequest() {
+      if (!this.$refs.form.validate()) {
+        this.snackbar.message = "กรุณากรอกข้อมูลให้ครบถ้วน";
+        this.snackbar.color = "error";
+        this.snackbar.show = true;
+        return;
+      }
+
       this.form.messageReply.user = this.user._id;
+
       try {
         await axios.post('http://localhost:7770/user/mesRequest', this.form, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
-        })
-        this.snackbar.message = "Requested Success!"
-        this.snackbar.color = "success"; // Set error color
+        });
+        this.snackbar.message = "Requested Success!";
+        this.snackbar.color = "success";
         this.snackbar.show = true;
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000); // Reloads the page after 2 seconds
       } catch (error) {
         if (!error.response) {
           this.snackbar.message = "Error Sending request: " + error;
         } else {
           this.snackbar.message = "Error Sending request: " + error.response.data.description.description + " Code: " + error.response.status;
         }
-        this.snackbar.color = "error"; // Set error color
+        this.snackbar.color = "error";
         this.snackbar.show = true;
       }
     },
