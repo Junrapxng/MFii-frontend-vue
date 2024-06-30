@@ -6,24 +6,6 @@
         <h1 class="pb-4" style="font-weight: 600; font-size: 35px">
           ผลงานพร้อมถ่ายทอด (จำนวน {{ info.length }} รายการ)
         </h1>
-        <!-- Filters Section -->
-        <!-- <v-row class="mb-4">
-          <v-col>
-            <v-card class="rounded-lg p-4">
-              <v-btn
-                v-for="filter in filters"
-                :key="filter.text"
-                class="m-2 rounded-s-xl rounded-e-md text-white justify-start items-center"
-                outlined
-                :color="filter.color"
-                style="height: 45px; width: 220px"
-              >
-                <v-icon left class="px-4">{{ filter.icon }}</v-icon>
-                {{ filter.text }}
-              </v-btn>
-            </v-card>
-          </v-col>
-        </v-row> -->
 
         <!-- Filters Section -->
         <v-container>
