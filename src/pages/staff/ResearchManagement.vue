@@ -365,7 +365,7 @@ export default {
     // get research data funnctions
     async fetchResearches() {
       try {
-        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
+        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all/all');
         this.researches = response.data;
 
       } catch (error) {
