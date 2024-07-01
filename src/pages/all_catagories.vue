@@ -228,7 +228,7 @@ export default {
   async mounted() {
     try {
       const [api1Response, api2Response] = await Promise.all([
-        axios.get("http://localhost:7770/getsResearch/all/all/all"),
+        axios.get("http://localhost:7770/getsResearch/all/all/all/all"),
         axios.get("https://65fb5ab714650eb21009db19.mockapi.io/todos"),
       ]);
 

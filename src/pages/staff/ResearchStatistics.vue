@@ -68,7 +68,7 @@ export default {
 
     const fetchResearch = async () => {
       try {
-        const res = await axios.get('http://localhost:7770/getsResearch/all/all/all');
+        const res = await axios.get('http://localhost:7770/getsResearch/all/all/all/all');
         research.value = res.data.result;
 
       } catch (error) {
