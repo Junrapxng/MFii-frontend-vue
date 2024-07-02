@@ -16,7 +16,16 @@
           </v-card-title>
           <v-card-text>
             <v-form @submit.prevent="register" ref="form">
+              <div>
+                          <h1>ประเภทธุรกิจ</h1>
+                          <v-radio-group :rules="[(v) => !!v || 'กรุณาเลือก ประเภทธุรกิจ']" color="#BA984C"
+                            v-model="form.businessType" required>
+                            <v-radio label="บุคคลธรรมดา" value="บุคคลธรรมดา"></v-radio>
+                            <v-radio label="นิติบุคคล" value="นิติบุคคล"></v-radio>
+                          </v-radio-group>
+                        </div>
               <v-row>
+              
                 <v-col cols="12" md="6">
                   <v-text-field v-model="form.firstName" label="ชื่อ" variant="outlined" outlined color="#BA984C"
                     :rules="[(v) => !!v || 'กรุณากรอก ชื่อ']" required></v-text-field>
@@ -92,6 +101,7 @@ export default {
         firstName: "",
         lastName: "",
         password: "",
+        businessType: "",
       },
       showPassword: false, // เพิ่มตรงนี้
       responseMessage: "",
@@ -121,6 +131,7 @@ export default {
             firstName: this.form.firstName.trim(),
             lastName: this.form.lastName.trim(),
             phoneNumber: this.form.phone.trim(),
+            businessType: this.form.businessType,
             createDate: createDate, // Set create date
           });
           localStorage.setItem("token", response.data.result.token);
