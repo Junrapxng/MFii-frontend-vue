@@ -40,6 +40,57 @@
           </v-carousel-item>
         </v-carousel>
       </v-container>
+
+      
+      <!-- Newer research research ใหม่-->
+      
+      <v-container>
+      <p class="text-3xl font-semibold mb-3">ของใหม่</p>
+        <v-container class="flex justify-center items-center bg-gray-100 rounded">
+          <v-row v-if="newinfo" class="flex flex-wrap justify-center">
+            <v-col v-for="(item, index) in newinfo.slice(0,4)" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
+              <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
+                <v-card class="hover:shadow-lg transition-shadow rounded-xl" style="max-width: 400px">
+                  <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
+                    <template v-slot:placeholder>
+                      <div class="flex items-center justify-center h-full">
+                        <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
+                      </div>
+                    </template>
+                  </v-img>
+                  <v-card-title class="text-lg">{{
+                    item.nameOnMedia
+                  }}</v-card-title>
+                  <v-card-subtitle class="text-sm">{{
+                    item.industryType
+                  }}</v-card-subtitle>
+                  <v-card-actions>
+                    <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
+                      ? 'purple'
+                      : item.techReadiness === 'ระดับต้นแบบ'
+                        ? 'blue'
+                        : item.techReadiness === 'ระดับถ่ายทอด'
+                          ? 'orange'
+                          : 'default'
+                      " class="text-xs">
+                      {{ item.techReadiness }}
+                    </v-chip>
+                    <!-- Views Counter -->
+                    <ViewCounter :productId="item._id" />
+                  </v-card-actions>
+                </v-card>
+              </router-link>
+            </v-col>
+            <h1 v-if="loading">Loading...</h1>
+            <div v-if="!loading">
+              <h1 v-if="paginatedItems.length <= 0">No data available</h1>
+            </div>
+          </v-row>
+        </v-container>
+      </v-container>
+
+
+
       <!-- Content -->
       <v-container class="inputSearch">
         <p class="text-3xl font-semibold mb-3">ผลงานพร้อมถ่ายทอด</p>
@@ -93,7 +144,6 @@
         <v-pagination v-model="currentPage" :length="totalPages" class="pt-6" @input="paginate"></v-pagination>
       </v-container>
 
-
       <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
         <div class="text-subtitle-1 pb-2"></div>
         <p>{{ snackbar.message }}</p>
@@ -130,6 +180,7 @@ export default defineComponent({
       userId: ref(null),
       userinfo: ref(null),
       info: [],
+      newinfo: [],
       images: [],
       loading: true,
       videos: [
@@ -193,6 +244,7 @@ export default defineComponent({
         const activeData = api1Response.data.result.filter(item => item.status === "active");
         if (activeData.length > 0) {
           this.info = activeData;
+          this.newinfo = [...activeData].reverse(); // Reverse only newinfo
           this.images = api2Response.data.result;
           console.log("images is " + this.images.result)
         } else {
@@ -201,6 +253,7 @@ export default defineComponent({
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
         }
+        
       } else {
         this.error = new Error("One or both API responses are not OK");
         console.error(
