@@ -14,7 +14,7 @@
                       @click="toggleVisibility(item)">
                       {{ item.status == 'active' ? 'mdi-eye' : 'mdi-eye-off' }}
                     </v-icon>
-                    <v-icon small @click="deleteResearch(item)">mdi-delete</v-icon>
+                    <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
                   </v-container>
                 </template>
               </v-data-table>
@@ -120,6 +120,23 @@
           </v-dialog>
         </v-container>
       </staff-layout>
+
+      <!-- Dialog delete research -->
+      <v-dialog v-model="dialogDelete" max-width="600px">
+        <v-card class="rounded-xl pa-4">
+          <v-card-title class="text-h5 text-center text-red-500">Are you sure you want to delete this research?</v-card-title>
+            <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="'blue-grey-darken-1" variant="outlined" class="hover:bg-gray-500"
+                  @click="closeDelete">Cancel</v-btn>
+                <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300"
+              @click="deleteResearch">OK</v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
+      <!-- Alert Snack bar -->
       <div class="text-center">
         <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
           <div class="text-subtitle-1 pb-2"></div>
@@ -148,6 +165,7 @@ export default {
       markedForDeletion: [],
       dialog: false,
       isEdit: false,
+      dialogDelete: false,
       snackbar: {
         show: false,
         message: "",
@@ -353,14 +371,26 @@ export default {
 
 
     // Delete Research =====================================================================================================
-    async deleteResearch(item) {
+    deleteItem(item) {
+      this.currentResearch = Object.assign({}, item);
+      this.dialogDelete = true;
+    },
+    closeDelete() {
+      this.dialogDelete = false;
+    },
+
+    async deleteResearch() {
       try {
-        await axios.delete(`http://localhost:7770/staff/deleteResearch/research/${item._id}`, {
+        await axios.delete(`http://localhost:7770/staff/deleteResearch/research/${this.currentResearch._id}`, {
           headers: {
             Authorization: localStorage.getItem('token'),
           },
         });
+        this.dialogDelete = false;
         this.fetchResearches();
+        this.snackbar.message = "research deleted successfully";
+        this.snackbar.color = "success"; 
+        this.snackbar.show = true;
 
       } catch (error) {
         console.log("Error deleting research: " + error);
