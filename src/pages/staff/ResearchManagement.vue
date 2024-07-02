@@ -28,10 +28,10 @@
                 <v-form>
                   <v-text-field label="ชื่อผลงาน" variant="solo-filled"
                     v-model="currentResearch.nameOnMedia"></v-text-field>
-                  <v-combobox v-model="currentResearch.inventor" label="ผู้คิดค้น" chips multiple></v-combobox>
-                  <v-text-field label="สำนัก" variant="solo-filled" v-model="currentResearch.major"></v-text-field>
+                  <v-combobox v-model="currentResearch.inventor" label="ผู้ประดิษฐ์" variant="solo-filled" chips multiple></v-combobox>
+                  <v-text-field label="สังกัด" variant="solo-filled" v-model="currentResearch.major"></v-text-field>
 
-                  <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.intelProp"
+                  <v-autocomplete variant="solo-filled" flat label="ทรัพย์สินทางปัญญา" v-model="currentResearch.intelProp"
                     :items="[
                       'สิทธิบัตรการประดิษฐ์',
                       'อนุสิทธิบัตร',
@@ -42,7 +42,7 @@
                       'ต้นแบบ',
                       'อื่น ๆ',
                     ]"></v-autocomplete>
-                  <v-autocomplete variant="solo-filled" flat label="หมวดหมู่" v-model="currentResearch.industryType"
+                  <v-autocomplete variant="solo-filled" flat label="ประเภทอุตสาหกรรม" v-model="currentResearch.industryType"
                     :items="[
                       'เครื่องสำอาง',
                       'การเกษตรและเทคโนโลยีชีวภาพ',
@@ -65,14 +65,28 @@
                     ]"></v-autocomplete>
 
                   <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.description"></v-textarea>
-                  <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.hilight"></v-textarea>
-                  <v-combobox v-model="currentResearch.coop" label="ความร่วมมือที่เสาะหา" chips multiple></v-combobox>
-                  <v-text-field label="IP" variant="solo-filled" v-model="currentResearch.ipType"></v-text-field>
-                  <v-file-input label="Upload Images" multiple @change="handleFileUpload" accept="image/*"
+                  <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.highlight"></v-textarea>
+                  <v-combobox v-model="currentResearch.coop" label="ความร่วมมือที่เสาะหา" variant="solo-filled" chips multiple></v-combobox>
+                  <v-text-field label="ปีงบประมาณ" variant="solo-filled" v-model="currentResearch.budgetYear"></v-text-field>
+                  <!-- <v-text-field label="Keyword" variant="solo-filled" v-model="currentResearch.ipType"></v-text-field> -->
+                  
+                  <v-container class="flex">
+                    <v-checkbox
+                      v-model="currentResearch.ipType"
+                      label="Portfolio"
+                      value="portfolio"
+                    ></v-checkbox>
+                    <v-checkbox
+                      v-model="currentResearch.ipType" 
+                      label="Prototype"
+                      value="prototype"
+                    ></v-checkbox>
+                  </v-container>
+                  <v-file-input label="Upload Images" multiple @change="handleFileUpload" variant="solo-filled" accept="image/*"
                     prepend-icon="mdi-camera"></v-file-input>
 
 
-                  <v-file-input label="Upload PDF" @change="handlePdfUpload" accept="application/pdf"
+                  <v-file-input label="Upload PDF" @change="handlePdfUpload" variant="solo-filled" accept="application/pdf"
                     prepend-icon="mdi-file-pdf-box"></v-file-input>
 
                   <v-container class="flex">
@@ -87,9 +101,6 @@
                         <v-img :src="`http://localhost:7770/${img}`" v-model="currentResearch.filePath" height="250px"
                           width="300px" cover></v-img>
                       </template>
-                      <v-img v-else :src="`http://localhost:7770/${img}`" v-model="currentResearch.filePath"
-                        height="250px" width="300px" cover>
-                      </v-img>
                       <v-btn v-if="isEdit" @click="markForDeletion(index)"
                         :class="{ 'marked-for-deletion': markedForDeletion.includes(index) }"
                         :icon="markedForDeletion.includes(index) ? 'mdi-check' : 'mdi-delete'"
@@ -150,7 +161,7 @@ export default {
       ],
       researches: [],
       currentResearch: {
-        budgetYear: '2566',
+        budgetYear: '',
         nameOnMedia: '',
         inventor: [],
         major: '',
@@ -159,7 +170,7 @@ export default {
         industryType: '',
         filePath: null,
         img: null,
-        hilight: '',
+        highlight: '',
         techReadiness: '',
         coop: [],
         link: '',
@@ -209,7 +220,7 @@ export default {
         industryType: '',
         filePath: null,
         img: null,
-        hilight: '',
+        highlight: '',
         techReadiness: '',
         coop: [],
         link: '',
@@ -230,14 +241,14 @@ export default {
     async saveResearch() {
       try {
         const formData = new FormData();
-        formData.append('budgetYear', 2566);
+        formData.append('budgetYear', this.currentResearch.budgetYear);
         formData.append('nameOnMedia', this.currentResearch.nameOnMedia);
         formData.append('inventor', this.currentResearch.inventor);
         formData.append('major', this.currentResearch.major);
-        formData.append('description', this.currentResearch.descripton);
+        formData.append('description', this.currentResearch.description);
         formData.append('intelProp', this.currentResearch.intelProp);
         formData.append('industryType', this.currentResearch.industryType);
-        formData.append('hilight', this.currentResearch.hilight);
+        formData.append('highlight', this.currentResearch.highlight);
         formData.append('techReadiness', this.currentResearch.techReadiness);
         formData.append('coop', this.currentResearch.coop);
         formData.append('link', this.currentResearch.link);
@@ -258,14 +269,14 @@ export default {
         if (this.isEdit) {
           try {
             await axios.patch(`http://localhost:7770/staff/updateResearchData/${this.currentResearch._id}`, {
-              budgetYear: '2566',
+              budgetYear: this.currentResearch.budgetYear,
               nameOnMedia: this.currentResearch.nameOnMedia,
               inventor: this.currentResearch.inventor,
               major: this.currentResearch.major,
               description: this.currentResearch.description,
               intelProp: this.currentResearch.intelProp,
               industryType: this.currentResearch.industryType,
-              hilight: this.currentResearch.hilight,
+              highlight: this.currentResearch.highlight,
               techReadiness: this.currentResearch.techReadiness,
               coop: this.currentResearch.coop,
               link: this.currentResearch.link,
