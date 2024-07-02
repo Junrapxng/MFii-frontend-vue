@@ -10,8 +10,10 @@
                 <template v-slot:[`item.actions`]="{ item }">
                   <v-container class="flex justify-center align-center">
                     <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
-                    <v-icon small class="mr-2" @click="toggleVisibility(item)">{{ item.visible ? 'mdi-eye' :
-                      'mdi-eye-off' }}</v-icon>
+                    <v-icon small class="mr-2" :class="item.status == 'active' ? 'text-green' : 'text-red'"
+                      @click="toggleVisibility(item)">
+                      {{ item.status == 'active' ? 'mdi-eye' : 'mdi-eye-off' }}
+                    </v-icon>
                     <v-icon small @click="deleteResearch(item)">mdi-delete</v-icon>
                   </v-container>
                 </template>
@@ -66,11 +68,6 @@
                   <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.hilight"></v-textarea>
                   <v-combobox v-model="currentResearch.coop" label="ความร่วมมือที่เสาะหา" chips multiple></v-combobox>
                   <v-text-field label="IP" variant="solo-filled" v-model="currentResearch.ipType"></v-text-field>
-                  <v-autocomplete variant="solo-filled" flat label="สถานะ" v-model="currentResearch.status" :items="[
-                    'active',
-                    'inactive',
-                  ]"></v-autocomplete>
-
                   <v-file-input label="Upload Images" multiple @change="handleFileUpload" accept="image/*"
                     prepend-icon="mdi-camera"></v-file-input>
 
@@ -184,9 +181,22 @@ export default {
       this.isEdit = true;
       this.dialog = true;
     },
-    toggleVisibility(item) {
-      item.visible = !item.visible;
-      // Logic to update visibility
+    async toggleVisibility(item) {
+      // Toggle the visibility status
+      item.status = item.status === "active" ? "inactive" : "active";
+
+      // Send the updated status to the server
+      try {
+        await axios.patch(`http://localhost:7770/staff/updateResearchData/${item._id}`, { status: item.status }, {
+          headers: {
+            Authorization: localStorage.getItem('token'),
+          },
+        }
+        );
+      } catch (error) {
+        console.error("Error updating visibility status:", error);
+
+      }
     },
     resetCurrentResearch() {
       this.currentResearch = {
@@ -365,7 +375,7 @@ export default {
     // get research data funnctions
     async fetchResearches() {
       try {
-        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all');
+        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all/all');
         this.researches = response.data;
 
       } catch (error) {

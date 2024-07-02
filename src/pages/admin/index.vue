@@ -15,7 +15,7 @@
 <script>
 import AdminLayout from "@/layouts/admin.vue";
 import UserStatistics from '@/pages/UserStatistics.vue'
-import ResearchStatistics from '@/pages/ResearchStatistics.vue' 
+import ResearchStatistics from '@/pages/staff/ResearchStatistics.vue' 
 
 export default {
   name: "Index-Admin-Page",
