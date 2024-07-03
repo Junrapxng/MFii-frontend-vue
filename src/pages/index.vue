@@ -3,15 +3,27 @@
     <NavBar />
     <v-main>
       <!-- Carousel Slide -->
+      <!-- display only images -->
       <v-container class="flex">
         <v-container fluid style="width: 90%">
-          <Carousel class="carousel" :autoplay="4000" :wrap-around="true">
-            <Slide v-for="(path, index) in images" :key="index">
-              <template v-if="path.filePath">
-                <v-img class="carousel__item mx-auto" max-height="500" lazy-src=""
-                  :src="`http://localhost:7770/${path.filePath}`" cover>
+          <Carousel v-if="filteredImages.length" class="carousel" :autoplay="4000" :wrap-around="true">
+            <Slide v-for="(path, index) in filteredImages" :key="index">
+              <template v-if="path.linkImage && path.linkImage.length">
+                <v-img v-for="(link, linkIndex) in path.linkImage" :key="`link-${linkIndex}`"
+                  class="carousel__item mx-auto" max-height="500" lazy-src="" :src="link" cover>
                   <template v-slot:placeholder>
-                    <div v-if="images" class="d-flex align-center justify-center fill-height">
+                    <div class="d-flex align-center justify-center fill-height">
+                      <v-progress-circular color="pink" indeterminate></v-progress-circular>
+                    </div>
+                  </template>
+                </v-img>
+              </template>
+              <template v-else-if="path.filePath && path.filePath.length">
+                <v-img v-for="(file, fileIndex) in path.filePath" :key="`file-${fileIndex}`"
+                  class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`http://localhost:7770/${file}`"
+                  cover>
+                  <template v-slot:placeholder>
+                    <div class="d-flex align-center justify-center fill-height">
                       <v-progress-circular color="pink" indeterminate></v-progress-circular>
                     </div>
                   </template>
@@ -30,12 +42,13 @@
       <div class="txt flex justify-center">
         <h1 class="text-2xl font-bold mb-3">Success Case</h1>
       </div>
-
       <v-container fluid style="width: 70%">
-        <v-carousel class="myCarousel" hide-delimiter-background height="400">
-          <v-carousel-item v-for="(video, index) in images" :key="index">
-            <v-sheet  v-if="video.linkVideo && video.linkVideo.length > 0 && video.linkVideo !== null" class="d-flex align-center justify-center" height="100%" elevation="10">
-              <iframe class="video-iframe" :src="video.linkVideo" :title="video.title" frameborder="0" allowfullscreen></iframe>
+        <v-carousel v-if="filteredVideos.length > 0" :key="carouselKey" class="myCarousel" hide-delimiter-background
+          height="400" :value="0">
+          <v-carousel-item v-for="(item, index) in filteredVideos" :key="index">
+            <v-sheet class="d-flex align-center justify-center" height="100%" elevation="10">
+              <iframe class="video-iframe" :src="item.linkVideo" :title="item.title || `Video ${index + 1}`"
+                frameborder="0" allowfullscreen></iframe>
             </v-sheet>
           </v-carousel-item>
         </v-carousel>
@@ -65,12 +78,12 @@
                   }}</v-card-subtitle>
                   <v-card-actions>
                     <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
-                        ? 'purple'
-                        : item.techReadiness === 'ระดับต้นแบบ'
-                          ? 'blue'
-                          : item.techReadiness === 'ระดับถ่ายทอด'
-                            ? 'orange'
-                            : 'default'
+                      ? 'purple'
+                      : item.techReadiness === 'ระดับต้นแบบ'
+                        ? 'blue'
+                        : item.techReadiness === 'ระดับถ่ายทอด'
+                          ? 'orange'
+                          : 'default'
                       " class="text-xs">
                       {{ item.techReadiness }}
                     </v-chip>
@@ -116,12 +129,12 @@
                   }}</v-card-subtitle>
                   <v-card-actions>
                     <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
-                        ? 'purple'
-                        : item.techReadiness === 'ระดับต้นแบบ'
-                          ? 'blue'
-                          : item.techReadiness === 'ระดับถ่ายทอด'
-                            ? 'orange'
-                            : 'default'
+                      ? 'purple'
+                      : item.techReadiness === 'ระดับต้นแบบ'
+                        ? 'blue'
+                        : item.techReadiness === 'ระดับถ่ายทอด'
+                          ? 'orange'
+                          : 'default'
                       " class="text-xs">
                       {{ item.techReadiness }}
                     </v-chip>
@@ -180,6 +193,7 @@ export default defineComponent({
       loading: true,
       currentPage: 1,
       itemsPerPage: 4,
+      carouselKey: 0,
     };
   },
 
@@ -283,6 +297,17 @@ export default defineComponent({
         );
       });
     },
+
+    filteredVideos() {
+      return this.images.filter(item => item.linkVideo && item.linkVideo.length > 0);
+    },
+
+    filteredImages() {
+      return this.images.filter(path =>
+        (path.linkImage && path.linkImage.length) ||
+        (path.filePath && path.filePath.length)
+      );
+    }
   },
   methods: {
     paginate(page) {
