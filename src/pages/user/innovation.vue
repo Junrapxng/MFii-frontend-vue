@@ -4,28 +4,27 @@
     <v-main>
       <v-container fluid v-if="research" class="font-noto-sans-thai">
         <v-row class="mx-5">
-          <v-col cols="12" md="5" lg="5">
+          <v-col cols="12" md="7" lg="7">
             <v-card class="rounded-xl max-h-fit bg-gray-100 pa-3 overflow-auto" height="500">
 
               <div class="contents">
                 <ul class="py-3 font-bold text-xl">
                   ชื่อผลงาน {{ research.nameOnMedia }}
                 </ul>
-                <li>ผู้ประดิษฐ์</li>
+                <ul>ผู้ประดิษฐ์</ul>
                 <li v-for="( inventor, index ) in research.inventor" :key="index" class="pl-10">{{ inventor }}</li>
-                <li>สังกัด {{ research.major }}</li>
-                <li>ทรัพย์สินทางปัญญา {{ research.intelProp }}</li>
-                <li>ประเภทอุตสาหกรรม <span class="text-green-600">{{ research.industryType }}</span></li>
-                <li>รายละเอียดผลงาน
-                  <dd class="pl-10">
+                <ul>สังกัด: <span  class="text-gray-700">{{ research.major }}</span></ul>
+                <ul>ทรัพย์สินทางปัญญา: <span class="text-red-600">{{ research.intelProp }}</span></ul>
+                <ul>ประเภทอุตสาหกรรม: <span class="text-green-600">{{ research.industryType }}</span></ul>
+                <ul>รายละเอียดผลงาน</ul>
+                  <p class="pl-10">
                     {{ research.description }}
-                  </dd>
-                </li>
-                <li>จุดเด่น</li>
-                <li class="pl-10">{{ research.hilight }}</li>
-                <li>ความพร้อมของเทคโนโลยี <span class="text-pink-600">{{ research.techReadiness }}</span></li>
-                <li>ความร่วมมือที่เสาะหา </li>
-                <li class="pl-10">{{ research.coop }}</li>
+                  </p>
+                <ul>จุดเด่น</ul>
+                <li v-for="( highlight, index ) in research.highlight" :key="index" class="pl-10">{{ highlight }}</li>
+                <ul>ความพร้อมของเทคโนโลยี: <span class="text-pink-600">{{ research.techReadiness }}</span></ul>
+                <ul>ความร่วมมือที่เสาะหา </ul>
+                <li v-for="( coop, index ) in research.coop" :key="index" class="pl-10">{{ coop }}</li>
               </div>
             </v-card>
           </v-col>
@@ -161,9 +160,12 @@ export default {
 </script>
 
 <style scoped>
-li {
+ul {
   font-weight: 600;
   padding: 5px;
+}
+span{
+  font-weight: 400;
 }
 /* Smaller text for iPad screen sizes */
 @media (max-width: 1024px) {
