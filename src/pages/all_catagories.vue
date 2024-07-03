@@ -12,51 +12,25 @@
           <v-card class="rounded-lg p-4 pt-10">
             <v-row>
               <v-col cols="12" sm="6" md="4" lg="3">
-                <v-combobox v-model="Industry_type" clearable @click:clear="clearIndustryType" chips variant="outlined"
-                  label="ประเภทอุตสาหกรรม " :items="[
-                    'ทั้งหมด',
-                    'เครื่องสำอาง',
-                    'การเกษตรและเทคโนโลยีชีวภาพ',
-                    'การแปรรูปอาหาร',
-                    'เชื้อเพลิงชีวภาพและเคมีชีวภาพ',
-                    'การแพทย์ครบวงจร',
-                    'สร้างสรรค์',
-                    'อิเล็กทรอนิกส์อัจฉริยะ',
-                    'หุ่นยนต์',
-                    'ดิจิตอล',
-                    'การท่องเที่ยวกลุ่มรายได้ดีและการท่องเที่ยวเชิงสุขภาพ',
-                    'การบินและระบบขนส่ง',
-                    'ยานยนต์สมัยใหม่',
-                  ]"></v-combobox>
+                <v-combobox v-model="Industry_type" :items="indust" item-value="value" item-title="text" clearable
+                  @click:clear="clearIndustryType" @change="fetchResearchData" chips variant="outlined"
+                  label="ประเภทอุตสาหกรรม"></v-combobox>
               </v-col>
               <v-col cols="12" sm="6" md="4" lg="3">
-                <v-combobox v-model="Intellectual_property_type" clearable @click:clear="clearIntellectualType" chips
-                  variant="outlined" label="ทรัพย์สินทางปัญญา" :items="[
-                    'ทั้งหมด',
-                    'สิทธิบัตรการประดิษฐ์',
-                    'อนุสิทธิบัตร',
-                    'สิทธิบัตรออกแบบ',
-                    'โปรแกรมคอมพิวเตอร์',
-                    'ลิขสิทธิ์',
-                    'ผลงานวิจัย',
-                    'ต้นแบบ',
-                    'อื่นๆ',
-                  ]"></v-combobox>
+                <v-combobox v-model="Intellectual_property_type" :items="prop" item-value="value" item-title="text"
+                  clearable @click:clear="clearIntellectualType" @change="fetchResearchData" chips variant="outlined"
+                  label="ประเภทอุตสาหกรรม"></v-combobox>
               </v-col>
               <v-col cols="12" sm="6" md="4" lg="3">
-                <v-combobox v-model="Technology_type" clearable @click:clear="clearTechnologyType" chips variant="outlined"
-                  label="ความพร้อมเทคโนโลยี" :items="[
-                    'ทั้งหมด',
-                    'ระดับการทดลอง',
-                    'ระดับต้นแบบ',
-                    'ระดับถ่ายทอด',
-                  ]"></v-combobox>
+                <v-combobox v-model="Technology_type" :items="tech" item-value="value" item-title="text" clearable
+                  @click:clear="clearTechnologyType" @change="fetchResearchData" chips variant="outlined"
+                  label="ประเภทอุตสาหกรรม"></v-combobox>
               </v-col>
               <v-col cols="12" sm="6" md="4" lg="3">
                 <!-- search -->
                 <v-text-field v-model="search" density="comfortable" placeholder="Search"
                   prepend-inner-icon="mdi-magnify" style="max-width: 300px" variant="solo" clearable
-                  @click:clear="clearSearch" hide-details rounded class="pb-6">
+                  @click:clear="clearSearch" @input="fetchResearchData" hide-details rounded class="pb-6">
                 </v-text-field>
               </v-col>
             </v-row>
@@ -67,38 +41,37 @@
         <v-container>
           <div v-if="loading" class="justify-center">Loading....</div>
           <v-row v-else>
-            <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
-              <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
-                <v-card class="hover:shadow-lg transition-shadow rounded-xl">
-                  <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
-                    <template v-slot:placeholder>
-                      <div class="d-flex align-center justify-center fill-height">
-                        <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
-                      </div>
-                    </template>
-                  </v-img>
-                  <v-card-title class="text-lg">{{
-                    item.nameOnMedia
-                  }}</v-card-title>
-                  <v-card-subtitle class="text-sm">{{
-                    item.industryType
-                  }}</v-card-subtitle>
-                  <v-card-actions>
-                    <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
-                      ? 'purple'
-                      : item.techReadiness === 'ระดับต้นแบบ'
-                        ? 'blue'
-                        : item.techReadiness === 'ระดับถ่ายทอด'
-                          ? 'orange'
-                          : 'default'
-                      ">
-                      {{ item.techReadiness }}
-                    </v-chip>
-                    <ViewCounter :productId="item._id" />
-                  </v-card-actions>
-                </v-card>
-              </router-link>
-            </v-col>
+            <template v-if="paginatedItems.length > 0">
+              <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
+                <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
+                  <v-card class="hover:shadow-lg transition-shadow rounded-xl">
+                    <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
+                      <template v-slot:placeholder>
+                        <div class="d-flex align-center justify-center fill-height">
+                          <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
+                        </div>
+                      </template>
+                    </v-img>
+                    <v-card-title class="text-lg">{{ item.nameOnMedia }}</v-card-title>
+                    <v-card-subtitle class="text-sm">{{ item.industryType }}</v-card-subtitle>
+                    <v-card-actions>
+                      <v-chip outlined
+                        :color="item.techReadiness === 'ระดับการทดลอง' ? 'purple' : item.techReadiness === 'ระดับต้นแบบ' ? 'blue' : item.techReadiness === 'ระดับถ่ายทอด' ? 'orange' : 'default'">
+                        {{ item.techReadiness }}
+                      </v-chip>
+                      <ViewCounter :productId="item._id" />
+                    </v-card-actions>
+                  </v-card>
+                </router-link>
+              </v-col>
+            </template>
+            <template v-else>
+              <v-row>
+                <v-col cols="12">
+                  <div class="text-center">ไม่พบข้อมูล</div>
+                </v-col>
+              </v-row>
+            </template>
           </v-row>
         </v-container>
 
@@ -115,7 +88,6 @@
           </v-btn>
         </template>
       </v-snackbar>
-
     </v-main>
     <Footer></Footer>
   </v-app>
@@ -133,109 +105,157 @@ export default {
         color: "success", // Default color
       },
       search: "",
-      Industry_type: 'ทั้งหมด',
-      Intellectual_property_type: 'ทั้งหมด',
-      Technology_type: 'ทั้งหมด',
+      Industry_type: "ทั้งหมด",
+      Intellectual_property_type: "ทั้งหมด",
+      Technology_type: "ทั้งหมด",
       info: [],
       images: [],
       loading: true,
       error: null,
       currentPage: 1,
       itemsPerPage: 8, // จำนวนรายการต่อหน้า
+
+      indust: [
+        { value: "cosme", text: "เครื่องสำอาง" },
+        { value: "agtech", text: "การเกษตรและเทคโนโลยีชีวภาพ" },
+        { value: "f4f", text: "การแปรรูปอาหาร" },
+        { value: "biofc", text: "เชื้อเพลิงชีวภาพและเคมีชีวภาพ" },
+        { value: "medhub", text: "การแพทย์ครบวงจร" },
+        { value: "arts", text: "สร้างสรรค์" },
+        { value: "smeln", text: "อิเล็กทรอนิกส์อัจฉริยะ" },
+        { value: "robot", text: "หุ่นยนต์" },
+        { value: "digit", text: "ดิจิทัล" },
+        {
+          value: "amwt",
+          text: "การท่องเที่ยวกลุ่มรายได้ดีและการท่องเที่ยวเชิงสุขภาพ",
+        },
+        { value: "alois", text: "การบินและโลจิสติกส์" },
+        { value: "nxato", text: "ยานยนต์สมัยใหม่" },
+      ],
+      prop: [
+        { value: "ptn", text: "สิทธิบัตรการประดิษฐ์" },
+        { value: "ppt", text: "อนุสิทธิบัตร" },
+        { value: "dsp", text: "สิทธิบัตรออกแบบ" },
+        { value: "cpr", text: "ลิขสิทธิ์" },
+        { value: "cpp", text: "ลิขสิทธิ์-โปรแกรมคอมพิวเตอร์" },
+        { value: "khw", text: "ผลงานวิจัย" },
+        { value: "pte", text: "ต้นแบบ" },
+        { value: "oth", text: "อื่น ๆ" },
+      ],
+      tech: [
+        { value: "lab", text: "ระดับการทดลอง" },
+        { value: "pty", text: "ระดับต้นแบบ" },
+        { value: "ids", text: "ระดับถ่ายทอด" },
+      ],
     };
   },
   computed: {
     // คำนวณจำนวนหน้าทั้งหมด
     totalPages() {
-      return Math.ceil(this.filteredItems.length / this.itemsPerPage);
+      return Math.ceil(this.info.length / this.itemsPerPage);
     },
     // กรองรายการโดยใช้การค้นหาและหน้าที่กำหนด
     paginatedItems() {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
       const endIndex = startIndex + this.itemsPerPage;
-      return this.filteredItems.slice(startIndex, endIndex);
-
-    },
-    // Filter items based on search query
-    filteredItems() {
-      return this.info.filter((item) => {
-        // Check if item matches search query
-        const matchesSearch = (
-          item.nameOnMedia.toLowerCase().includes(this.search.toLowerCase()) ||
-          item.industryType.toLowerCase().includes(this.search.toLowerCase()) ||
-          item.techReadiness.toLowerCase().includes(this.search.toLowerCase())
-        );
-
-        // Check if item matches selected Industry_type
-        const matchesIndustryType = (
-          this.Industry_type === 'ทั้งหมด' || // Show all if 'ทั้งหมด' is selected
-          item.industryType === this.Industry_type
-        );
-
-        // Check if item matches selected Intellectual_property_type
-        const matchesIntellectualPropertyType = (
-          this.Intellectual_property_type === 'ทั้งหมด' || // Show all if 'ทั้งหมด' is selected
-          item.intelProp === this.Intellectual_property_type
-        );
-
-        // Check if item matches selected Technology_type
-        const matchesTechnologyType = (
-          this.Technology_type === 'ทั้งหมด' || // Show all if 'ทั้งหมด' is selected
-          item.techReadiness === this.Technology_type
-        );
-
-        return matchesSearch && matchesIndustryType && matchesIntellectualPropertyType && matchesTechnologyType;
-      });
+      return this.info.slice(startIndex, endIndex);
     },
   },
   methods: {
     clearSearch() {
-      this.search = '';
-      this.currentPage = '1';
+      this.search = "";
+      this.fetchResearchData();
+      this.currentPage = "1";
     },
     clearIndustryType() {
-      this.Industry_type = 'ทั้งหมด';
+      this.Industry_type = "ทั้งหมด";
+      this.fetchResearchData();
     },
     clearIntellectualType() {
-      this.Intellectual_property_type = 'ทั้งหมด';
+      this.Intellectual_property_type = "ทั้งหมด";
+      this.fetchResearchData();
     },
     clearTechnologyType() {
-      this.Technology_type = 'ทั้งหมด';
+      this.Technology_type = "ทั้งหมด";
+      this.fetchResearchData();
+    },
+    // Search ResearchData
+    fetchResearchData() {
+      const indust = this.Industry_type?.value || "all";
+      const prop = this.Intellectual_property_type?.value || "all";
+      const tech = this.Technology_type?.value || "all";
+      const descript = this.search.trim() || "all";
+      this.loading = true;
+      axios
+        .get(
+          `http://localhost:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`
+        )
+        .then((response) => {
+          if (response.status == 200) {
+            // Filter out the data to get only those with status "active"
+            const activeData = response.data.result.filter(
+              (item) => item.status === "active"
+            );
+            if (activeData.length > 0) {
+              this.info = activeData;
+            } else {
+              this.info = [];
+              console.log("No active data found");
+            }
+          } else {
+            this.error = new Error("One or both API responses are not OK");
+          }
+          this.loading = false;
+        })
+        .catch((error) => {
+          console.error(
+            "There was an error fetching the research data:",
+            error
+          );
+          this.loading = false;
+        });
     },
   },
-  async mounted() {
-    try {
-      const [api1Response, api2Response] = await Promise.all([
-        axios.get("http://localhost:7770/getsResearch/all/all/all/all"),
-        axios.get("https://65fb5ab714650eb21009db19.mockapi.io/todos"),
-      ]);
 
-      if (api1Response.status == 200 && api2Response.status == 200) {
-        // Filter out the data to get only those with status "active"
-        const activeData = api1Response.data.result.filter(item => item.status === "active");
-        if (activeData.length > 0) {
-          this.info = activeData;
-          this.images = api2Response.data;
-        } else {
-          console.log("No active data found");
-        }
+  async mounted() {
+  try {
+    const [api1Response, api2Response] = await Promise.all([
+      axios.get("http://localhost:7770/getsResearch/all/all/all/all"),
+      axios.get("https://65fb5ab714650eb21009db19.mockapi.io/todos"),
+    ]);
+
+    if (api1Response.status == 200 && api2Response.status == 200) {
+      // Filter out the data to get only those with status "active"
+      const activeData = api1Response.data.result.filter(
+        (item) => item.status === "active"
+      );
+      if (activeData.length > 0) {
+        this.info = activeData;
+        this.images = api2Response.data;
       } else {
-        this.error = new Error("One or both API responses are not OK");
+        console.log("No active data found");
       }
-    } catch (error) {
-      this.error = `'Error fetching data: ${error}'`;
-      console.error("Error fetching data:", error);
-      if(!error.response){
-        this.snackbar.message = "Error : " + error;
-      } else {
-        this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
-      }
-      this.snackbar.color = "error"; // Set error color
-      this.snackbar.show = true;
-    } finally {
-      this.loading = false;
+    } else {
+      this.error = new Error("One or both API responses are not OK");
     }
-  },
+  } catch (error) {
+    this.error = `'Error fetching data: ${error}'`;
+    console.error("Error fetching data:", error);
+    if (!error.response) {
+      this.snackbar.message = "Error : " + error;
+    } else {
+      this.snackbar.message =
+        "Error : " +
+        error.response.data.description.description +
+        " Code: " +
+        error.response.status;
+    }
+    this.snackbar.color = "error"; // Set error color
+    this.snackbar.show = true;
+  } finally {
+    this.loading = false;
+  }
+}
 };
 </script>
 
