@@ -194,7 +194,7 @@ export default {
         img: null,
         link: '',
         status: '',
-        keyword: ''
+        keyword: null
       },
     }
   },
@@ -245,7 +245,7 @@ export default {
         img: null,
         link: '',
         status: '',
-        keyword: ''
+        keyword: null
       };
       this.markedForDeletion = [];
     },
