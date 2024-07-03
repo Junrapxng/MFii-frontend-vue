@@ -66,9 +66,9 @@
 
                   <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.description"></v-textarea>
                   <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.highlight"></v-textarea>
-                  <v-combobox v-model="currentResearch.coop" label="ความร่วมมือที่เสาะหา" variant="solo-filled" chips multiple></v-combobox>
+                  <v-combobox v-model="currentResearch.coop" label="ความร่วมมือที่เสาะหา"  chips multiple variant="solo-filled"></v-combobox>
                   <v-text-field label="ปีงบประมาณ" variant="solo-filled" v-model="currentResearch.budgetYear"></v-text-field>
-                  <!-- <v-text-field label="Keyword" variant="solo-filled" v-model="currentResearch.ipType"></v-text-field> -->
+                  <v-combobox label="Keyword" variant="solo-filled" chips multiple v-model="currentResearch.keyword"></v-combobox>
                   
                   <v-container class="flex">
                     <v-checkbox
@@ -183,17 +183,18 @@ export default {
         nameOnMedia: '',
         inventor: [],
         major: '',
-        description: '',
         intelProp: '',
         industryType: '',
-        filePath: null,
-        img: null,
+        description: '',
         highlight: '',
         techReadiness: '',
         coop: [],
+        ipType: '',
+        filePath: null,
+        img: null,
         link: '',
         status: '',
-        ipType: '',
+        keyword: ''
       },
     }
   },
@@ -233,17 +234,18 @@ export default {
         nameOnMedia: '',
         inventor: [],
         major: '',
-        description: '',
         intelProp: '',
         industryType: '',
-        filePath: null,
-        img: null,
+        description: '',
         highlight: '',
         techReadiness: '',
         coop: [],
+        ipType: '',
+        filePath: null,
+        img: null,
         link: '',
         status: '',
-        ipType: '',
+        keyword: ''
       };
       this.markedForDeletion = [];
     },
@@ -272,6 +274,7 @@ export default {
         formData.append('link', this.currentResearch.link);
         formData.append('status', this.currentResearch.status);
         formData.append('ipType', this.currentResearch.ipType);
+        formData.append('keyword', this.currentResearch.keyword);
 
         if (this.currentResearch.img) {
           this.currentResearch.img.forEach((file, index) => {
@@ -300,6 +303,7 @@ export default {
               link: this.currentResearch.link,
               status: this.currentResearch.status,
               ipType: this.currentResearch.ipType,
+              keyword: this.currentResearch.keyword,
             }, {
               headers: {
                 Authorization: localStorage.getItem('token'),
