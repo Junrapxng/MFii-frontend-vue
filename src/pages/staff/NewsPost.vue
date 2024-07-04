@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import api from "../axios";
+import api from "../../axios";
 import StaffLayout from "@/layouts/staff.vue";
 
 export default {

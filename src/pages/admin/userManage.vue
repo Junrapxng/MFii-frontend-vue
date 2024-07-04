@@ -139,7 +139,7 @@
 
 <script>
 import AdminLayout from "@/layouts/admin.vue";
-import api from "../axios";
+import api from "../../axios";
 export default {
   components: {
     AdminLayout,
