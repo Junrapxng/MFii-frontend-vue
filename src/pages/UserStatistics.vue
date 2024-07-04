@@ -35,8 +35,7 @@
 </template>
 
 <script>
-import {ref} from 'vue';
-import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -47,24 +46,6 @@ export default {
       
     }
   },
-async setup() {
-    const counter = ref({});
-
-  try {
-    const res = await axios.get('http://localhost:7770/all-product-counts');
-    counter.value = res.data.globalCount;
-    console.log(counter);
-  } catch (error) {
-    alert(error)
-  }
-
-  return{
-    counter
-  }
-  },
-      
-    
-    
 }
 </script>
 
