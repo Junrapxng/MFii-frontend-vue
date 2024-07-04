@@ -20,7 +20,7 @@
               </template>
               <template v-else-if="path.filePath && path.filePath.length">
                 <v-img v-for="(file, fileIndex) in path.filePath" :key="`file-${fileIndex}`"
-                  class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`http://localhost:7770/${file}`"
+                  class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`/${file}`"
                   cover>
                   <template v-slot:placeholder>
                     <div class="d-flex align-center justify-center fill-height">
@@ -63,10 +63,10 @@
             <v-col v-for="(item, index) in newinfo.slice(0, 4)" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
               <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="hover:shadow-lg transition-shadow rounded-xl" style="max-width: 400px">
-                  <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
+                  <v-img :src="`/${item.filePath[1]}`" cover height="200px">
                     <template v-slot:placeholder>
                       <div class="flex items-center justify-center h-full">
-                        <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
+                        <img :src="`/${item.filePath[0]}`" alt="" />
                       </div>
                     </template>
                   </v-img>
@@ -114,10 +114,10 @@
             <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
               <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="hover:shadow-lg transition-shadow rounded-xl" style="max-width: 400px">
-                  <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
+                  <v-img :src="`/${item.filePath[1]}`" cover height="200px">
                     <template v-slot:placeholder>
                       <div class="flex items-center justify-center h-full">
-                        <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
+                        <img :src="`/${item.filePath[0]}`" alt="" />
                       </div>
                     </template>
                   </v-img>
@@ -174,7 +174,7 @@ import { defineComponent, ref } from "vue";
 import { Carousel, Navigation, Slide, Pagination } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
 import ViewCounter from "@/components/ViewCounter.vue";
-import axios from "axios";
+import api from "../axios";
 export default defineComponent({
   name: "index-page",
   data() {
@@ -201,8 +201,8 @@ export default defineComponent({
     // Fetch api research and News(Banner) =======================================================================================
     try {
       const [api1Response, api2Response] = await Promise.all([
-        axios.get("http://localhost:7770/getsResearch/all/all/all/all"),
-        axios.get("http://localhost:7770/getsNews"),
+        api.get("/getsResearch/all/all/all/all"),
+        api.get("/getsNews"),
       ]);
 
       if (api1Response.status == 200 && api2Response.status == 200) {
@@ -293,9 +293,9 @@ export default defineComponent({
       const tech = "all";
       const descript = this.search.trim() || "all";
       this.loading = true;
-      axios
+      api
         .get(
-          `http://localhost:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`,{
+          `/getsResearch/${indust}/${prop}/${tech}/${descript}`,{
             withCredentials: true,
             credentials: 'include'
           }
