@@ -57,7 +57,7 @@
       <!-- Newer research research ใหม่-->
 
       <v-container>
-        <p class="text-3xl font-semibold mb-3">ของใหม่</p>
+        <p class="text-3xl font-semibold mb-3">เพิ่มล่าสุด</p>
         <v-container class="flex justify-center items-center bg-gray-100 rounded">
           <v-row v-if="newinfo" class="flex flex-wrap justify-center">
             <v-col v-for="(item, index) in newinfo.slice(0, 4)" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
@@ -315,6 +315,46 @@ export default defineComponent({
     },
     clearSearch() {
       this.search = "";
+      // this.fetchResearchData()
+    },
+     // Search ResearchData
+     fetchResearchData() {
+      const indust = "all";
+      const prop = "all";
+      const tech = "all";
+      const descript = this.search.trim() || "all";
+      this.loading = true;
+      axios
+        .get(
+          `http://localhost:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`,{
+            withCredentials: true,
+            credentials: 'include'
+          }
+        )
+        .then((response) => {
+          if (response.status == 200) {
+            // Filter out the data to get only those with status "active"
+            const activeData = response.data.result.filter(
+              (item) => item.status === "active"
+            );
+            if (activeData.length > 0) {
+              this.info = activeData;
+            } else {
+              this.info = [];
+              console.log("No active data found");
+            }
+          } else {
+            this.error = new Error("One or both API responses are not OK");
+          }
+          this.loading = false;
+        })
+        .catch((error) => {
+          console.error(
+            "There was an error fetching the research data:",
+            error
+          );
+          this.loading = false;
+        });
     },
   },
   components: {
