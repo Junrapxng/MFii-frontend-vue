@@ -143,7 +143,7 @@ export default {
     async openReplyDialog(id) {
       try {
         const response = await axios.get(
-          "http://192.168.10.184:7770/mesDetail/" + id,
+          "http://172.26.0.3:7770/mesDetail/" + id,
           {
             headers: {
               Authorization: localStorage.getItem("token"),
@@ -177,7 +177,7 @@ export default {
     async replyMessage(message, id) {
       try {
         await axios.patch(
-          "http://192.168.10.184:7770/mesReplyUpdate/" + id,
+          "http://172.26.0.3:7770/mesReplyUpdate/" + id,
           {
             messages: message,
             user: this.user._id, // Assuming you have the user object available
@@ -213,7 +213,7 @@ export default {
     // fetch ข้อความมาแสดง
     async fetchMessages() {
       try {
-        const response = await axios.get("http://192.168.10.184:7770/mesGetData", {
+        const response = await axios.get("http://172.26.0.3:7770/mesGetData", {
           headers: {
             Authorization: localStorage.getItem("token"),
           },

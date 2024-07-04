@@ -20,7 +20,7 @@
               </template>
               <template v-else-if="path.filePath && path.filePath.length">
                 <v-img v-for="(file, fileIndex) in path.filePath" :key="`file-${fileIndex}`"
-                  class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`http://localhost:7770/${file}`"
+                  class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`http://172.26.0.3:7770/${file}`"
                   cover>
                   <template v-slot:placeholder>
                     <div class="d-flex align-center justify-center fill-height">
@@ -63,10 +63,10 @@
             <v-col v-for="(item, index) in newinfo.slice(0, 4)" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
               <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="hover:shadow-lg transition-shadow rounded-xl" style="max-width: 400px">
-                  <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
+                  <v-img :src="`http://172.26.0.3:7770/${item.filePath[1]}`" cover height="200px">
                     <template v-slot:placeholder>
                       <div class="flex items-center justify-center h-full">
-                        <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
+                        <img :src="`http://172.26.0.3:7770/${item.filePath[0]}`" alt="" />
                       </div>
                     </template>
                   </v-img>
@@ -114,10 +114,10 @@
             <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
               <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="hover:shadow-lg transition-shadow rounded-xl" style="max-width: 400px">
-                  <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
+                  <v-img :src="`http://172.26.0.3:7770/${item.filePath[1]}`" cover height="200px">
                     <template v-slot:placeholder>
                       <div class="flex items-center justify-center h-full">
-                        <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
+                        <img :src="`http://172.26.0.3:7770/${item.filePath[0]}`" alt="" />
                       </div>
                     </template>
                   </v-img>

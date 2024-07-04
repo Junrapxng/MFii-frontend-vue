@@ -57,7 +57,7 @@ export default {
 
     const fetchProductCounts = async () => {
       try {
-        const response = await axios.get('http://192.168.10.184:7770/all-product-counts');
+        const response = await axios.get('http://172.26.0.3:7770/all-product-counts');
         productCounts.value = response.data.productCounts;
       } catch (error) {
         this.snackbar.message = "Error: " + error;
@@ -68,7 +68,7 @@ export default {
 
     const fetchResearch = async () => {
       try {
-        const res = await axios.get('http://192.168.10.184:7770/getsResearch/all/all/all/all');
+        const res = await axios.get('http://172.26.0.3:7770/getsResearch/all/all/all/all');
         research.value = res.data.result;
 
       } catch (error) {

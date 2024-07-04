@@ -45,10 +45,10 @@
               <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
                 <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                   <v-card class="hover:shadow-lg transition-shadow rounded-xl">
-                    <v-img :src="`http://192.168.10.184:7770/${item.filePath[1]}`" cover height="200px">
+                    <v-img :src="`http://172.26.0.3:7770/${item.filePath[1]}`" cover height="200px">
                       <template v-slot:placeholder>
                         <div class="d-flex align-center justify-center fill-height">
-                          <img :src="`http://192.168.10.184:7770/${item.filePath[0]}`" alt="" />
+                          <img :src="`http://172.26.0.3:7770/${item.filePath[0]}`" alt="" />
                         </div>
                       </template>
                     </v-img>
@@ -188,7 +188,7 @@ export default {
       this.loading = true;
       axios
         .get(
-          `http://192.168.10.184:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`
+          `http://172.26.0.3:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`
         )
         .then((response) => {
           if (response.status == 200) {
@@ -220,7 +220,7 @@ export default {
   async mounted() {
   try {
     const [api1Response, api2Response] = await Promise.all([
-      axios.get("http://192.168.10.184:7770/getsResearch/all/all/all/all"),
+      axios.get("http://172.26.0.3:7770/getsResearch/all/all/all/all"),
       axios.get("https://65fb5ab714650eb21009db19.mockapi.io/todos"),
     ]);
 
