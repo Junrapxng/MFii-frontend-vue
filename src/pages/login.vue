@@ -75,7 +75,7 @@ export default {
       const userStore = useUserStore();
       if (valid) {
         try {
-          const response = await axios.post("http://localhost:7770/login", {
+          const response = await axios.post("http://server:7770/login", {
             email: this.form.email.trim(),
             password: this.form.password.trim(),
           });
