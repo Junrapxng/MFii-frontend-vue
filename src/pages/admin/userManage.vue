@@ -247,7 +247,7 @@ export default {
     // fetch users =============================================================
     async fectchUser() {
       try {
-        const response = await axios.get("http://server:7770/admin/getsUser", {
+        const response = await axios.get("http://192.168.10.184:7770/admin/getsUser", {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -278,7 +278,7 @@ export default {
       console.log(this.editedItem._id);
       try {
         const res = await axios.delete(
-          "http://server:7770/admin/deleteUser/" + this.editedItem._id, {
+          "http://192.168.10.184:7770/admin/deleteUser/" + this.editedItem._id, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -337,7 +337,7 @@ export default {
         console.log(this.editedItem._id);
         try {
           await axios.patch(
-            "http://server:7770/admin/updatePatch/" + this.editedItem._id, {
+            "http://192.168.10.184:7770/admin/updatePatch/" + this.editedItem._id, {
             firstName: this.editedItem.firstName.trim(),
             lastName: this.editedItem.lastName.trim(),
             email: this.editedItem.email.trim(),
@@ -399,7 +399,7 @@ export default {
         const createDate = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}T${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}:${parts.find(p => p.type === 'second').value}.000Z`;
         try {
           await axios.post(
-            "http://server:7770/register", {
+            "http://192.168.10.184:7770/register", {
             firstName: this.editedItem.firstName.trim(),
             lastName: this.editedItem.lastName.trim(),
             email: this.editedItem.email.trim(),

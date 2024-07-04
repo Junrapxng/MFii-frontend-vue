@@ -32,7 +32,7 @@
             <div class="d-flex justify-center items-center">
               <v-carousel show-arrows="hover" cycle hide-delimiter-background>
                 <v-carousel-item v-for="(pic, index) in filteredImages" :key="index"
-                  :src="`http://server:7770/${pic}`" fit></v-carousel-item>
+                  :src="`http://192.168.10.184:7770/${pic}`" fit></v-carousel-item>
               </v-carousel>
             </div>
           </v-col>
@@ -95,7 +95,7 @@ export default {
     async fetchData() {
       try {
         const response = await axios.get(
-          "http://server:7770/getResearch?researchId=" + this.id
+          "http://192.168.10.184:7770/getResearch?researchId=" + this.id
         ); // Replace with your API endpoint
         this.research = response.data.result;
         console.log(this.research);
@@ -117,7 +117,7 @@ export default {
       if (this.research.filePath && this.research.filePath.length > 0) {
         const pdfPath = this.research.filePath.find(path => path.toLowerCase().endsWith('.pdf'));
         if (pdfPath) {
-          window.open(`http://server:7770/${pdfPath}`, '_blank');
+          window.open(`http://192.168.10.184:7770/${pdfPath}`, '_blank');
         } else {
           // Handle case where no PDF file is found
           this.snackbar.message = 'No PDF file';

@@ -201,8 +201,8 @@ export default defineComponent({
     // Fetch api research and News(Banner) =======================================================================================
     try {
       const [api1Response, api2Response] = await Promise.all([
-        axios.get("http://server:7770/getsResearch/all/all/all/all"),
-        axios.get("http://server:7770/getsNews"),
+        axios.get("http://192.168.10.184:7770/getsResearch/all/all/all/all"),
+        axios.get("http://192.168.10.184:7770/getsNews"),
       ]);
 
       if (api1Response.status == 200 && api2Response.status == 200) {
@@ -295,7 +295,7 @@ export default defineComponent({
       this.loading = true;
       axios
         .get(
-          `http://server:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`,{
+          `http://192.168.10.184:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`,{
             withCredentials: true,
             credentials: 'include'
           }
