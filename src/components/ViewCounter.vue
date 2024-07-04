@@ -21,10 +21,11 @@
       };
     },
     async created() {
-      // const productCounts = ref({})
+      // const productCounts = 
       try {
-        const response = await axios.get('http://localhost:7770/all-product-counts');
-        const productCounts = response.data.productCounts;
+        const response = await axios.get('http://localhost:7770/getStatProduct');
+        const productCounts = response.data.productAccess;
+        console.log(productCounts)
         this.count = productCounts
       } catch (error) {
         console.error("Error fetching product count:", error);
