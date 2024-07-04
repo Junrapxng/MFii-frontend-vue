@@ -13,17 +13,17 @@
             <v-row>
               <v-col cols="12" sm="6" md="4" lg="3">
                 <v-combobox v-model="Industry_type" :items="indust" item-value="value" item-title="text" clearable
-                  @click:clear="clearIndustryType" @change="fetchResearchData" chips variant="outlined"
+                  @click:clear="clearIndustryType" @update:modelValue="fetchResearchData" chips variant="outlined"
                   label="ประเภทอุตสาหกรรม"></v-combobox>
               </v-col>
               <v-col cols="12" sm="6" md="4" lg="3">
                 <v-combobox v-model="Intellectual_property_type" :items="prop" item-value="value" item-title="text"
-                  clearable @click:clear="clearIntellectualType" @change="fetchResearchData" chips variant="outlined"
+                  clearable @click:clear="clearIntellectualType" @update:modelValue="fetchResearchData" chips variant="outlined"
                   label="ประเภทอุตสาหกรรม"></v-combobox>
               </v-col>
               <v-col cols="12" sm="6" md="4" lg="3">
                 <v-combobox v-model="Technology_type" :items="tech" item-value="value" item-title="text" clearable
-                  @click:clear="clearTechnologyType" @change="fetchResearchData" chips variant="outlined"
+                  @click:clear="clearTechnologyType" @update:modelValue="fetchResearchData" chips variant="outlined"
                   label="ประเภทอุตสาหกรรม"></v-combobox>
               </v-col>
               <v-col cols="12" sm="6" md="4" lg="3">
