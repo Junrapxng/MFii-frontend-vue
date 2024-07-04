@@ -125,7 +125,7 @@ export default {
         const parts = formatter.formatToParts(new Date());
         const createDate = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}T${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}:${parts.find(p => p.type === 'second').value}.000Z`;
         try {
-          const response = await axios.post("http://172.26.0.3:7770/register", {
+          const response = await axios.post("http://localhost:7770/register", {
             email: this.form.email.trim(),
             password: this.form.password.trim(),
             firstName: this.form.firstName.trim(),

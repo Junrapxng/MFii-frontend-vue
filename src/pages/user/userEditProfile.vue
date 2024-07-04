@@ -86,7 +86,7 @@ export default {
 
     async saveProfile() {
       try {
-        await axios.patch('http://172.26.0.3:7770/user/updatePatch', this.user, {
+        await axios.patch('http://localhost:7770/user/updatePatch', this.user, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },

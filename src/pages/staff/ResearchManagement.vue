@@ -98,7 +98,7 @@
                       </template>
                       <template v-else>
                         <!-- Handle other file types or cases where img is not a string -->
-                        <v-img :src="`http://172.26.0.3:7770/${img}`" v-model="currentResearch.filePath" height="250px"
+                        <v-img :src="`http://localhost:7770/${img}`" v-model="currentResearch.filePath" height="250px"
                           width="300px" cover></v-img>
                       </template>
                       <v-btn v-if="isEdit" @click="markForDeletion(index)"
@@ -215,9 +215,9 @@ export default {
       // Toggle the visibility status
       item.status = item.status === "active" ? "inactive" : "active";
 
-      // Send the updated status to the 172.26.0.3
+      // Send the updated status to the localhost
       try {
-        await axios.patch(`http://172.26.0.3:7770/staff/updateResearchData/${item._id}`, { status: item.status }, {
+        await axios.patch(`http://localhost:7770/staff/updateResearchData/${item._id}`, { status: item.status }, {
           headers: {
             Authorization: localStorage.getItem('token'),
           },
@@ -289,7 +289,7 @@ export default {
         // Edit
         if (this.isEdit) {
           try {
-            await axios.patch(`http://172.26.0.3:7770/staff/updateResearchData/${this.currentResearch._id}`, {
+            await axios.patch(`http://localhost:7770/staff/updateResearchData/${this.currentResearch._id}`, {
               budgetYear: this.currentResearch.budgetYear,
               nameOnMedia: this.currentResearch.nameOnMedia,
               inventor: this.currentResearch.inventor,
@@ -313,7 +313,7 @@ export default {
             if (this.markedForDeletion.length > 0) {
               const deleteRequests = this.markedForDeletion.map(index => {
                 const img = this.currentResearch.filePath[index];
-                return axios.patch(`http://172.26.0.3:7770/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
+                return axios.patch(`http://localhost:7770/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
                   filePath: img
                 }, {
                   headers: {
@@ -324,7 +324,7 @@ export default {
               await Promise.all(deleteRequests);
             }
             // Add file edit
-            await axios.patch(`http://172.26.0.3:7770/staff/addFileResearch/${this.currentResearch._id}`, formData, {
+            await axios.patch(`http://localhost:7770/staff/addFileResearch/${this.currentResearch._id}`, formData, {
               headers: {
                 Authorization: localStorage.getItem('token'),
                 'Content-Type': 'multipart/form-data'
@@ -344,7 +344,7 @@ export default {
           }
 
         } else {
-          await axios.post('http://172.26.0.3:7770/staff/addResearch', formData, {
+          await axios.post('http://localhost:7770/staff/addResearch', formData, {
             headers: {
               Authorization: localStorage.getItem('token'),
               'Content-Type': 'multipart/form-data'
@@ -385,7 +385,7 @@ export default {
 
     async deleteResearch() {
       try {
-        await axios.delete(`http://172.26.0.3:7770/staff/deleteResearch/research/${this.currentResearch._id}`, {
+        await axios.delete(`http://localhost:7770/staff/deleteResearch/research/${this.currentResearch._id}`, {
           headers: {
             Authorization: localStorage.getItem('token'),
           },
@@ -420,7 +420,7 @@ export default {
     // get research data funnctions
     async fetchResearches() {
       try {
-        const response = await axios.get('http://172.26.0.3:7770/getsResearch/all/all/all/all');
+        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all/all');
         this.researches = response.data;
 
       } catch (error) {

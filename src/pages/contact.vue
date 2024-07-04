@@ -136,7 +136,7 @@ export default {
       this.form.messageReply.user = this.user._id;
 
       try {
-        await axios.post('http://172.26.0.3:7770/user/mesRequest', this.form, {
+        await axios.post('http://localhost:7770/user/mesRequest', this.form, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },

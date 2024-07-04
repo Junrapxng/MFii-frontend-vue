@@ -25,7 +25,7 @@
               <v-row>
                 <v-col v-for="(img, index) in imgs" :key="index" cols="12" md="4">
                   <v-card class="hover:shadow-lg transition-shadow rounded-lg my-1 mx-1" style="max-width: 400px">
-                    <v-img v-if="img.filePath.length > 0" :src="`http://172.26.0.3:7770/${img.filePath}`" height="150px" cover />
+                    <v-img v-if="img.filePath.length > 0" :src="`http://localhost:7770/${img.filePath}`" height="150px" cover />
                     <v-img v-else-if="img.linkImage.length > 0" :src="`${img.linkImage}`" height="150px" cover />
                     <iframe v-else-if="img.linkVideo.length > 0" :src="`${img.linkVideo}`" height="150px" class="w-full"></iframe>
                     <p v-else>No media available</p>
@@ -54,7 +54,7 @@
                         allowfullscreen
                         ></iframe>
                 <v-img v-else-if="item.filePath.length > 0"
-                      :src="`http://172.26.0.3:7770/${item.filePath}`"
+                      :src="`http://localhost:7770/${item.filePath}`"
                       :alt="item.title"></v-img>
                  <v-img v-else-if="item.linkImage.length > 0"
                       :src="`${item.linkImage}`"
@@ -159,7 +159,7 @@ export default {
 
       // Check if formData has any files or links before making the request
       if (formData.has('images[0]') || formData.has('linkVideo') || formData.has('linkImage')) {
-        const response = await axios.post('http://172.26.0.3:7770/staff/addNews', formData, {
+        const response = await axios.post('http://localhost:7770/staff/addNews', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: localStorage.getItem("token"),
@@ -191,7 +191,7 @@ export default {
     async fetchImg() {
       console.log('fetchImg method called.');
       try {
-        const res = await axios.get('http://172.26.0.3:7770/getsNews');
+        const res = await axios.get('http://localhost:7770/getsNews');
         this.imgs = res.data.result;
       } catch (error) {
         console.log('Error getting News: ' + error);
@@ -216,7 +216,7 @@ export default {
     },
     async deleteImage() {
       try {
-        const response = await axios.delete(`http://172.26.0.3:7770/staff/deleteNews/news/${this.deleteImgId}`, {
+        const response = await axios.delete(`http://localhost:7770/staff/deleteNews/news/${this.deleteImgId}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           }
