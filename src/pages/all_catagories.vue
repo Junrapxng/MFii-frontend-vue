@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "../axios";
 export default {
   name: "all-categories-page",
   data() {
@@ -186,9 +186,9 @@ export default {
       const tech = this.Technology_type?.value || "all";
       const descript = this.search.trim() || "all";
       this.loading = true;
-      axios
+      api
         .get(
-          `http://localhost:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`
+          `/getsResearch/${indust}/${prop}/${tech}/${descript}`
         )
         .then((response) => {
           if (response.status == 200) {
@@ -220,8 +220,8 @@ export default {
   async mounted() {
   try {
     const [api1Response, api2Response] = await Promise.all([
-      axios.get("http://localhost:7770/getsResearch/all/all/all/all"),
-      axios.get("https://65fb5ab714650eb21009db19.mockapi.io/todos"),
+      api.get("/getsResearch/all/all/all/all"),
+      api.get("/65fb5ab714650eb21009db19.mockapi.io/todos"),
     ]);
 
     if (api1Response.status == 200 && api2Response.status == 200) {

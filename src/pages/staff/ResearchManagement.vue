@@ -153,7 +153,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import api from "../axios";
 import StaffLayout from "@/layouts/staff.vue";
 export default {
   name: "staff-ResearchManagement-page",
@@ -217,7 +217,7 @@ export default {
 
       // Send the updated status to the localhost
       try {
-        await axios.patch(`http://localhost:7770/staff/updateResearchData/${item._id}`, { status: item.status }, {
+        await api.patch(`/staff/updateResearchData/${item._id}`, { status: item.status }, {
           headers: {
             Authorization: localStorage.getItem('token'),
           },
@@ -289,7 +289,7 @@ export default {
         // Edit
         if (this.isEdit) {
           try {
-            await axios.patch(`http://localhost:7770/staff/updateResearchData/${this.currentResearch._id}`, {
+            await api.patch(`/staff/updateResearchData/${this.currentResearch._id}`, {
               budgetYear: this.currentResearch.budgetYear,
               nameOnMedia: this.currentResearch.nameOnMedia,
               inventor: this.currentResearch.inventor,
@@ -313,7 +313,7 @@ export default {
             if (this.markedForDeletion.length > 0) {
               const deleteRequests = this.markedForDeletion.map(index => {
                 const img = this.currentResearch.filePath[index];
-                return axios.patch(`http://localhost:7770/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
+                return api.patch(`/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
                   filePath: img
                 }, {
                   headers: {
@@ -324,7 +324,7 @@ export default {
               await Promise.all(deleteRequests);
             }
             // Add file edit
-            await axios.patch(`http://localhost:7770/staff/addFileResearch/${this.currentResearch._id}`, formData, {
+            await api.patch(`/staff/addFileResearch/${this.currentResearch._id}`, formData, {
               headers: {
                 Authorization: localStorage.getItem('token'),
                 'Content-Type': 'multipart/form-data'
@@ -344,7 +344,7 @@ export default {
           }
 
         } else {
-          await axios.post('http://localhost:7770/staff/addResearch', formData, {
+          await api.post('/staff/addResearch', formData, {
             headers: {
               Authorization: localStorage.getItem('token'),
               'Content-Type': 'multipart/form-data'
@@ -385,7 +385,7 @@ export default {
 
     async deleteResearch() {
       try {
-        await axios.delete(`http://localhost:7770/staff/deleteResearch/research/${this.currentResearch._id}`, {
+        await api.delete(`/staff/deleteResearch/research/${this.currentResearch._id}`, {
           headers: {
             Authorization: localStorage.getItem('token'),
           },
@@ -420,7 +420,7 @@ export default {
     // get research data funnctions
     async fetchResearches() {
       try {
-        const response = await axios.get('http://localhost:7770/getsResearch/all/all/all/all');
+        const response = await api.get('/getsResearch/all/all/all/all');
         this.researches = response.data;
 
       } catch (error) {

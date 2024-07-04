@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "../axios";
 export default {
   name: "innovation-page",
   props: ["id"],
@@ -94,8 +94,8 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get(
-          "http://localhost:7770/getResearch?researchId=" + this.id
+        const response = await api.get(
+          "/getResearch?researchId=" + this.id
         ); // Replace with your API endpoint
         this.research = response.data.result;
         console.log(this.research);
