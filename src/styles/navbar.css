@@ -1,0 +1,184 @@
+.font-noto-sans-thai {
+    font-family: "Noto Sans Thai", sans-serif;
+  }
+  .v-app-bar {
+      margin-top: 10%;
+    }
+  
+  @media (max-width:1500px) {
+    .v-app-bar {
+      margin-top: 14%;
+    }
+  }
+  
+  @media (max-width:1420px) {
+  .regandlog{
+    display: flex;
+    justify-content: center;
+  }
+   .reg,.log{
+    margin-top: 10px;
+   }
+  }
+  
+  @media (max-width: 1215px) {
+    .v-app-bar {
+      margin-top: 16%;
+    }
+    
+    .text-3xl {
+      font-size: 10px;
+    }
+  
+    .text-2xl {
+      font-size: 24px;
+    }
+  
+    .text-xl {
+      font-size: 16px;
+    }
+  
+    .btn-nav {
+      width: 95px;
+      height: 40px;
+      font-size: 12px;
+    }
+  
+    .v-app-bar {
+      margin-top: 15%;
+    }
+  }
+  @media (max-width:1117px) {
+    .v-app-bar {
+      margin-top: 16%;
+    }
+  }
+  
+  @media (max-width:1055px) {
+    .v-app-bar {
+      margin-top: 18%;
+    }
+  }
+  
+  @media (max-width: 990px) {
+    .text-3xl {
+      font-size: 10px;
+    }
+  
+    .text-2xl {
+      font-size: 20px;
+    }
+  
+    .text-xl {
+      font-size: 14px;
+    }
+  
+    .header {
+      display: block;
+    }
+  
+    .head-logo {
+      justify-content: center;
+      display: flex;
+      margin-bottom: 10px;
+    }
+  
+    /* .btn-top {
+      display: block;
+      justify-content: center; 
+      align-items: center; 
+    } */
+    .btn-nav {
+      width: 79px;
+      height: 40px;
+      font-size: 10px;
+    }
+  
+    .v-app-bar {
+      margin-top: 20%;
+    }
+  }
+  
+  @media (max-width: 855px) {
+    .v-app-bar {
+      margin-top: 22%;
+    }
+  }
+  
+  @media (max-width: 785px) {
+    .v-app-bar {
+      margin-top: 23%;
+    }
+  }
+  
+  
+  @media (max-width: 750px) {
+    .v-app-bar {
+      margin-top: 24%;
+    }
+    .text-3xl {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+  
+    .text-2xl {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+  
+    .text-xl {
+      font-size: 10px;
+      margin-bottom: 3px;
+    }
+  }
+  
+  
+  
+  @media (max-width: 604px) {
+    
+    .text-3xl {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+  
+    .text-2xl {
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+  
+    .text-xl {
+      font-size: 10px;
+      margin-bottom: 3px;
+    }
+  
+    .head-logo {
+      justify-content: center;
+      display: flex;
+      margin-bottom: 5px;
+    }
+  
+    .header-title {
+      display: block;
+    }
+  
+    .header {
+      margin-top: 15%;
+    }
+  
+    .searchandAuth {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .regandlog{
+      justify-content: center;
+    }
+  
+    .v-app-bar {
+      margin-top: 0%;
+    }
+  
+  
+  
+  }
+  
