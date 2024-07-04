@@ -95,7 +95,7 @@ export default {
     async fetchData() {
       try {
         const response = await axios.get(
-          "http://localhost:7770/getResearch/" + this.id
+          "http://localhost:7770/getResearch?researchId=" + this.id
         ); // Replace with your API endpoint
         this.research = response.data.result;
         console.log(this.research);
@@ -112,18 +112,7 @@ export default {
         this.isLoading = false;
       }
     },
-
-    // counter visitor
-    async counter() {
-      try {
-        await axios.get(
-          "http://localhost:7770/product-visits/" + this.id
-        );
-      } catch (error) {
-        console.error(error);
-      }
-    },
-
+    
     downloadPdf() {
       if (this.research.filePath && this.research.filePath.length > 0) {
         const pdfPath = this.research.filePath.find(path => path.toLowerCase().endsWith('.pdf'));
@@ -153,7 +142,6 @@ export default {
   },
   mounted() {
     this.fetchData();
-    this.counter();
   },
 
 }
