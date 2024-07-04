@@ -175,6 +175,11 @@ import { Carousel, Navigation, Slide, Pagination } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
 import ViewCounter from "@/components/ViewCounter.vue";
 import axios from "axios";
+
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:7770',
+  // other configurations
+});
 export default defineComponent({
   name: "index-page",
   data() {
@@ -293,9 +298,9 @@ export default defineComponent({
       const tech = "all";
       const descript = this.search.trim() || "all";
       this.loading = true;
-      axios
+      axiosInstance
         .get(
-          `http://192.168.10.184:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`,{
+          `/getsResearch/${indust}/${prop}/${tech}/${descript}`,{
             withCredentials: true,
             credentials: 'include'
           }
