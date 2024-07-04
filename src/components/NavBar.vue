@@ -95,12 +95,12 @@
 
     <v-container class="navcontainer">
       <!-- Header Menu Bar -->
-      <v-app-bar :elevation="2" app color="#D02630" class=" font-noto-sans-thai mt-36">
-        <v-app-bar-nav-icon @click="drawer = !drawer" class="navbar d-flex d-sm-none"></v-app-bar-nav-icon>
+      <v-app-bar :elevation="2" app color="#D02630" class="font-noto-sans-thai mt-36">
+        <v-app-bar-nav-icon @click="drawer = !drawer" class="navbar d-flex d-md-none"></v-app-bar-nav-icon>
 
         <v-spacer></v-spacer>
 
-        <div class="text-center d-none d-sm-flex">
+        <div class="text-center d-none d-md-flex">
           <v-menu v-for="item in menuItems" :key="item.title" :location="bottom" :to="item.route">
             <template v-slot:activator="{ props }">
               <v-btn dark v-bind="props" class="mx-2 rounded-lg hover:bg-white hover:text-red-500" v-if="
@@ -198,7 +198,7 @@
         <v-spacer></v-spacer>
       </v-app-bar>
 
-      <v-navigation-drawer v-model="drawer" temporary class="d-sm-none">
+      <v-navigation-drawer v-model="drawer" temporary class="d-md-none">
         <v-list>
           <template v-for="item in menuItems" :key="item.title">
             <v-list-group v-if="item.subItems && item.subItems.length" :value="item.title">
@@ -229,6 +229,7 @@
 import { useUserStore } from "@/store/user";
 import SearchComponent from '../components/SearchComponent.vue';
 import { ref } from 'vue';
+import { useDisplay } from 'vuetify'
 export default {
   name: "NavBar",
   components: {
@@ -237,6 +238,7 @@ export default {
   data() {
     return {
       drawer: ref(false),
+       mdAndUp: useDisplay(),
       loggedIn: false,
       menuItems: [
         {
@@ -340,6 +342,10 @@ export default {
 
 <style scoped>
 @import "../styles/navbar.css";
+
+
+
+
 
 /* .v-app-bar {
     margin-top: 10%;

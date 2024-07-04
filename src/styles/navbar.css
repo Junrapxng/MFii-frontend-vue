@@ -4,10 +4,16 @@
   .v-app-bar {
       margin-top: 10%;
     }
-  
+    @media (max-width:1600px) {
+      .v-app-bar {
+        margin-top: 12%;
+      }
+    }
+    
+
   @media (max-width:1500px) {
     .v-app-bar {
-      margin-top: 14%;
+      margin-top: 12%;
     }
   }
   
@@ -19,6 +25,9 @@
    .reg,.log{
     margin-top: 10px;
    }
+   .v-app-bar {
+    margin-top: 14%;
+  }
   }
   
   @media (max-width: 1215px) {
@@ -98,24 +107,27 @@
       margin-top: 20%;
     }
   }
-  
-  @media (max-width: 855px) {
+
+  @media (max-width: 960px) {
     .v-app-bar {
-      margin-top: 22%;
-    }
+        margin-top: 0%;
+      }
+      .header{
+        margin-top: 10%;
+      }
   }
   
-  @media (max-width: 785px) {
-    .v-app-bar {
-      margin-top: 23%;
-    }
-  }
+  
   
   
   @media (max-width: 750px) {
-    .v-app-bar {
-      margin-top: 24%;
+    .d-md-none {
+      display: flex !important;
     }
+    .d-none.d-md-flex {
+      display: none !important;
+    }
+
     .text-3xl {
       font-size: 20px;
       margin-bottom: 10px;
@@ -131,8 +143,7 @@
       margin-bottom: 3px;
     }
   }
-  
-  
+
   
   @media (max-width: 604px) {
     
