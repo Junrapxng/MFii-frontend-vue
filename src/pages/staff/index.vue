@@ -15,7 +15,7 @@
 <script>
 import StaffLayout from "@/layouts/staff.vue";
 import UserStatistics from "@/pages/UserStatistics.vue";
-import ResearchStatistics from "@/pages/staff/ResearchStatistics.vue";
+import ResearchStatistics from "@/pages/ResearchStatistics.vue";
 
 export default {
   name: "staff-index-page",
