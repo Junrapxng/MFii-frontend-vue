@@ -90,7 +90,7 @@
 </template>
 
 <script>
-import api from "../axios";
+import {api} from "../axios";
 export default {
   name: "register-page",
   data() {

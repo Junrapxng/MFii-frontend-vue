@@ -103,7 +103,7 @@
 import {
   useUserStore
 } from "@/store/user";
-import api from "../../axios";
+import {api} from "../../axios";
 import StaffLayout from "@/layouts/staff.vue";
 export default {
   name: "staff-MessageReply-page",

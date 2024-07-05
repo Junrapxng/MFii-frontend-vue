@@ -98,7 +98,7 @@
 
 <script>
 import { useUserStore } from '@/store/user';
-import api from "../axios";
+import {api} from "../axios";
 export default {
   name: "contact-page",
   data() {

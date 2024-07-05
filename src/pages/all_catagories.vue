@@ -59,7 +59,7 @@
                         :color="item.techReadiness === 'ระดับการทดลอง' ? 'purple' : item.techReadiness === 'ระดับต้นแบบ' ? 'blue' : item.techReadiness === 'ระดับถ่ายทอด' ? 'orange' : 'default'">
                         {{ item.techReadiness }}
                       </v-chip>
-                      <ViewCounter :productId="item._id" />
+                
                     </v-card-actions>
                   </v-card>
                 </router-link>
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import api from "../axios";
+import {api} from "../axios";
 export default {
   name: "all-categories-page",
   data() {

@@ -92,7 +92,7 @@
 
 <script>
 import { useUserStore } from "@/store/user";
-import api from "../../axios";
+import {api} from "../../axios";
 import NavBar from "./../../components/NavBar.vue";
 export default {
   name: "messagePage",

@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import api from "../axios";
+import {api} from "../axios";
 import { ref, computed } from "vue";
 
 export default {
