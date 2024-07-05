@@ -6,11 +6,12 @@
       <!-- display only images -->
       <v-container class="flex">
         <v-container fluid style="width: 90%">
-          <Carousel v-if="filteredImages.length" class="carousel" :autoplay="4000" :wrap-around="true">
-            <Slide v-for="(path, index) in filteredImages" :key="index">
+          <v-carousel v-if="filteredImages.length" :key="carouselKey" class="Carousel" cycle show-arrows="hover"
+            hide-delimiter-background height="370" :value="0">
+            <v-carousel-item v-for="(path, index) in filteredImages" :key="index">
               <template v-if="path.linkImage && path.linkImage.length">
                 <v-img v-for="(link, linkIndex) in path.linkImage" :key="`link-${linkIndex}`"
-                  class="carousel__item mx-auto" max-height="500" lazy-src="" :src="link" cover>
+                  class="carousel__item mx-auto" height="370" lazy-src="" :src="link" contain>
                   <template v-slot:placeholder>
                     <div class="d-flex align-center justify-center fill-height">
                       <v-progress-circular color="pink" indeterminate></v-progress-circular>
@@ -20,8 +21,7 @@
               </template>
               <template v-else-if="path.filePath && path.filePath.length">
                 <v-img v-for="(file, fileIndex) in path.filePath" :key="`file-${fileIndex}`"
-                  class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`${baseUrl}/${file}`"
-                  cover>
+                  class="carousel__item mx-auto" height="370" lazy-src="" :src="`${baseUrl}/${file}`" contain>
                   <template v-slot:placeholder>
                     <div class="d-flex align-center justify-center fill-height">
                       <v-progress-circular color="pink" indeterminate></v-progress-circular>
@@ -29,12 +29,8 @@
                   </template>
                 </v-img>
               </template>
-            </Slide>
-            <template #addons>
-              <Pagination />
-              <Navigation />
-            </template>
-          </Carousel>
+            </v-carousel-item>
+          </v-carousel>
         </v-container>
       </v-container>
 
@@ -71,20 +67,19 @@
                     </template>
                   </v-img>
                   <v-card-title class="text-lg">{{
-                    
                     item.nameOnMedia
-                    }}</v-card-title>
+                  }}</v-card-title>
                   <v-card-subtitle class="text-sm">{{
                     item.industryType
-                    }}</v-card-subtitle>
+                  }}</v-card-subtitle>
                   <v-card-actions>
                     <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
-                      ? 'purple'
-                      : item.techReadiness === 'ระดับต้นแบบ'
-                        ? 'blue'
-                        : item.techReadiness === 'ระดับถ่ายทอด'
-                          ? 'orange'
-                          : 'default'
+                        ? 'purple'
+                        : item.techReadiness === 'ระดับต้นแบบ'
+                          ? 'blue'
+                          : item.techReadiness === 'ระดับถ่ายทอด'
+                            ? 'orange'
+                            : 'default'
                       " class="text-xs">
                       {{ item.techReadiness }}
                     </v-chip>
@@ -92,7 +87,6 @@
                     <v-chip class="mx-2">
                       {{ count[item._id] || 0 }} views
                     </v-chip>
-                   
                   </v-card-actions>
                 </v-card>
               </router-link>
@@ -109,7 +103,7 @@
       <v-container class="inputSearch">
         <p class="text-3xl font-semibold mb-3">ผลงานพร้อมถ่ายทอด</p>
         <v-text-field v-model="search" density="comfortable" placeholder="Search" prepend-inner-icon="mdi-magnify"
-          style="max-width: 300px" variant="solo" clearable @click:clear="clearSearch" @input="fetchResearchData" 
+          style="max-width: 300px" variant="solo" clearable @click:clear="clearSearch" @input="fetchResearchData"
           hide-details rounded class="pb-6"></v-text-field>
 
         <!-- Cards Section -->
@@ -121,24 +115,24 @@
                   <v-img :src="`${baseUrl}/${item.filePath[0]}`" cover height="200px">
                     <template v-slot:placeholder>
                       <div class="flex items-center justify-center h-full">
-                          Loading...
+                        Loading...
                       </div>
                     </template>
                   </v-img>
                   <v-card-title class="text-lg">{{
                     item.nameOnMedia
-                    }}</v-card-title>
+                  }}</v-card-title>
                   <v-card-subtitle class="text-sm">{{
                     item.industryType
-                    }}</v-card-subtitle>
+                  }}</v-card-subtitle>
                   <v-card-actions>
                     <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
-                      ? 'purple'
-                      : item.techReadiness === 'ระดับต้นแบบ'
-                        ? 'blue'
-                        : item.techReadiness === 'ระดับถ่ายทอด'
-                          ? 'orange'
-                          : 'default'
+                        ? 'purple'
+                        : item.techReadiness === 'ระดับต้นแบบ'
+                          ? 'blue'
+                          : item.techReadiness === 'ระดับถ่ายทอด'
+                            ? 'orange'
+                            : 'default'
                       " class="text-xs">
                       {{ item.techReadiness }}
                     </v-chip>
@@ -178,9 +172,7 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import { Carousel, Navigation, Slide, Pagination } from "vue3-carousel";
-import "vue3-carousel/dist/carousel.css";
-import {api, url} from '../axios'
+import { api, url } from "../axios";
 export default defineComponent({
   name: "index-page",
   data() {
@@ -202,13 +194,12 @@ export default defineComponent({
       carouselKey: 0,
       sessionId: null,
       count: {},
-      baseUrl: '',
-
+      baseUrl: "",
     };
   },
 
   async created() {
-      this.baseUrl = url
+    this.baseUrl = url;
     // Fetch api research and News(Banner) =======================================================================================
     try {
       const [api1Response, api2Response] = await Promise.all([
@@ -218,7 +209,7 @@ export default defineComponent({
 
       if (api1Response.status == 200 && api2Response.status == 200) {
         // Filter out the data to get only those with status "active"
-        console.log("test " + api1Response.data)
+        console.log("test " + api1Response.data);
         this.sessionId = api1Response.data.sessionId;
         const activeData = api1Response.data.result.filter(
           (item) => item.status === "active"
@@ -272,17 +263,20 @@ export default defineComponent({
       const endIndex = startIndex + this.itemsPerPage;
       return this.info.slice(startIndex, endIndex);
     },
-  
+
     filteredVideos() {
-      return this.images.filter(item => item.linkVideo && item.linkVideo.length > 0);
+      return this.images.filter(
+        (item) => item.linkVideo && item.linkVideo.length > 0
+      );
     },
 
     filteredImages() {
-      return this.images.filter(path =>
-        (path.linkImage && path.linkImage.length) ||
-        (path.filePath && path.filePath.length)
+      return this.images.filter(
+        (path) =>
+          (path.linkImage && path.linkImage.length) ||
+          (path.filePath && path.filePath.length)
       );
-    }
+    },
   },
   methods: {
     paginate(page) {
@@ -290,7 +284,7 @@ export default defineComponent({
     },
     clearSearch() {
       this.search = "";
-      this.fetchResearchData()
+      this.fetchResearchData();
       this.currentPage = "1";
     },
     // Search ResearchData
@@ -301,12 +295,10 @@ export default defineComponent({
       const descript = this.search.trim() || "all";
       this.loading = true;
       api
-        .get(
-          `/getsResearch/${indust}/${prop}/${tech}/${descript}`, {
+        .get(`/getsResearch/${indust}/${prop}/${tech}/${descript}`, {
           withCredentials: true,
-          credentials: 'include'
-        }
-        )
+          credentials: "include",
+        })
         .then((response) => {
           if (response.status == 200) {
             // Filter out the data to get only those with status "active"
@@ -333,41 +325,22 @@ export default defineComponent({
         });
     },
 
-
-// Get view count ===========================================================================
+    // Get view count ===========================================================================
     async getviewCount() {
       try {
         // Make a single API call to fetch all product counts
-        const response = await api.get('/getStatProduct');
+        const response = await api.get("/getStatProduct");
         const productCounts = response.data.result;
 
         // Store product counts in the component's data
         this.count = productCounts;
 
-        console.log('Product counts:', this.count);
+        console.log("Product counts:", this.count);
       } catch (error) {
-        console.error('Error fetching product counts:', error);
+        console.error("Error fetching product counts:", error);
       }
     },
     // ============================================================================================
-  },
-  components: {
-    Pagination,
-    Carousel,
-    Slide,
-    Navigation,
-  },
-  breakpoints: {
-    // 700px and up
-    700: {
-      itemsToShow: 3.5,
-      snapAlign: "center",
-    },
-    // 1024 and up
-    1024: {
-      itemsToShow: 5,
-      snapAlign: "start",
-    },
   },
 });
 </script>
