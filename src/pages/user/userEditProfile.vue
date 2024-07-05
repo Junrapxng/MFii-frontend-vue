@@ -58,7 +58,7 @@
 
 <script>
 import { useUserStore } from '@/store/user';
-import axios from 'axios';
+import {api} from "../../axios";
 export default {
   name: 'user-profile-page',
   data() {
@@ -86,7 +86,7 @@ export default {
 
     async saveProfile() {
       try {
-        await axios.patch('http://localhost:7770/user/updatePatch', this.user, {
+        await api.patch('/user/updatePatch', this.user, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },

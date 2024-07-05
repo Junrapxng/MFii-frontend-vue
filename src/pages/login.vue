@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import {api} from "../axios";
 import { useUserStore } from "@/store/user";
 export default {
   name: "login-page",
@@ -75,7 +75,7 @@ export default {
       const userStore = useUserStore();
       if (valid) {
         try {
-          const response = await axios.post("http://localhost:7770/login", {
+          const response = await api.post("/login", {
             email: this.form.email.trim(),
             password: this.form.password.trim(),
           });
