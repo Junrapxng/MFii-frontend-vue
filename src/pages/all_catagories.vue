@@ -45,10 +45,10 @@
               <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
                 <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                   <v-card class="hover:shadow-lg transition-shadow rounded-xl">
-                    <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
+                    <v-img :src="`${baseUrl}/${item.filePath}`" cover height="200px">
                       <template v-slot:placeholder>
                         <div class="d-flex align-center justify-center fill-height">
-                          <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
+                          Loading...  
                         </div>
                       </template>
                     </v-img>
@@ -94,7 +94,7 @@
 </template>
 
 <script>
-import {api} from "../axios";
+import {api, url} from "../axios";
 export default {
   name: "all-categories-page",
   data() {
@@ -114,6 +114,7 @@ export default {
       error: null,
       currentPage: 1,
       itemsPerPage: 8, // จำนวนรายการต่อหน้า
+      baseUrl: '',
 
       indust: [
         { value: "cosme", text: "เครื่องสำอาง" },
@@ -218,20 +219,19 @@ export default {
   },
 
   async mounted() {
+    this.baseUrl = url
   try {
-    const [api1Response, api2Response] = await Promise.all([
+    const api1Response = await Promise.all([
       api.get("/getsResearch/all/all/all/all"),
-      api.get("/65fb5ab714650eb21009db19.mockapi.io/todos"),
     ]);
 
-    if (api1Response.status == 200 && api2Response.status == 200) {
+    if (api1Response.status == 200) {
       // Filter out the data to get only those with status "active"
       const activeData = api1Response.data.result.filter(
         (item) => item.status === "active"
       );
       if (activeData.length > 0) {
         this.info = activeData;
-        this.images = api2Response.data;
       } else {
         console.log("No active data found");
       }
