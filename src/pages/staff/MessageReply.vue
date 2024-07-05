@@ -103,7 +103,7 @@
 import {
   useUserStore
 } from "@/store/user";
-import axios from "axios";
+import {api} from "../../axios";
 import StaffLayout from "@/layouts/staff.vue";
 export default {
   name: "staff-MessageReply-page",
@@ -148,7 +148,7 @@ export default {
   methods: {
     async openReplyDialog(id) {
       try {
-        const response = await axios.get('http://localhost:7770/mesDetail/' + id, {
+        const response = await api.get('/mesDetail/' + id, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -180,7 +180,7 @@ export default {
     // reply Message
     async replyMessage(message, id) {
       try {
-        await axios.patch('http://localhost:7770/mesReplyUpdate/' + id, {
+        await api.patch('/mesReplyUpdate/' + id, {
           messages: message,
           user: this.user._id // Assuming you have the user object available
         }, {
@@ -210,7 +210,7 @@ export default {
 
     async fetchMessages() {
       try {
-        const response = await axios.get('http://localhost:7770/mesGetData', {
+        const response = await api.get('/mesGetData', {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
