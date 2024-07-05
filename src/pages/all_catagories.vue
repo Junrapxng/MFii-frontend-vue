@@ -220,6 +220,7 @@ export default {
 
   async mounted() {
     this.baseUrl = url
+    this.fetchResearchData();
   try {
     const api1Response = await Promise.all([
       api.get("/getsResearch/all/all/all/all"),
