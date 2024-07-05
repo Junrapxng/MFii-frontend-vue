@@ -1,6 +1,6 @@
 <template>
-  <v-container class="mb-10 my-0 ">
-    <v-container class="header flex-wrap ">
+  <v-container fluid class="mb-10 my-0 ">
+    <v-container fluid class="header flex-wrap ">
       <!-- Logo, Title, and Buttons Section -->
       <v-row>
         <!-- Logo column -->
@@ -35,9 +35,9 @@
 
               <!-- if user not loggedin -->
               <v-container v-if="userStore.error || userStore.loading" class="regandlog">
-                <v-btn class="reg  bg-black text-white rounded-xl border w-32 h-14 btn-nav"
+                <v-btn class="reg  bg-black text-white rounded-xl border w-32 h-14 btn-nav mr-1"
                   to="/register">สมัครสมาชิก</v-btn>
-                <v-btn class="log text-black rounded-xl border border-black w-32 h-14 btn-nav"
+                <v-btn class="log text-black rounded-xl border border-black w-32 h-14 btn-nav ml-1"
                   to="/login">เข้าสู่ระบบ</v-btn>
               </v-container>
             </div>
@@ -386,9 +386,6 @@ export default {
 .name{
   margin-right: 1rem;
 }
-
-
-
 /* .v-app-bar {
     margin-top: 10%;
   } */
