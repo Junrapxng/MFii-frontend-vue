@@ -239,8 +239,11 @@ export default defineComponent({
       this.loading = false;
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     this.getviewCount();
+=======
+>>>>>>> parent of 9760eeb (Merge branch 'main' of https://github.com/Junrapxng/MFii-frontend-vue into A-frontEnd)
 =======
 >>>>>>> parent of 9760eeb (Merge branch 'main' of https://github.com/Junrapxng/MFii-frontend-vue into A-frontEnd)
     // ==============================================================================================================================
