@@ -22,25 +22,21 @@
       </template>
     </v-snackbar>
   </div>
-
 </template>
 
 <script>
-import {api} from "../axios";
-import { ref, computed } from "vue";
+import { api } from "../axios";
+import { ref, reactive, computed } from "vue";
 
 export default {
-  data() {
-    return {
-      snackbar: {
-        show: false,
-        message: "",
-        color: "success", // Default color
-      },
-    }
-  },
   setup() {
-    const productCounts = ref({});
+    const snackbar = reactive({
+      show: false,
+      message: "",
+      color: "success"
+    });
+
+    const productCounts = reactive({});
     const research = ref([]);
 
     const headers = [
@@ -48,51 +44,52 @@ export default {
       { title: 'จำนวนการเข้าชม', align: "center", key: "viewCount" }
     ];
 
-    const researchWithCounts = computed(() => {
-      return research.value.map(item => ({
-        ...item,
-        viewCount: productCounts.value[item._id] || 0
-      }));
-    });
-
-    const fetchProductCounts = async () => {
-      try {
-        const response = await api.get('/all-product-counts');
-        productCounts.value = response.data.productCounts;
-      } catch (error) {
-        this.snackbar.message = "Error: " + error;
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
-      }
-    };
-
     const fetchResearch = async () => {
       try {
         const res = await api.get('/getsResearch/all/all/all/all');
         research.value = res.data.result;
-
       } catch (error) {
         console.error("Error fetching research:", error);
         if (!error.response) {
-          this.snackbar.message = "Error : " + error;
+          snackbar.message = "Error : " + error;
         } else {
-          this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+          snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
         }
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
+        snackbar.color = "error";
+        snackbar.show = true;
       }
     };
 
+    const fetchResearchCounts = async () => {
+      try {
+        const response = await api.get('/getStatProduct');
+        Object.assign(productCounts, response.data.result);
+      } catch (error) {
+        console.error('Error fetching research counts:', error);
+        snackbar.message = "Error fetching research counts";
+        snackbar.color = "error";
+        snackbar.show = true;
+      }
+    };
+
+    const researchWithCounts = computed(() => {
+      return research.value.map(item => ({
+        ...item,
+        viewCount: productCounts[item._id] || 0
+      }));
+    });
+
     // Fetch both research and product counts when component is created
     fetchResearch();
-    fetchProductCounts();
+    fetchResearchCounts();
 
     return {
       headers,
-      researchWithCounts
+      researchWithCounts,
+      snackbar
     };
   }
-}
+};
 </script>
 
 <style scoped></style>
