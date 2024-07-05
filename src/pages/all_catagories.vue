@@ -45,7 +45,7 @@
               <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
                 <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                   <v-card class="hover:shadow-lg transition-shadow rounded-xl">
-                    <v-img :src="`${baseUrl}/${item.filePath}`" cover height="200px">
+                    <v-img :src="`${baseUrl}/${item.filePath[0]}`" cover height="200px">
                       <template v-slot:placeholder>
                         <div class="d-flex align-center justify-center fill-height">
                           Loading...  
