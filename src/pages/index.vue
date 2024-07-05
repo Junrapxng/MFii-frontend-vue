@@ -246,7 +246,7 @@ export default defineComponent({
       this.snackbar.show = true;
     } finally {
       this.loading = false;
-    }
+    };
 
     this.getviewCount();
     // ==============================================================================================================================
