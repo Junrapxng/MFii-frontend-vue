@@ -20,7 +20,7 @@
               </template>
               <template v-else-if="path.filePath && path.filePath.length">
                 <v-img v-for="(file, fileIndex) in path.filePath" :key="`file-${fileIndex}`"
-                  class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`http://localhost:7770/${file}`"
+                  class="carousel__item mx-auto" max-height="500" lazy-src="" :src="`${baseUrl}/${file}`"
                   cover>
                   <template v-slot:placeholder>
                     <div class="d-flex align-center justify-center fill-height">
@@ -63,19 +63,20 @@
             <v-col v-for="(item, index) in newinfo.slice(0, 4)" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
               <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="hover:shadow-lg transition-shadow rounded-xl" style="max-width: 400px">
-                  <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
+                  <v-img :src="`${baseUrl}/${item.filePath}`" cover height="200px">
                     <template v-slot:placeholder>
                       <div class="flex items-center justify-center h-full">
-                        <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
+                        Loading...
                       </div>
                     </template>
                   </v-img>
                   <v-card-title class="text-lg">{{
+                    
                     item.nameOnMedia
-                  }}</v-card-title>
+                    }}</v-card-title>
                   <v-card-subtitle class="text-sm">{{
                     item.industryType
-                  }}</v-card-subtitle>
+                    }}</v-card-subtitle>
                   <v-card-actions>
                     <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
                       ? 'purple'
@@ -88,7 +89,10 @@
                       {{ item.techReadiness }}
                     </v-chip>
                     <!-- Views Counter -->
-                    <ViewCounter :productId="item._id" />
+                    <v-chip class="mx-2">
+                      {{ count[item._id] || 0 }} views
+                    </v-chip>
+                   
                   </v-card-actions>
                 </v-card>
               </router-link>
@@ -168,8 +172,7 @@
 import { defineComponent, ref } from "vue";
 import { Carousel, Navigation, Slide, Pagination } from "vue3-carousel";
 import "vue3-carousel/dist/carousel.css";
-import ViewCounter from "@/components/ViewCounter.vue";
-import axios from "axios";
+import {api, url} from '../axios'
 export default defineComponent({
   name: "index-page",
   data() {
@@ -189,19 +192,25 @@ export default defineComponent({
       currentPage: 1,
       itemsPerPage: 4,
       carouselKey: 0,
+      sessionId: null,
+      count: {},
+      baseUrl: '',
+
     };
   },
 
-     // Fetch api research and News(Banner) =======================================================================================
-     async mounted() {
+  async created() {
+    // Fetch api research and News(Banner) =======================================================================================
     try {
       const [api1Response, api2Response] = await Promise.all([
-        axios.get("http://localhost:7770/getsResearch/all/all/all/all"),
-        axios.get("http://localhost:7770/getsNews"),
+        api.get("/getsResearch/all/all/all/all"),
+        api.get("/getsNews"),
       ]);
 
       if (api1Response.status == 200 && api2Response.status == 200) {
         // Filter out the data to get only those with status "active"
+        console.log("test " + api1Response.data)
+        this.sessionId = api1Response.data.sessionId;
         const activeData = api1Response.data.result.filter(
           (item) => item.status === "active"
         );
@@ -209,7 +218,7 @@ export default defineComponent({
           this.info = activeData;
           this.newinfo = [...activeData].reverse(); // Reverse only newinfo
           this.images = api2Response.data.result;
-          console.log("images is " + this.images.result);
+          console.log("images is " + this.images);
         } else {
           console.log("No active data found");
           this.snackbar.message = "No active data found.";
@@ -237,7 +246,9 @@ export default defineComponent({
       this.snackbar.show = true;
     } finally {
       this.loading = false;
-    }
+    };
+
+    this.getviewCount();
     // ==============================================================================================================================
   },
 
@@ -273,7 +284,6 @@ export default defineComponent({
       this.fetchResearchData()
       this.currentPage = "1";
     },
-
      // Search ResearchData
      fetchResearchData() {
       const indust = "all";
@@ -281,9 +291,12 @@ export default defineComponent({
       const tech = "all";
       const descript = this.search.trim() || "all";
       this.loading = true;
-      axios
+      api
         .get(
-          `http://localhost:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`
+          `http://localhost:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`,{
+            withCredentials: true,
+            credentials: 'include'
+          }
         )
         .then((response) => {
           if (response.status == 200) {
@@ -310,13 +323,30 @@ export default defineComponent({
           this.loading = false;
         });
     },
+
+
+// Get view count ===========================================================================
+    async getviewCount() {
+      try {
+        // Make a single API call to fetch all product counts
+        const response = await api.get('/getStatProduct');
+        const productCounts = response.data.result;
+
+        // Store product counts in the component's data
+        this.count = productCounts;
+
+        console.log('Product counts:', this.count);
+      } catch (error) {
+        console.error('Error fetching product counts:', error);
+      }
+    },
+    // ============================================================================================
   },
   components: {
     Pagination,
     Carousel,
     Slide,
     Navigation,
-    ViewCounter,
   },
   breakpoints: {
     // 700px and up
@@ -335,23 +365,4 @@ export default defineComponent({
 
 <style scoped>
 @import "../styles/index.css";
-
-main {
-  font-family: "Noto Sans Thai", sans-serif;
-}
-
-@media (max-width: 640px) {
-  .inputSearch p {
-    font-size: 1.25rem;
-    /* Change text size for mobile */
-  }
-}
-
-/* Adjust card padding for smaller devices */
-@media (max-width: 640px) {
-  .v-card {
-    padding: 1rem;
-    /* Adjust padding for mobile */
-  }
-}
 </style>
