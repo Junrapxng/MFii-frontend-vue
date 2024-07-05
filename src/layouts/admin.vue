@@ -56,14 +56,20 @@
       <v-toolbar-title>MFii Admin Panel</v-toolbar-title>
       <v-divider class="border-opacity-100 mx-3 my-2" vertical></v-divider>
       <!-- <v-row align="center" class="pa-0 ma-0"> -->
-      <v-col cols="auto">
+        <v-col cols="auto">
+        <v-avatar size="36px">
+          <v-img
+            alt="Avatar"
+            src="../assets/mfii_logo_avatar.jpg"
+          ></v-img>
+        </v-avatar>
       </v-col>
+
       <v-col class="hidden-xs-only" cols="auto">
-        <div class="d-flex flex-column  mr-2">
+        <div class="d-flex flex-column mr-2">
           <span class="title">{{ user.email }}</span>
           <span class="subtitle text-xs">{{ user.role }}</span>
         </div>
-
       </v-col>
       <!-- </v-row> -->
 
