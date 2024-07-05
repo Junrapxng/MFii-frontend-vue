@@ -32,7 +32,7 @@
             <div class="d-flex justify-center items-center">
               <v-carousel show-arrows="hover" cycle hide-delimiter-background>
                 <v-carousel-item v-for="(pic, index) in filteredImages" :key="index"
-                  :src="`${baseUrl}/${pic}`" fit></v-carousel-item>
+                  :src="`http://localhost:7770/${pic}`" fit></v-carousel-item>
               </v-carousel>
             </div>
           </v-col>
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import {api, url} from "../../axios";
+import axios from "axios";
 export default {
   name: "innovation-page",
   props: ["id"],
@@ -88,19 +88,14 @@ export default {
       },
       research: null,
       isLoading: true,
-      baseUrl: '',
     };
-  },
-
-  created(){
-    this.baseUrl = url
   },
 
   methods: {
     async fetchData() {
       try {
-        const response = await api.get(
-          "/getResearch?researchId=" + this.id
+        const response = await axios.get(
+          "http://localhost:7770/getResearch?researchId=" + this.id
         ); // Replace with your API endpoint
         this.research = response.data.result;
         console.log(this.research);
@@ -122,7 +117,7 @@ export default {
       if (this.research.filePath && this.research.filePath.length > 0) {
         const pdfPath = this.research.filePath.find(path => path.toLowerCase().endsWith('.pdf'));
         if (pdfPath) {
-          window.open(`${url}/${pdfPath}`, '_blank');
+          window.open(`http://localhost:7770/${pdfPath}`, '_blank');
         } else {
           // Handle case where no PDF file is found
           this.snackbar.message = 'No PDF file';

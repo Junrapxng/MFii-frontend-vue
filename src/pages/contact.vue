@@ -98,7 +98,7 @@
 
 <script>
 import { useUserStore } from '@/store/user';
-import {api} from "../axios";
+import axios from 'axios';
 export default {
   name: "contact-page",
   data() {
@@ -136,7 +136,7 @@ export default {
       this.form.messageReply.user = this.user._id;
 
       try {
-        await api.post('/user/mesRequest', this.form, {
+        await axios.post('http://localhost:7770/user/mesRequest', this.form, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
-import {api} from '@/axios';
+import axios from 'axios';
+
 export const useUserStore = defineStore('user', {
   state: () => ({
     user: null,
@@ -9,7 +10,6 @@ export const useUserStore = defineStore('user', {
   getters: {
     isAdmin: (state) => state.user?.resutl.role === 'admin',
     isUser: (state) => state.user?.resutl.role === 'user',
-
   },
   actions: {
     async fetchUser() {
@@ -17,13 +17,12 @@ export const useUserStore = defineStore('user', {
       this.error = null;
       if(localStorage.getItem('token')){
         try {
-          const response = await api.get('/getUser', {
+          const response = await axios.get('http://localhost:7770/getUser', {
             headers: {
               Authorization: localStorage.getItem('token'),
             },
           });
           this.user = response.data;
-          console.log("state management " + this.user);
         } catch (error) {
           this.error = error;
         } finally {
