@@ -3,8 +3,18 @@
     <v-main>
       <staff-layout>
         <v-container class="font-noto-sans-thai">
-          <v-card class="rounded-3xl">
-            <v-card-title>จัดการผลงานวิจัย</v-card-title>
+          <v-card class="rounded-3xl pa-2 mb-2 bg-gray-200">
+            <v-card-title class="d-flex align-center my-2">
+
+              <v-icon icon="mdi-clipboard-edit"></v-icon> &nbsp;
+              จัดการผลงานวิจัย
+
+              <v-spacer></v-spacer>
+
+              <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify"
+                variant="solo-filled" flat hide-details single-line clearable @click:clear="clearSearch" @input="searchResearch"></v-text-field>
+
+            </v-card-title>
             <v-card-text>
               <v-data-table :headers="headers" :items="researches.result" class="elevation-1">
                 <template v-slot:[`item.actions`]="{ item }">
@@ -28,11 +38,12 @@
                 <v-form>
                   <v-text-field label="ชื่อผลงาน" variant="solo-filled"
                     v-model="currentResearch.nameOnMedia"></v-text-field>
-                  <v-combobox v-model="currentResearch.inventor" label="ผู้ประดิษฐ์" variant="solo-filled" chips multiple></v-combobox>
+                  <v-combobox v-model="currentResearch.inventor" label="ผู้ประดิษฐ์" variant="solo-filled" chips
+                    multiple></v-combobox>
                   <v-text-field label="สังกัด" variant="solo-filled" v-model="currentResearch.major"></v-text-field>
 
-                  <v-autocomplete variant="solo-filled" flat label="ทรัพย์สินทางปัญญา" v-model="currentResearch.intelProp"
-                    :items="[
+                  <v-autocomplete variant="solo-filled" flat label="ทรัพย์สินทางปัญญา"
+                    v-model="currentResearch.intelProp" :items="[
                       'สิทธิบัตรการประดิษฐ์',
                       'อนุสิทธิบัตร',
                       'สิทธิบัตรออกแบบ',
@@ -42,8 +53,8 @@
                       'ต้นแบบ',
                       'อื่น ๆ',
                     ]"></v-autocomplete>
-                  <v-autocomplete variant="solo-filled" flat label="ประเภทอุตสาหกรรม" v-model="currentResearch.industryType"
-                    :items="[
+                  <v-autocomplete variant="solo-filled" flat label="ประเภทอุตสาหกรรม"
+                    v-model="currentResearch.industryType" :items="[
                       'เครื่องสำอาง',
                       'การเกษตรและเทคโนโลยีชีวภาพ',
                       'การแปรรูปอาหาร',
@@ -66,28 +77,23 @@
 
                   <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.description"></v-textarea>
                   <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.highlight"></v-textarea>
-                  <v-combobox v-model="currentResearch.coop" label="ความร่วมมือที่เสาะหา"  chips multiple variant="solo-filled"></v-combobox>
-                  <v-text-field label="ปีงบประมาณ" variant="solo-filled" v-model="currentResearch.budgetYear"></v-text-field>
-                  <v-combobox label="Keyword" variant="solo-filled" chips multiple v-model="currentResearch.keyword"></v-combobox>
-                  
+                  <v-combobox v-model="currentResearch.coop" label="ความร่วมมือที่เสาะหา" chips multiple
+                    variant="solo-filled"></v-combobox>
+                  <v-text-field label="ปีงบประมาณ" variant="solo-filled"
+                    v-model="currentResearch.budgetYear"></v-text-field>
+                  <v-combobox label="Keyword" variant="solo-filled" chips multiple
+                    v-model="currentResearch.keyword"></v-combobox>
+
                   <v-container class="flex">
-                    <v-checkbox
-                      v-model="currentResearch.ipType"
-                      label="Portfolio"
-                      value="portfolio"
-                    ></v-checkbox>
-                    <v-checkbox
-                      v-model="currentResearch.ipType" 
-                      label="Prototype"
-                      value="prototype"
-                    ></v-checkbox>
+                    <v-checkbox v-model="currentResearch.ipType" label="Portfolio" value="portfolio"></v-checkbox>
+                    <v-checkbox v-model="currentResearch.ipType" label="Prototype" value="prototype"></v-checkbox>
                   </v-container>
-                  <v-file-input label="Upload Images" multiple @change="handleFileUpload" variant="solo-filled" accept="image/*"
-                    prepend-icon="mdi-camera"></v-file-input>
+                  <v-file-input label="Upload Images" multiple @change="handleFileUpload" variant="solo-filled"
+                    accept="image/*" prepend-icon="mdi-camera"></v-file-input>
 
 
-                  <v-file-input label="Upload PDF" @change="handlePdfUpload" variant="solo-filled" accept="application/pdf"
-                    prepend-icon="mdi-file-pdf-box"></v-file-input>
+                  <v-file-input label="Upload PDF" @change="handlePdfUpload" variant="solo-filled"
+                    accept="application/pdf" prepend-icon="mdi-file-pdf-box"></v-file-input>
 
                   <v-container class="flex">
                     <v-card v-for="(img, index) in currentResearch.filePath" :key="index" class="mx-2"
@@ -124,13 +130,13 @@
       <!-- Dialog delete research -->
       <v-dialog v-model="dialogDelete" max-width="600px">
         <v-card class="rounded-xl pa-4">
-          <v-card-title class="text-h5 text-center text-red-500">Are you sure you want to delete this research?</v-card-title>
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="'blue-grey-darken-1" variant="outlined" class="hover:bg-gray-500"
-                  @click="closeDelete">Cancel</v-btn>
-                <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300"
-              @click="deleteResearch">OK</v-btn>
+          <v-card-title class="text-h5 text-center text-red-500">Are you sure you want to delete this
+            research?</v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="'blue-grey-darken-1" variant="outlined" class="hover:bg-gray-500"
+              @click="closeDelete">Cancel</v-btn>
+            <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300" @click="deleteResearch">OK</v-btn>
             <v-spacer></v-spacer>
           </v-card-actions>
         </v-card>
@@ -163,6 +169,7 @@ export default {
   data() {
     return {
       markedForDeletion: [],
+      search: "",
       dialog: false,
       isEdit: false,
       dialogDelete: false,
@@ -393,7 +400,7 @@ export default {
         this.dialogDelete = false;
         this.fetchResearches();
         this.snackbar.message = "research deleted successfully";
-        this.snackbar.color = "success"; 
+        this.snackbar.color = "success";
         this.snackbar.show = true;
 
       } catch (error) {
@@ -433,8 +440,24 @@ export default {
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
-    }
+    },
 
+    clearSearch() {
+      this.search = "";
+      this.fetchResearches()
+    },
+
+    searchResearch() {
+      const searchTerm = this.search.toLowerCase();
+      if (searchTerm) {
+        this.researches.result = this.researches.result.filter(item =>
+          item.nameOnMedia.toLowerCase().includes(searchTerm) ||
+          item.industryType.toLowerCase().includes(searchTerm)
+        );
+      } else {
+        this.fetchResearches();
+      }
+    }
   },
 
   watch: {
