@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import {api} from "../../axios";
+import axios from "axios";
 import StaffLayout from "@/layouts/staff.vue";
 
 export default {
@@ -159,7 +159,7 @@ export default {
 
       // Check if formData has any files or links before making the request
       if (formData.has('images[0]') || formData.has('linkVideo') || formData.has('linkImage')) {
-        const response = await api.post('/staff/addNews', formData, {
+        const response = await axios.post('http://localhost:7770/staff/addNews', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: localStorage.getItem("token"),
@@ -191,7 +191,7 @@ export default {
     async fetchImg() {
       console.log('fetchImg method called.');
       try {
-        const res = await api.get('/getsNews');
+        const res = await axios.get('http://localhost:7770/getsNews');
         this.imgs = res.data.result;
       } catch (error) {
         console.log('Error getting News: ' + error);
@@ -216,7 +216,7 @@ export default {
     },
     async deleteImage() {
       try {
-        const response = await api.delete(`/staff/deleteNews/news/${this.deleteImgId}`, {
+        const response = await axios.delete(`http://localhost:7770/staff/deleteNews/news/${this.deleteImgId}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           }
