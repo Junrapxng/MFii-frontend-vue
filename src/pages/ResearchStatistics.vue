@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import {api} from "../axios";
+import axios from "axios";
 import { ref, computed } from "vue";
 
 export default {
@@ -57,7 +57,7 @@ export default {
 
     const fetchProductCounts = async () => {
       try {
-        const response = await api.get('/all-product-counts');
+        const response = await axios.get('http://localhost:7770/all-product-counts');
         productCounts.value = response.data.productCounts;
       } catch (error) {
         this.snackbar.message = "Error: " + error;
@@ -68,7 +68,7 @@ export default {
 
     const fetchResearch = async () => {
       try {
-        const res = await api.get('/getsResearch/all/all/all/all');
+        const res = await axios.get('http://localhost:7770/getsResearch/all/all/all/all');
         research.value = res.data.result;
 
       } catch (error) {

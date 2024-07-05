@@ -94,22 +94,3 @@ input:focus {
   .video-iframe:hover {
     transform: scale(1.05);
   }
-
-  main {
-    font-family: "Noto Sans Thai", sans-serif;
-  }
-  
-  @media (max-width: 640px) {
-    .inputSearch p {
-      font-size: 1.25rem;
-      /* Change text size for mobile */
-    }
-  }
-  
-  /* Adjust card padding for smaller devices */
-  @media (max-width: 640px) {
-    .v-card {
-      padding: 1rem;
-      /* Adjust padding for mobile */
-    }
-  }
