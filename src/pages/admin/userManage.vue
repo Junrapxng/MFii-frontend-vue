@@ -139,7 +139,7 @@
 
 <script>
 import AdminLayout from "@/layouts/admin.vue";
-import axios from "axios";
+import {api} from "../../axios";
 export default {
   components: {
     AdminLayout,
@@ -247,7 +247,7 @@ export default {
     // fetch users =============================================================
     async fectchUser() {
       try {
-        const response = await axios.get("http://localhost:7770/admin/getsUser", {
+        const response = await api.get("/admin/getsUser", {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -277,8 +277,8 @@ export default {
       this.users.resutl.splice(this.editedIndex, 1);
       console.log(this.editedItem._id);
       try {
-        const res = await axios.delete(
-          "http://localhost:7770/admin/deleteUser/" + this.editedItem._id, {
+        const res = await api.delete(
+          "/admin/deleteUser/" + this.editedItem._id, {
           headers: {
             Authorization: localStorage.getItem("token"),
           },
@@ -336,8 +336,8 @@ export default {
         Object.assign(this.users.resutl[this.editedIndex], this.editedItem);
         console.log(this.editedItem._id);
         try {
-          await axios.patch(
-            "http://localhost:7770/admin/updatePatch/" + this.editedItem._id, {
+          await api.patch(
+            "/admin/updatePatch/" + this.editedItem._id, {
             firstName: this.editedItem.firstName.trim(),
             lastName: this.editedItem.lastName.trim(),
             email: this.editedItem.email.trim(),
@@ -398,8 +398,8 @@ export default {
         const parts = formatter.formatToParts(new Date());
         const createDate = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}T${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}:${parts.find(p => p.type === 'second').value}.000Z`;
         try {
-          await axios.post(
-            "http://localhost:7770/register", {
+          await api.post(
+            "/register", {
             firstName: this.editedItem.firstName.trim(),
             lastName: this.editedItem.lastName.trim(),
             email: this.editedItem.email.trim(),
