@@ -34,6 +34,10 @@
     border-radius: 5%;
 }
 
+.researchCard, .newResearchCard{
+    max-width: 400px;
+}
+
 /* img {
     min-width: 15rem;
 } */
@@ -100,6 +104,12 @@ input:focus {
   }
   
   @media (max-width: 640px) {
+    .researchCard, .newResearchCard{
+        max-width: 350px;
+    }
+
+    
+
     .inputSearch p {
       font-size: 1.25rem;
       /* Change text size for mobile */
