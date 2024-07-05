@@ -56,7 +56,7 @@
         <v-avatar size="36px">
           <v-img
             alt="Avatar"
-            src="https://avatars0.githubusercontent.com/u/9064066?v=4&s=460"
+            src="../assets/mfii_logo_avatar.jpg"
           ></v-img>
         </v-avatar>
       </v-col>
