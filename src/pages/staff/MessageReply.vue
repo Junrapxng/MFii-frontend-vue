@@ -102,7 +102,7 @@
 <script>
 import {
   useUserStore
-} from "@/store/user";
+} from "@/stores/user";
 import {api} from "../../axios";
 import StaffLayout from "@/layouts/staff.vue";
 export default {

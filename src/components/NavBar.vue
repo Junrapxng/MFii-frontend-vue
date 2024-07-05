@@ -1,6 +1,6 @@
 <template>
-  <div class="mb-10 mt-3">
-    <div class="header flex-wrap">
+  <v-container class="mb-10 my-0 ">
+    <v-container class="header flex-wrap ">
       <!-- Logo, Title, and Buttons Section -->
       <v-row>
         <!-- Logo column -->
@@ -25,11 +25,11 @@
         </v-col>
 
         <!-- Register and login buttons column -->
-        <v-col cols="12" lg="3" md="3" sm="3" class="font-noto-sans-thai">
+        <v-col cols="12" lg="3" md="3" sm="3" class="font-noto-sans-thai p-0">
           <v-container class="searchandAuth">
-    
-              <div>
-                   <!-- Search Navbar -->
+
+            <div>
+              <!-- Search Navbar -->
               <search-component class="btn-search"></search-component>
               <router-view></router-view>
 
@@ -40,58 +40,56 @@
                 <v-btn class="log text-black rounded-xl border border-black w-32 h-14 btn-nav"
                   to="/login">เข้าสู่ระบบ</v-btn>
               </v-container>
-              </div>
+            </div>
 
-              <!-- if user loggedin -->
-              <v-container v-if="!userStore.loading && !userStore.error" class="flex align-center justify-center p-0">
-                <h1 class=" mx-4">
-                  สวัสดี, คุณ {{ userStore.user.resutl.firstName }}
-                  {{ userStore.user.resutl.lastName }}
-                </h1>
+            <!-- if user loggedin -->
+            <v-container v-if="!userStore.loading && !userStore.error" class="profileIcon flex align-center justify-end">
+              <h1 class="name">
+               คุณ {{ userStore.user.resutl.firstName }} {{ userStore.user.resutl.lastName }}
+              </h1>
+              <v-menu transition="slide-x-transition">
+                <template v-slot:activator="{ props }">
+                  <v-btn v-bind="props" icon size="48px" class="hover:bg-gray-200">
+                    <v-avatar size="48px">
+                      <v-icon v-if="!userStore.user.resutl.img" icon="mdi-account-circle" size="58px"></v-icon>
+                      <v-img v-else alt="John" src="https://cdn.vuetifyjs.com/images/john.jpg" cover></v-img>
+                    </v-avatar>
+                  </v-btn>
+                </template>
 
-                <v-menu transition="slide-x-transition">
-                  <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props" icon size="48px" class="hover:bg-gray-200">
-                      <v-avatar size="48px">
-                        <v-icon v-if="!userStore.user.resutl.img" icon="mdi-account-circle" size="58px"></v-icon>
-                        <v-img v-else alt="John" src="https://cdn.vuetifyjs.com/images/john.jpg" cover></v-img>
-                      </v-avatar>
-                    </v-btn>
-                  </template>
-
-                  <v-list>
-                    <router-link v-if="userStore.user.resutl.role === 'staff'" to="/staff">
-                      <v-list-item>
-                        <v-list-item-title>Staff Page</v-list-item-title>
-                      </v-list-item>
-                    </router-link>
-                    <router-link v-if="userStore.user.resutl.role === 'admin'" to="/admin">
-                      <v-list-item>
-                        <v-list-item-title>Admin Page</v-list-item-title>
-                      </v-list-item>
-                    </router-link>
-                    <router-link v-if="userStore.user.resutl.role === 'user'" to="/profile">
-                      <v-list-item>
-                        <v-list-item-title>Edit Profile</v-list-item-title>
-                      </v-list-item>
-                    </router-link>
-
-                    <router-link v-if="userStore.user.resutl.role === 'user'" to="/message">
-                      <v-list-item>
-                        <v-list-item-title>Message</v-list-item-title>
-                      </v-list-item>
-                    </router-link>
-                    <v-list-item @click="logoutBtn">
-                      <v-list-item-title>Logout</v-list-item-title>
+                <v-list>
+                  <router-link v-if="userStore.user.resutl.role === 'staff'" to="/staff">
+                    <v-list-item>
+                      <v-list-item-title>Staff Page</v-list-item-title>
                     </v-list-item>
-                  </v-list>
-                </v-menu>
-              </v-container>
+                  </router-link>
+                  <router-link v-if="userStore.user.resutl.role === 'admin'" to="/admin">
+                    <v-list-item>
+                      <v-list-item-title>Admin Page</v-list-item-title>
+                    </v-list-item>
+                  </router-link>
+                  <router-link v-if="userStore.user.resutl.role === 'user'" to="/profile">
+                    <v-list-item>
+                      <v-list-item-title>Edit Profile</v-list-item-title>
+                    </v-list-item>
+                  </router-link>
+
+                  <router-link v-if="userStore.user.resutl.role === 'user'" to="/message">
+                    <v-list-item>
+                      <v-list-item-title>Message</v-list-item-title>
+                    </v-list-item>
+                  </router-link>
+                  <v-list-item @click="logoutBtn">
+                    <v-list-item-title>Logout</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-container>
 
           </v-container>
         </v-col>
       </v-row>
-    </div>
+    </v-container>
 
     <v-container class="navcontainer">
       <!-- Header Menu Bar -->
@@ -194,7 +192,49 @@
             </v-list>
           </v-menu>
         </div>
+            <!-- if user loggedin -->
+            <v-container v-if="!userStore.loading && !userStore.error" class="profileMenu flex align-center justify-end">
+              <h1 class="nameMenu mr-5">
+             คุณ {{ userStore.user.resutl.firstName }} {{ userStore.user.resutl.lastName }}
+              </h1>
+              <v-menu transition="slide-x-transition">
+                <template v-slot:activator="{ props }">
+                  <v-btn v-bind="props" icon size="48px" class="hover:bg-gray-200">
+                    <v-avatar size="48px">
+                      <v-icon v-if="!userStore.user.resutl.img" icon="mdi-account-circle" size="58px"></v-icon>
+                      <v-img v-else alt="John" src="https://cdn.vuetifyjs.com/images/john.jpg" cover></v-img>
+                    </v-avatar>
+                  </v-btn>
+                </template>
 
+                <v-list>
+                  <router-link v-if="userStore.user.resutl.role === 'staff'" to="/staff">
+                    <v-list-item>
+                      <v-list-item-title>Staff Page</v-list-item-title>
+                    </v-list-item>
+                  </router-link>
+                  <router-link v-if="userStore.user.resutl.role === 'admin'" to="/admin">
+                    <v-list-item>
+                      <v-list-item-title>Admin Page</v-list-item-title>
+                    </v-list-item>
+                  </router-link>
+                  <router-link v-if="userStore.user.resutl.role === 'user'" to="/profile">
+                    <v-list-item>
+                      <v-list-item-title>Edit Profile</v-list-item-title>
+                    </v-list-item>
+                  </router-link>
+
+                  <router-link v-if="userStore.user.resutl.role === 'user'" to="/message">
+                    <v-list-item>
+                      <v-list-item-title>Message</v-list-item-title>
+                    </v-list-item>
+                  </router-link>
+                  <v-list-item @click="logoutBtn">
+                    <v-list-item-title>Logout</v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-container>
         <v-spacer></v-spacer>
       </v-app-bar>
 
@@ -223,10 +263,10 @@
         </v-list>
       </v-navigation-drawer>
     </v-container>
-  </div>
+  </v-container>
 </template>
 <script>
-import { useUserStore } from "@/store/user";
+import { useUserStore } from "@/stores/user";
 import SearchComponent from '../components/SearchComponent.vue';
 import { ref } from 'vue';
 import { useDisplay } from 'vuetify'
@@ -238,7 +278,7 @@ export default {
   data() {
     return {
       drawer: ref(false),
-       mdAndUp: useDisplay(),
+      mdAndUp: useDisplay(),
       loggedIn: false,
       menuItems: [
         {
@@ -343,7 +383,9 @@ export default {
 <style scoped>
 @import "../styles/navbar.css";
 
-
+.name{
+  margin-right: 1rem;
+}
 
 
 

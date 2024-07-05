@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import { useUserStore } from "@/store/user";
+import { useUserStore } from "@/stores/user";
 import {api} from "../../axios";
 import NavBar from "./../../components/NavBar.vue";
 export default {

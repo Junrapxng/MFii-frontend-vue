@@ -8,10 +8,9 @@
 </template>
 
 <script setup>
-import { useUserStore } from './store/user';
+import { useUserStore } from './stores/user';
 const userStore = useUserStore();
 userStore.fetchUser();
 
 </script>
-
 

@@ -2,18 +2,41 @@
     font-family: "Noto Sans Thai", sans-serif;
   }
   .v-app-bar {
-      margin-top: 10%;
+      margin-top: 11%;
+      min-width: 100dvw;
     }
+
+    .profileIcon{
+      margin: auto;
+      padding-right: 35%;
+    }
+  
+
+    .profileMenu{
+      display: none;
+    }
+
+      @media (max-width: 1800px) {
+        .profileIcon{
+          margin: auto;
+          padding-right: 0%;
+        }
+      }
+
     @media (max-width:1600px) {
       .v-app-bar {
         margin-top: 12%;
+      }
+  
+      .name{
+        font-size: 13px;
       }
     }
     
 
   @media (max-width:1500px) {
     .v-app-bar {
-      margin-top: 12%;
+      margin-top: 13%;
     }
   }
   
@@ -26,15 +49,12 @@
     margin-top: 10px;
    }
    .v-app-bar {
-    margin-top: 14%;
+    margin-top: 14.5%;
   }
   }
   
   @media (max-width: 1215px) {
-    .v-app-bar {
-      margin-top: 16%;
-    }
-    
+
     .text-3xl {
       font-size: 10px;
     }
@@ -54,12 +74,15 @@
     }
   
     .v-app-bar {
-      margin-top: 15%;
+      margin-top: 17%;
     }
   }
   @media (max-width:1117px) {
     .v-app-bar {
-      margin-top: 16%;
+      margin-top: 17.5%;
+    }
+    .name{
+      font-size: 10px;
     }
   }
   
@@ -108,12 +131,22 @@
     }
   }
 
-  @media (max-width: 960px) {
+  @media (max-width: 959px) {
     .v-app-bar {
         margin-top: 0%;
       }
       .header{
         margin-top: 10%;
+      }
+      .name{
+        display: none;
+      }
+      .profileIcon{
+        display: none;
+      }
+      
+      .profileMenu{
+        display: flex;
       }
   }
   

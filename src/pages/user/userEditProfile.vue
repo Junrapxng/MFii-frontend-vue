@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { useUserStore } from '@/store/user';
+import { useUserStore } from '@/stores/user';
 import {api} from "../../axios";
 export default {
   name: 'user-profile-page',

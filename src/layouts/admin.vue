@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { useUserStore } from '@/store/user';
+import { useUserStore } from '@/stores/user';
 export default {
   name: "AdminLayout",
   data: () => ({
