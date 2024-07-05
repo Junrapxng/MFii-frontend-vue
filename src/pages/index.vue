@@ -118,7 +118,7 @@
             <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
               <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="hover:shadow-lg transition-shadow rounded-xl" style="max-width: 400px">
-                  <v-img :src="`${baseUrl}/${item.filePath}`" cover height="200px">
+                  <v-img :src="`${baseUrl}/${item.filePath[0]}`" cover height="200px">
                     <template v-slot:placeholder>
                       <div class="flex items-center justify-center h-full">
                           Loading...
@@ -153,7 +153,7 @@
             </v-col>
             <h1 v-if="loading">Loading...</h1>
             <div v-if="!loading">
-              <h1 v-if="paginatedItems.length <= 0">No data available</h1>
+              <h1 v-if="paginatedItems.length <= 0">ไม่พบข้อมูล</h1>
             </div>
           </v-row>
         </v-container>
