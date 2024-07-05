@@ -93,9 +93,9 @@
                 </v-card>
               </router-link>
             </v-col>
-            <h1 v-if="loading">Loading...</h1>
+            <!-- <h1 v-if="loading">Loading...</h1> -->
             <div v-if="!loading">
-              <h1 v-if="paginatedItems.length <= 0">No data available</h1>
+              <h1 v-if="newinfo.length <= 0">No data available</h1>
             </div>
           </v-row>
         </v-container>
@@ -105,49 +105,44 @@
       <v-container class="inputSearch">
         <p class="text-3xl font-semibold mb-3">ผลงานพร้อมถ่ายทอด</p>
         <v-text-field v-model="search" density="comfortable" placeholder="Search" prepend-inner-icon="mdi-magnify"
-          style="max-width: 300px" variant="solo" clearable @click:clear="clearSearch" hide-details rounded
-          class="pb-6"></v-text-field>
+          style="max-width: 300px" variant="solo" clearable @click:clear="clearSearch" @input="fetchResearchData" 
+          hide-details rounded class="pb-6"></v-text-field>
 
         <!-- Cards Section -->
         <v-container class="flex justify-center items-center bg-gray-100 rounded">
-          <v-row v-if="paginatedItems" class="flex flex-wrap justify-center">
-            <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
-              <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
-                <v-card class="hover:shadow-lg transition-shadow rounded-xl" style="max-width: 400px">
-                  <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
-                    <template v-slot:placeholder>
-                      <div class="flex items-center justify-center h-full">
-                        <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
-                      </div>
-                    </template>
-                  </v-img>
-                  <v-card-title class="text-lg">{{
-                    item.nameOnMedia
-                  }}</v-card-title>
-                  <v-card-subtitle class="text-sm">{{
-                    item.industryType
-                  }}</v-card-subtitle>
-                  <v-card-actions>
-                    <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
-                      ? 'purple'
-                      : item.techReadiness === 'ระดับต้นแบบ'
-                        ? 'blue'
-                        : item.techReadiness === 'ระดับถ่ายทอด'
-                          ? 'orange'
-                          : 'default'
-                      " class="text-xs">
-                      {{ item.techReadiness }}
-                    </v-chip>
-                    <!-- Views Counter -->
-                    <ViewCounter :productId="item._id" />
-                  </v-card-actions>
-                </v-card>
-              </router-link>
-            </v-col>
-            <h1 v-if="loading">Loading...</h1>
-            <div v-if="!loading">
-              <h1 v-if="paginatedItems.length <= 0">No data available</h1>
-            </div>
+          <div v-if="loading" class="justify-center">Loading....</div>
+          <v-row v-else>
+            <template v-if="paginatedItems.length > 0">
+              <v-col v-for="(item, index) in paginatedItems" :key="index"  cols="12" sm="6" md="6" lg="3">
+                <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
+                  <v-card class="hover:shadow-lg transition-shadow rounded-xl" style="max-width: 400px">
+                    <v-img :src="`http://localhost:7770/${item.filePath[1]}`" cover height="200px">
+                      <template v-slot:placeholder>
+                        <div class="d-flex align-center justify-center fill-height">
+                          <img :src="`http://localhost:7770/${item.filePath[0]}`" alt="" />
+                        </div>
+                      </template>
+                    </v-img>
+                    <v-card-title class="text-lg">{{ item.nameOnMedia }}</v-card-title>
+                    <v-card-subtitle class="text-sm">{{ item.industryType }}</v-card-subtitle>
+                    <v-card-actions>
+                      <v-chip outlined
+                        :color="item.techReadiness === 'ระดับการทดลอง' ? 'purple' : item.techReadiness === 'ระดับต้นแบบ' ? 'blue' : item.techReadiness === 'ระดับถ่ายทอด' ? 'orange' : 'default'">
+                        {{ item.techReadiness }}
+                      </v-chip>
+                      <ViewCounter :productId="item._id" />
+                    </v-card-actions>
+                  </v-card>
+                </router-link>
+              </v-col>
+            </template>
+            <template v-else>
+              <v-row>
+                <v-col cols="12">
+                  <div class="text-center">ไม่พบข้อมูล</div>
+                </v-col>
+              </v-row>
+            </template>
           </v-row>
         </v-container>
         <!-- Pagination -->
@@ -197,8 +192,8 @@ export default defineComponent({
     };
   },
 
-  async created() {
-    // Fetch api research and News(Banner) =======================================================================================
+     // Fetch api research and News(Banner) =======================================================================================
+     async mounted() {
     try {
       const [api1Response, api2Response] = await Promise.all([
         axios.get("http://localhost:7770/getsResearch/all/all/all/all"),
@@ -245,28 +240,19 @@ export default defineComponent({
     }
     // ==============================================================================================================================
   },
+
   computed: {
     // คำนวณจำนวนหน้าทั้งหมด
     totalPages() {
-      return Math.ceil(this.filteredItems.length / this.itemsPerPage);
+      return Math.ceil(this.info.length / this.itemsPerPage);
     },
     // กรองรายการโดยใช้การค้นหาและหน้าที่กำหนด
     paginatedItems() {
       const startIndex = (this.currentPage - 1) * this.itemsPerPage;
       const endIndex = startIndex + this.itemsPerPage;
-      return this.filteredItems.slice(startIndex, endIndex);
+      return this.info.slice(startIndex, endIndex);
     },
-    // กรองรายการโดยใช้การค้นหา
-    filteredItems() {
-      return this.info.filter((item) => {
-        return (
-          item.nameOnMedia.toLowerCase().includes(this.search.toLowerCase()) ||
-          item.industryType.toLowerCase().includes(this.search.toLowerCase()) ||
-          item.techReadiness.toLowerCase().includes(this.search.toLowerCase())
-        );
-      });
-    },
-
+  
     filteredVideos() {
       return this.images.filter(item => item.linkVideo && item.linkVideo.length > 0);
     },
@@ -284,8 +270,10 @@ export default defineComponent({
     },
     clearSearch() {
       this.search = "";
-      // this.fetchResearchData()
+      this.fetchResearchData()
+      this.currentPage = "1";
     },
+
      // Search ResearchData
      fetchResearchData() {
       const indust = "all";
@@ -295,10 +283,7 @@ export default defineComponent({
       this.loading = true;
       axios
         .get(
-          `http://localhost:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`,{
-            withCredentials: true,
-            credentials: 'include'
-          }
+          `http://localhost:7770/getsResearch/${indust}/${prop}/${tech}/${descript}`
         )
         .then((response) => {
           if (response.status == 200) {
