@@ -31,6 +31,17 @@
         </v-row>
       </v-card-text>
     </v-card>
+
+    <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+        <div class="text-subtitle-1 pb-2"></div>
+        <p>{{ snackbar.message }}</p>
+        <template v-slot:actions>
+          <v-btn color="white" variant="text" @click="snackbar.show = false">
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
+
   </v-container>
 </template>
 
@@ -44,6 +55,11 @@ export default {
       todayUsers: 0,
       monthlyUsers: 0,
       yearlyUsers: 0,
+      snackbar: {
+        show: false,
+        message: "",
+        color: "success",
+      },
     };
   },
   created() {
@@ -60,10 +76,14 @@ export default {
         this.todayUsers = viewerCounts.dailyAccess
         this.monthlyUsers = viewerCounts.monthlyAccess
         this.yearlyUsers = viewerCounts.yearlyAccess
-
-        console.log('Viewer counts:', viewerCounts);
       } catch (error) {
-        console.error('Error fetching viewer counts:', error);
+        if (!error.response) {
+          this.snackbar.message = "Error Sending request: " + error;
+        } else {
+          this.snackbar.message = "Error Sending request: " + error.response.data.description.description + " Code: " + error.response.status;
+        }
+        this.snackbar.color = "error";
+        this.snackbar.show = true;
       }
     },
   },
