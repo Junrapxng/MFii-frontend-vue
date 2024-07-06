@@ -38,23 +38,24 @@
               class="font-noto-sans-thai rounded-xl flex justify-center items-center min-h-fit min-w-full bg-gray-100">
               <v-card class="w-full max-w-full rounded-xl ">
                 <v-card-text>
-                  <v-form ref="form" v-model="formValid">
+                  <v-form ref="form" @submit.prevent="sendRequest"  >
                     <v-row>
-                      <v-col cols="12" md="12" lg="12">                      
+                      <v-col cols="12" md="12" lg="12">
                         <div>
                           <v-text-field v-model="form.interestTech" label="เทคโนโลยีที่สนใจ " variant="outlined"
-                            outlined color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก เทคโนโลยีที่สนใจ']"
+                            outlined color="#BA984C" :rules="[v => !!v || 'กรุณากรอก เทคโนโลยีที่สนใจ']"
                             required></v-text-field>
                         </div>
                         <div>
                           <v-text-field v-model="form.usesScope" label="ขอบเขตการใช้ผลงาน" variant="outlined" outlined
-                            color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ขอบเขตการใช้ผลงาน']"
+                            color="#BA984C" :rules="[v => !!v || 'กรุณากรอก ขอบเขตการใช้ผลงาน']"
                             required></v-text-field>
+
                           <v-textarea v-model="form.messageReply.messages" label="ข้อความ" variant="outlined" outlined
-                            color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ข้อความ']" required></v-textarea>
+                            color="#BA984C" :rules="[v => !!v || 'กรุณากรอก ข้อความ']" required></v-textarea>
                         </div>
                         <div class="text-center">
-                          <v-btn class="bg-red-600 text-white" @click="sendRequest">ส่ง</v-btn>
+                          <v-btn type="submit" class="bg-red-600 text-white">ส่ง</v-btn>
                         </div>
                       </v-col>
                     </v-row>
@@ -83,7 +84,7 @@
 
 <script>
 import { useUserStore } from '@/stores/user';
-import {api} from "../axios";
+import { api } from "../axios";
 export default {
   name: "contact-page",
   data() {
@@ -108,37 +109,46 @@ export default {
 
 
   methods: {
+    async validateForm() {
+    const { valid } = await this.$refs.form.validate()
+    return valid
+  },
+
     async sendRequest() {
-      if (!this.$refs.form.validate()) {
-        this.snackbar.message = "กรุณากรอกข้อมูลให้ครบถ้วน";
-        this.snackbar.color = "error";
-        this.snackbar.show = true;
-        return;
-      }
-
-      this.form.messageReply.user = this.user._id;
-
-      try {
-        await api.post('/user/mesRequest', this.form, {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        });
-        this.snackbar.message = "Requested Success!";
-        this.snackbar.color = "success";
-        this.snackbar.show = true;
-        setTimeout(() => {
-          window.location.reload();
-        }, 1000); // Reloads the page after 2 seconds
-      } catch (error) {
-        if (!error.response) {
-          this.snackbar.message = "Error Sending request: " + error;
-        } else {
-          this.snackbar.message = "Error Sending request: " + error.response.data.description.description + " Code: " + error.response.status;
+      if (await this.validateForm()) {
+          this.form.messageReply.user = this.user._id;
+          try {
+            const response = await api.post('/user/mesRequest', this.form, {
+              headers: {
+                Authorization: localStorage.getItem("token"),
+              },
+            });
+            this.snackbar.message = "Requested Success!";
+            this.snackbar.color = "success";
+            this.snackbar.show = true;
+            setTimeout(() => {
+              window.location.reload();
+            }, 1000); // Reloads the page after 2 seconds
+          } catch (error) {
+            if (!error.response) {
+              this.snackbar.message = "Error Sending request: " + error;
+            }
+            if (error.response.status == 500) {
+              this.snackbar.message = "Error Sending request: " + error;
+            }
+            else {
+              this.snackbar.message = "Error Sending request: " + error.response.data.description.description + " Code: " + error.response.status;
+            }
+            this.snackbar.color = "error";
+            this.snackbar.show = true;
         }
-        this.snackbar.color = "error";
-        this.snackbar.show = true;
+      } else {
+        this.snackbar.message = "กรุณากรอกข้อมูลให้ครบถ้วน";
+          this.snackbar.color = "error";
+          this.snackbar.show = true;
+          return;
       }
+
     },
 
     //get user
@@ -177,7 +187,8 @@ export default {
     flex: 0 0 100%;
     max-width: 100%;
   }
-  span{
+
+  span {
     font-size: 14px;
   }
 }

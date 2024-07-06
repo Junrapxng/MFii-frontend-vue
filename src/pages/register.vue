@@ -3,7 +3,7 @@
     <NavBar></NavBar>
 
     <v-main>
-      <v-alert v-if="responseMessage" type="error" icon="mdi-alert-circle-outline">{{
+      <v-alert v-if="responseMessage" type="error">{{
         responseMessage
       }}</v-alert>
       <v-container class="font-noto-sans-thai rounded-xl flex justify-center items-center bg-gray-100 mb-5">
@@ -129,7 +129,7 @@ export default {
             lastName: this.form.lastName.trim(),
             phoneNumber: this.form.phone.trim(),
             businessType: this.form.businessType,
-            businessName: this.form.businessName.trim(),
+            businessName: this.form.businessName,
             createDate: createDate, // Set create date
           });
           localStorage.setItem("token", response.data.result.token);
@@ -138,15 +138,17 @@ export default {
           console.error("Error registering:", error);
           this.responseMessage = error;
           if (!error.response) {
-            this.responseMessage = "Error registering: " + error;
+            this.snackbar.message = "Error registering: " + error;
           } else {
-            this.responseMessage = "Error registering: " + error.response.data.description.description + " Code: " + error.response.status;
+            this.snackbar.message = "Error registering: " + error.response.data.description.description + " Code: " + error.response.status;
           }
+          this.snackbar.color = "error"; // Set error color
+          this.snackbar.show = true;
         }
       } else {
         console.log("Form is not valid");
         this.responseMessage =
-          "แบบฟอร์มไม่ถูกต้อง กรุณากรอกข้อมูลในช่องที่ต้องกรอกทั้งหมด"; // Set form validation message
+          "Form is not valid. Please fill out all required fields."; // Set form validation message
       }
       this.showPassword = false;
     },
