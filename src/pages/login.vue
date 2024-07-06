@@ -37,12 +37,12 @@
                 </v-col>
               </v-row>
               <v-btn class="rounded-xl" type="submit" color="#BA984C" s block>เข้าสู่ระบบ</v-btn>
-              <div class="text-center justify-space-between pt-5 flex text-base">
+              <!-- <div class="text-center justify-space-between pt-5 flex text-base">
                 <v-checkbox v-model="checkbox" label="Remember Me" class="text-gray-500"></v-checkbox>
                 <p class="mt-3">
                   <a class="hover:underline" style="color: #ba984c" href="/register">Forgot Password?</a>
                 </p>
-              </div>
+              </div> -->
             </v-form>
           </v-card-text>
         </v-card>
