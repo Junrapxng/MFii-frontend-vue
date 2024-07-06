@@ -25,7 +25,7 @@
               <v-row>
                 <v-col v-for="(img, index) in imgs" :key="index" cols="12" md="4">
                   <v-card class="hover:shadow-lg transition-shadow rounded-lg my-1 mx-1" style="max-width: 400px">
-                    <v-img v-if="img.filePath.length > 0" :src="`http://localhost:7770/${img.filePath}`" height="150px" cover />
+                    <v-img v-if="img.filePath.length > 0" :src="`http://localhost:7770/${img.filePath[0]}`" height="150px" cover />
                     <v-img v-else-if="img.linkImage.length > 0" :src="`${img.linkImage}`" height="150px" cover />
                     <iframe v-else-if="img.linkVideo.length > 0" :src="`${img.linkVideo}`" height="150px" class="w-full"></iframe>
                     <p v-else>No media available</p>
