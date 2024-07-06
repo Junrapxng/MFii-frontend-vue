@@ -56,7 +56,7 @@
                     </v-col>
                     <v-col cols="12" md="6" sm="6">
                       <v-autocomplete variant="solo-filled" flat label="Role" v-model="editedItem.role"
-                        :items="['user', 'staff', 'admin']"></v-autocomplete>
+                        :items="['user', 'staff']"></v-autocomplete>
                     </v-col>
                     <v-col cols="12" md="6" sm="6">
                       <v-autocomplete variant="solo-filled" flat label="Status" v-model="editedItem.status"
@@ -183,7 +183,7 @@ export default {
     },
     {
       title: "Create Date",
-      key: "createDate"
+      key: "createdAt"
     },
     {
       title: "Role",
