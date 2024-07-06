@@ -1,9 +1,9 @@
 <template>
     <v-empty-state
-  headline="Whoops, 404"
-  title="Page not found"
+  headline="Not available yet, 404"
+  title="MFii Phase 2, Page not found"
   text="The page you were looking for does not exist"
-  image="https://vuetifyjs.b-cdn.net/docs/images/logos/v.png"
+  image="https://ip-mfii.mfu.ac.th/src/assets/mfii_logo_avatar.jpg"
 ></v-empty-state>
 </template>
 
