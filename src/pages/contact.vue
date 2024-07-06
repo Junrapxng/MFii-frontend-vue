@@ -5,22 +5,21 @@
     <v-main>
       <v-container>
         <v-row>
-          <v-col col="7" md="7" lg="7" sm="12">
-            <!-- <div id="c16127" class="frame frame-default frame-type-header frame-layout-0"> -->
+          <v-col class="custom-col" col="7" lg="7" md="12" sm="12" xs="12">
             <header>
-              <h2 class="font-noto-sans-thai py-3" style="font-weight: 600; font-size: 35px">
+              <h1 class="font-noto-sans-thai py-3 lg:text-2xl sm:text-xl" style="font-weight: 600; font-size: 35px">
                 ติดต่อเรา
-              </h2>
+              </h1>
             </header>
 
-            <div id="c17556" class="frame frame-default frame-type-html frame-layout-0">
+            <div class="frame frame-default frame-type-html frame-layout-0">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4109.340290300189!2d99.89215215071464!3d20.044947186473486!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30d700048c69def1%3A0xa20592e502bc20c9!2sMae%20Fah%20Luang%20University!5e1!3m2!1sen!2sth!4v1573545998005!5m2!1sen!2sth"
                 width="100%" height="450" frameborder="0" style="border: 0" allowfullscreen=""></iframe>
             </div>
 
-            <div id="c17557" class="frame frame-default frame-type-text frame-layout-0">
-              <p class="font-noto-sans-thai py-2" style="font-weight: 500; font-size: 18px">
+            <div class="frame frame-default frame-type-text frame-layout-0">
+              <p class="font-noto-sans-thai py-2 lg:text-2xl sm:text-xl" style="font-weight: 500; font-size: 18px">
                 <span>ฝ่ายจัดการทรัพย์สินทางปัญญา มหาวิทยาลัยแม่ฟ้าหลวง<br />
                   333 ม.1 ต.ท่าสุด อ.เมือง จ.เชียงราย 57100<br />
                   โทรศัพท์ 0 5391 7014 หรือ 0 5391 7182<br />
@@ -28,12 +27,12 @@
               </p>
             </div>
           </v-col>
-          <v-col col="5" md="5" lg="5" sm="12">
+          <v-col class="custom-col" col="5" lg="5" md="12" sm="12" xs="12">
             <header>
-              <h class="font-noto-sans-thai py-3 text-center justify-center d-flex"
+              <h1 class="font-noto-sans-thai py-3 text-center justify-center d-flex"
                 style="font-weight: 600; font-size: 28px">
                 ขอข้อมูลเพิ่มเติมเกี่ยวกับเทคโนโลยี
-              </h>
+              </h1>
             </header>
             <v-container
               class="font-noto-sans-thai rounded-xl flex justify-center items-center min-h-fit min-w-full bg-gray-100">
@@ -41,21 +40,7 @@
                 <v-card-text>
                   <v-form ref="form" v-model="formValid">
                     <v-row>
-                      <v-col cols="12" lg="6" md="6" sm="12">
-                      </v-col>
-                      <v-col cols="12" md="12" lg="12">
-                        <div>
-                          <h1>ประเภทธุรกิจ</h1>
-                          <v-radio-group :rules="[(v) => !!v || 'กรุณาเลือก ประเภทธุรกิจ']" color="#BA984C"
-                            v-model="form.businessType" required>
-                            <v-radio label="บุคคลธรรมดา" value="บุคคลธรรมดา"></v-radio>
-                            <v-radio label="นิติบุคคล" value="นิติบุคคล"></v-radio>
-                          </v-radio-group>
-                        </div>
-                        <div>
-                          <v-text-field v-model="form.businessName" label="ระบุ ชื่อกิจการ" variant="outlined" outlined
-                            color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ชื่อกิจการ']" required></v-text-field>
-                        </div>
+                      <v-col cols="12" md="12" lg="12">                      
                         <div>
                           <v-text-field v-model="form.interestTech" label="เทคโนโลยีที่สนใจ " variant="outlined"
                             outlined color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก เทคโนโลยีที่สนใจ']"
@@ -111,8 +96,6 @@ export default {
       },
       user: [],
       form: {
-        businessType: "",
-        businessName: "",
         interestTech: "",
         usesScope: "",
         messageReply: {
@@ -188,4 +171,14 @@ export default {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+@media (max-width: 600px) {
+  .custom-col {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  span{
+    font-size: 14px;
+  }
+}
+</style>
