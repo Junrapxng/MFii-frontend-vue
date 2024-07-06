@@ -104,7 +104,7 @@
                       </template>
                       <template v-else>
                         <!-- Handle other file types or cases where img is not a string -->
-                        <v-img :src="`http://localhost:7770/${img}`" v-model="currentResearch.filePath" height="250px"
+                        <v-img :src="`${baseUrl}/${img}`" v-model="currentResearch.filePath" height="250px"
                           width="300px" cover></v-img>
                       </template>
                       <v-btn v-if="isEdit" @click="markForDeletion(index)"
@@ -159,7 +159,7 @@
 </template>
 
 <script>
-import {api} from "../../axios";
+import {api, url} from "../../axios";
 import StaffLayout from "@/layouts/staff.vue";
 export default {
   name: "staff-ResearchManagement-page",
@@ -170,6 +170,7 @@ export default {
     return {
       markedForDeletion: [],
       search: "",
+      baseUrl: "",
       dialog: false,
       isEdit: false,
       dialogDelete: false,
@@ -470,6 +471,7 @@ export default {
   // get research data when loaded website
   async created() {
     this.fetchResearches();
+    this.baseUrl = url;
   },
 
 
