@@ -107,7 +107,7 @@ export default {
       } else {
         console.log("Form is not valid");
         this.responseMessage =
-          "Form is not valid. Please fill out all required fields."; // Set form validation message
+          "แบบฟอร์มไม่ถูกต้อง กรุณากรอกข้อมูลในช่องที่ต้องกรอกทั้งหมด"; // Set form validation message
       }
       this.showPassword = false;
     },
