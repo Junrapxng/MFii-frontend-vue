@@ -14,7 +14,7 @@
         <br />
         <span>
           <a
-            href="https://example.com/privacy-policy"
+            href="https://drive.google.com/file/d/1ZsZXvp-TvUGVMPVqCW5Q_YV9G9qXOmvg/view"
             target="_blank"
             rel="noopener noreferrer"
             class="underline font-semibold mx-1"
@@ -22,7 +22,7 @@
             ประกาศเกี่ยวกับความเป็นส่วนตัว
           </a>
           <a
-            href="https://example.com/cookie-policy"
+            href="https://pdpa.mfu.ac.th/papa-6240/pdpa-6251.html"
             target="_blank"
             rel="noopener noreferrer"
             class="underline font-semibold mx-1"
