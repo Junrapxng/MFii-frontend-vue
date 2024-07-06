@@ -5,14 +5,15 @@
         <v-container>
           <v-card class="rounded-xl pa-4">
             <v-card-title>สร้างโพสข่าวสาร</v-card-title>
+            <p class="ml-14 text-red-500">อัพโหลดรูปภาพขนาด 2048 X 799 </p>
             <v-card-text>
               <v-form @submit.prevent="addNews">
                 <v-text-field v-model="news.linkVideo" label="URL video" clearable prepend-icon="mdi-youtube"
                   variant="solo-filled"></v-text-field>
-                  <v-text-field v-model="news.linkImage" label="URL Images" clearable prepend-icon="mdi-web"
+                <v-text-field v-model="news.linkImage" label="URL Images" clearable prepend-icon="mdi-web"
                   variant="solo-filled"></v-text-field>
-                <v-file-input v-model="news.images" label="Upload Images" chips show-size
-                  variant="solo-filled"></v-file-input>
+                <v-file-input v-model="news.images" label="Upload Images" chips show-size variant="solo-filled"
+                  accept="image/*" :rules="[fileSizeRule]"></v-file-input>
                 <v-btn type="submit" class="bg-slate-800 text-white">บันทึก</v-btn>
               </v-form>
             </v-card-text>
@@ -27,7 +28,8 @@
                   <v-card class="hover:shadow-lg transition-shadow rounded-lg my-1 mx-1" style="max-width: 400px">
                     <v-img v-if="img.filePath.length > 0" :src="`${baseUrl}/${img.filePath[0]}`" height="150px" cover />
                     <v-img v-else-if="img.linkImage.length > 0" :src="`${img.linkImage}`" height="150px" cover />
-                    <iframe v-else-if="img.linkVideo.length > 0" :src="`${img.linkVideo}`" height="150px" class="w-full"></iframe>
+                    <iframe v-else-if="img.linkVideo.length > 0" :src="`${img.linkVideo}`" height="150px"
+                      class="w-full"></iframe>
                     <p v-else>No media available</p>
                     <!-- Centered delete button -->
                     <v-container class="d-flex justify-center">
@@ -100,7 +102,7 @@
 </template>
 
 <script>
-import {api, url} from "../../axios";
+import { api, url } from "../../axios";
 import StaffLayout from "@/layouts/staff.vue";
 
 export default {
@@ -129,66 +131,71 @@ export default {
     };
   },
   methods: {
-   // Convert URL Video
-   convertToEmbedUrl(url) {
-    const videoId = url.split('v=')[1];
-    const ampersandPosition = videoId.indexOf('&');
-    if (ampersandPosition !== -1) {
-      return `https://www.youtube.com/embed/${videoId.substring(0, ampersandPosition)}`;
-    }
-    return `https://www.youtube.com/embed/${videoId}`;
-  },
-  async addNews() {
-    try {
-      const formData = new FormData();
-
-      // Append images if they are not empty
-      this.news.images.forEach((image, index) => {
-        if (image.size > 0) { // Check if file is not empty
-          formData.append(`images[${index}]`, image);
+    // Convert URL Video
+    convertToEmbedUrl(url) {
+      const videoId = url.split('v=')[1];
+      const ampersandPosition = videoId.indexOf('&');
+      if (ampersandPosition !== -1) {
+        return `https://www.youtube.com/embed/${videoId.substring(0, ampersandPosition)}`;
+      }
+      return `https://www.youtube.com/embed/${videoId}`;
+    },
+    async addNews() {
+      try {
+        if (!this.checkFileSizes()) {
+          return;
         }
-      });
 
-      // Convert video and image links to embed format before appending
-      if (this.news.linkVideo.length > 0) {
-        formData.append('linkVideo', this.convertToEmbedUrl(this.news.linkVideo));
-      }
+        const formData = new FormData();
 
-      if (this.news.linkImage.length > 0) {
-        formData.append('linkImage', this.news.linkImage);
-      }
-
-      // Check if formData has any files or links before making the request
-      if (formData.has('images[0]') || formData.has('linkVideo') || formData.has('linkImage')) {
-        const response = await api.post('/staff/addNews', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: localStorage.getItem("token"),
+        // Append images if they are not empty
+        this.news.images.forEach((image, index) => {
+          if (image.size > 0) { // Check if file is not empty
+            formData.append(`images[${index}]`, image);
           }
         });
 
-        console.log(response.data);
-        this.fetchImg(); // Reload images after upload
-        this.news.images = [];
-        this.news.linkVideo = '';
-        this.news.linkImage = '';
-        this.snackbar.message = "News and images uploaded successfully!";
-        this.snackbar.color = "success";
+        // Convert video and image links to embed format before appending
+        if (this.news.linkVideo.length > 0) {
+          formData.append('linkVideo', this.convertToEmbedUrl(this.news.linkVideo));
+        }
+
+        if (this.news.linkImage.length > 0) {
+          formData.append('linkImage', this.news.linkImage);
+        }
+
+        // Check if formData has any files or links before making the request
+        if (formData.has('images[0]') || formData.has('linkVideo') || formData.has('linkImage')) {
+          const response = await api.post('/staff/addNews', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: localStorage.getItem("token"),
+            }
+          });
+
+          console.log(response.data);
+          this.fetchImg(); // Reload images after upload
+          this.news.images = [];
+          this.news.linkVideo = '';
+          this.news.linkImage = '';
+          this.snackbar.message = "News and images uploaded successfully!";
+          this.snackbar.color = "success";
+          this.snackbar.show = true;
+        } else {
+          alert('No images selected or all selected images are empty.');
+        }
+      } catch (error) {
+        console.error("Error adding News:", error);
+        if (!error.response) {
+          this.snackbar.message = "Error adding News: " + error;
+        } else {
+          this.snackbar.message = "Error adding News: " + error.response.data.description + " Code: " + error.response.status;
+        }
+        this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
-      } else {
-        alert('No images selected or all selected images are empty.');
       }
-    } catch (error) {
-      console.error("Error adding News:", error);
-      if (!error.response) {
-        this.snackbar.message = "Error adding News: " + error;
-      } else {
-        this.snackbar.message = "Error adding News: " + error.response.data.description + " Code: " + error.response.status;
-      }
-      this.snackbar.color = "error"; // Set error color
-      this.snackbar.show = true;
-    }
-  },
+    },
+
     async fetchImg() {
       console.log('fetchImg method called.');
       try {
@@ -197,13 +204,12 @@ export default {
       } catch (error) {
         console.log('Error getting News: ' + error);
         if (!error.response) {
-        this.snackbar.message = "Error getting News: " + error;
-      } else {
-        this.snackbar.message = "Error getting News: " + error.response.data.description.description + " Code: " + error.response.status;
-      }
-      this.snackbar.color = "error"; // Set error color
-      this.snackbar.show = true;
-
+          this.snackbar.message = "Error getting News: " + error;
+        } else {
+          this.snackbar.message = "Error getting News: " + error.response.data.description.description + " Code: " + error.response.status;
+        }
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
     },
 
@@ -232,13 +238,40 @@ export default {
       } catch (error) {
         console.error('Error deleting image:', error);
         if (!error.response) {
-        this.snackbar.message = "Error deleting image: " + error;
-      } else {
-        this.snackbar.message = "Error deleting image: " + error.response.data.description.description + " Code: " + error.response.status;
+          this.snackbar.message = "Error deleting image: " + error;
+        } else {
+          this.snackbar.message = "Error deleting image: " + error.response.data.description.description + " Code: " + error.response.status;
+        }
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
-      this.snackbar.color = "error"; // Set error color
-      this.snackbar.show = true;
+    },
+
+    // Check if all files are within the size limit
+    checkFileSizes() {
+      const maxSize = 2 * 1024 * 1024; // 2 MB
+      for (const file of this.news.images) {
+        if (file.size > maxSize) {
+          this.snackbar.message = `File ${file.name} is too large. Max size is 2MB.`;
+          this.snackbar.color = "error";
+          this.snackbar.show = true;
+          return false;
+        }
       }
+      return true;
+    },
+
+    //File size validation
+    fileSizeRule(value) {
+      if (value && value.length) {
+        const maxSize = 2 * 1024 * 1024; // 2 MB
+        for (const file of value) {
+          if (file.size > maxSize) {
+            return `File ${file.name} is too large. Max size is 2MB.`;
+          }
+        }
+      }
+      return true;
     },
   },
   mounted() {
