@@ -15,17 +15,17 @@
                   <v-row>
                     <v-col cols="12">
                       <v-text-field v-model="user.firstName" label="First Name" prepend-inner-icon="mdi-account"
-                        :rules="[rules.required]" required></v-text-field>
+                        :rules="[rules.required, rules.notEmpty]" required></v-text-field>
                       <v-text-field v-model="user.lastName" label="Last Name" prepend-inner-icon="mdi-account"
-                        :rules="[rules.required]" required></v-text-field>
+                        :rules="[rules.required,rules.notEmpty]" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
                       <v-text-field v-model="user.email" label="Email" prepend-inner-icon="mdi-email"
-                        :rules="[rules.required, rules.email]" required></v-text-field>
+                        :rules="[rules.required, rules.email, rules.notEmpty]" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
                       <v-text-field v-model="user.phoneNumber" label="Phone" prepend-inner-icon="mdi-phone"
-                        :rules="[rules.required, rules.phone]"></v-text-field>
+                        :rules="[rules.required, rules.phone, rules.notEmpty]"></v-text-field>
                     </v-col>
                     <v-col cols="12" class="text-center">
                       <v-btn type="submit" color="primary" class="mr-2">Save</v-btn>
@@ -76,16 +76,27 @@ export default {
         picture: ''
       },
       rules: {
-        required: value => !!value || 'Required.',
-        email: value => /.+@.+\..+/.test(value) || 'E-mail must be valid.',
-        phone: value => /^\d{10}$/.test(value) || 'Phone must be 10 digits.'
-      }
+      required: value => !!value || 'This field is required.',
+      email: value => {
+        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        return pattern.test(value) || 'Invalid e-mail.'
+      },
+      phone: value => /^\d{10}$/.test(value) || 'Phone must be 10 digits.',
+      notEmpty: value => (value && value.trim().length > 0) || 'This field cannot be empty.'
+    }
     }
   },
   methods: {
 
+    async validateForm() {
+    const { valid } = await this.$refs.form.validate()
+    return valid
+  },
+
+
     async saveProfile() {
-      try {
+        if(await this.validateForm()){
+          try {
         await api.patch('/user/updatePatch', this.user, {
           headers: {
             Authorization: localStorage.getItem("token"),
@@ -108,6 +119,11 @@ export default {
       this.snackbar.color = "error"; // Set error color
       this.snackbar.show = true;
       }
+        } else {
+          this.snackbar.message = "กรุณากรอกข้อมูลให้ครบถ้วน";
+          this.snackbar.color = "error"; // Set error color
+          this.snackbar.show = true;
+        }
     },
 
 
