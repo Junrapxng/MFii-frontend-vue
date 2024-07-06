@@ -38,7 +38,7 @@
       <div class="txt flex justify-center">
         <h1 class="text-2xl font-bold mb-3">Success Case</h1>
       </div>
-      <v-container fluid style="width: 70%">
+      <v-container class="youtubeContainer" fluid >
         <v-carousel v-if="filteredVideos.length > 0" :key="carouselKey" class="myCarousel" hide-delimiter-background
           height="400" :value="0">
           <v-carousel-item v-for="(item, index) in filteredVideos" :key="index">
