@@ -3,7 +3,7 @@
     <NavBar></NavBar>
 
     <v-main>
-      <v-alert v-if="responseMessage"  type="error" icon="mdi-alert-circle-outline">{{
+      <v-alert v-if="responseMessage" type="error">{{
         responseMessage
       }}</v-alert>
       <v-container class="font-noto-sans-thai rounded-xl flex justify-center items-center bg-gray-100 mb-6">
@@ -37,12 +37,12 @@
                 </v-col>
               </v-row>
               <v-btn class="rounded-xl" type="submit" color="#BA984C" s block>เข้าสู่ระบบ</v-btn>
-              <!-- <div class="text-center justify-space-between pt-5 flex text-base">
+              <div class="text-center justify-space-between pt-5 flex text-base">
                 <v-checkbox v-model="checkbox" label="Remember Me" class="text-gray-500"></v-checkbox>
                 <p class="mt-3">
                   <a class="hover:underline" style="color: #ba984c" href="/register">Forgot Password?</a>
                 </p>
-              </div> -->
+              </div>
             </v-form>
           </v-card-text>
         </v-card>
@@ -97,9 +97,9 @@ export default {
           console.error("Error Logging in:", error);
           this.responseMessage = error;
           if (!error.response) {
-            this.responseMessage = "Error  Logging in: " + error;
+            this.snackbar.message = "Error  Logging in: " + error;
           } else {
-            this.responseMessage = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+            this.snackbar.message = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
           }
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
@@ -107,7 +107,7 @@ export default {
       } else {
         console.log("Form is not valid");
         this.responseMessage =
-          "แบบฟอร์มไม่ถูกต้อง กรุณากรอกข้อมูลในช่องที่ต้องกรอกทั้งหมด"; // Set form validation message
+          "Form is not valid. Please fill out all required fields."; // Set form validation message
       }
       this.showPassword = false;
     },
