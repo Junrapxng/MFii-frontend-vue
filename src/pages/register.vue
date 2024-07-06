@@ -17,15 +17,19 @@
           <v-card-text>
             <v-form @submit.prevent="register" ref="form">
               <div>
-                          <h1>ประเภทธุรกิจ</h1>
-                          <v-radio-group :rules="[(v) => !!v || 'กรุณาเลือก ประเภทธุรกิจ']" color="#BA984C"
-                            v-model="form.businessType" required>
-                            <v-radio label="บุคคลธรรมดา" value="บุคคลธรรมดา"></v-radio>
-                            <v-radio label="นิติบุคคล" value="นิติบุคคล"></v-radio>
-                          </v-radio-group>
-                        </div>
+                <h1>ประเภทธุรกิจ</h1>
+                <v-radio-group :rules="[(v) => !!v || 'กรุณาเลือก ประเภทธุรกิจ']" color="#BA984C"
+                  v-model="form.businessType" required>
+                  <v-radio label="บุคคลธรรมดา" value="บุคคลธรรมดา"></v-radio>
+                  <v-radio label="นิติบุคคล" value="นิติบุคคล"></v-radio>
+                </v-radio-group>
+              </div>
+              <div>
+                <v-text-field v-model="form.businessName" label="ระบุ ชื่อกิจการ" variant="outlined" outlined
+                  color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ชื่อกิจการ']" required></v-text-field>
+              </div>
               <v-row>
-              
+
                 <v-col cols="12" md="6">
                   <v-text-field v-model="form.firstName" label="ชื่อ" variant="outlined" outlined color="#BA984C"
                     :rules="[(v) => !!v || 'กรุณากรอก ชื่อ']" required></v-text-field>
@@ -52,14 +56,6 @@
                         /^\d{10}$/.test(v) || 'กรุณากรอกเบอร์โทรศัพท์ 10 หลัก',
                     ]" required></v-text-field>
                 </v-col>
-
-                <!-- <v-col cols="6">
-                  <h1>เพศ</h1>
-                  <v-radio-group inline :rules="[(v) => !!v || 'กรุณาเลือก เพศ']" color="#BA984C" required>
-                    <v-radio label="ชาย" value="man" v-model="form.gender"></v-radio>
-                    <v-radio label="หญิง" value="women" v-model="form.gender"></v-radio>
-                  </v-radio-group>
-                </v-col> -->
 
                 <v-col cols="12">
                   <v-text-field v-model="form.password" label="รหัสผ่าน"
@@ -90,7 +86,7 @@
 </template>
 
 <script>
-import {api} from "../axios";
+import { api } from "../axios";
 export default {
   name: "register-page",
   data() {
@@ -102,6 +98,7 @@ export default {
         lastName: "",
         password: "",
         businessType: "",
+        businessName: "",
       },
       showPassword: false, // เพิ่มตรงนี้
       responseMessage: "",
@@ -132,6 +129,7 @@ export default {
             lastName: this.form.lastName.trim(),
             phoneNumber: this.form.phone.trim(),
             businessType: this.form.businessType,
+            businessName: this.form.businessName,
             createDate: createDate, // Set create date
           });
           localStorage.setItem("token", response.data.result.token);
