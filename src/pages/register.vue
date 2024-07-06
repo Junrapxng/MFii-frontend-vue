@@ -129,7 +129,7 @@ export default {
             lastName: this.form.lastName.trim(),
             phoneNumber: this.form.phone.trim(),
             businessType: this.form.businessType,
-            businessName: this.form.businessName,
+            businessName: this.form.businessName.trim(),
             createDate: createDate, // Set create date
           });
           localStorage.setItem("token", response.data.result.token);
