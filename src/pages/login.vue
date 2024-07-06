@@ -97,9 +97,9 @@ export default {
           console.error("Error Logging in:", error);
           this.responseMessage = error;
           if (!error.response) {
-            this.snackbar.message = "Error  Logging in: " + error;
+            this.responseMessage = "Error  Logging in: " + error;
           } else {
-            this.snackbar.message = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+            this.responseMessage = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
           }
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
