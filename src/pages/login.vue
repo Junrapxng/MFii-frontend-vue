@@ -3,7 +3,7 @@
     <NavBar></NavBar>
 
     <v-main>
-      <v-alert v-if="responseMessage" type="error">{{
+      <v-alert v-if="responseMessage"  type="error" icon="mdi-alert-circle-outline">{{
         responseMessage
       }}</v-alert>
       <v-container class="font-noto-sans-thai rounded-xl flex justify-center items-center bg-gray-100 mb-6">
