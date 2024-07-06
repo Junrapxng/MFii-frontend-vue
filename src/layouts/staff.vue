@@ -1,10 +1,11 @@
 <template>
   <v-app>
     <!-- sidebar -->
-    <v-navigation-drawer app   style="position: fixed; height: 100vh; overflow-y: auto;" class="bg-red-400 rounded-e-circle">
+    <v-navigation-drawer app style="position: fixed; height: 100vh; overflow-y: auto;"
+      class="bg-red-400 rounded-e-circle">
       <div class="d-flex justify-center mt-4 mb-4">
         <a href="/staff">
-        <v-img src="../assets/mfu_logo.png" width="240px"></v-img>
+          <v-img src="../assets/mfu_logo.png" width="240px"></v-img>
         </a>
       </div>
       <v-list dense class="text-white">
@@ -35,14 +36,21 @@
           </v-list-item-icon>
           <v-list-item-title class="inline">ข้อความและการตอบกลับ</v-list-item-title>
         </v-list-item>
+
+          <v-list-item v-if="user.role === 'admin'" to="/admin">
+            <v-list-item-icon>
+              <v-icon class="mr-2">mdi-home-floor-a</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title class="inline">หน้าหลัก ADMIN</v-list-item-title>
+          </v-list-item>
       </v-list>
 
       <!-- logout -->
       <template #append>
         <div class="pa-4 d-flex justify-start">
-            <v-btn class="primary--text" rounded @click="logout()">
-              <v-icon class="primary--text mr-2">mdi-logout</v-icon>Logout
-            </v-btn>
+          <v-btn class="primary--text" rounded @click="logout()">
+            <v-icon class="primary--text mr-2">mdi-logout</v-icon>Logout
+          </v-btn>
         </div>
       </template>
     </v-navigation-drawer>
@@ -54,10 +62,7 @@
 
       <v-col cols="auto">
         <v-avatar size="36px">
-          <v-img
-            alt="Avatar"
-            src="../assets/mfii_logo_avatar.jpg"
-          ></v-img>
+          <v-img alt="Avatar" src="../assets/mfii_logo_avatar.jpg"></v-img>
         </v-avatar>
       </v-col>
 
@@ -91,9 +96,9 @@ export default {
     user: [],
   }),
 
- async created(){
-      // get user info from pinia store/user.js
-      const userStore = useUserStore();
+  async created() {
+    // get user info from pinia store/user.js
+    const userStore = useUserStore();
     try {
       if (!userStore.user) {
         await userStore.fetchUser();
@@ -122,6 +127,4 @@ export default {
 .v-list-item:focus {
   color: black;
 }
-
-
 </style>
