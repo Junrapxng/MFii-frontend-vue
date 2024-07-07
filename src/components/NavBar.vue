@@ -160,7 +160,7 @@
                               </v-list-item>
                             </template>
                           </v-menu>
-                          <router-link v-else :to="subNestedItem.route">
+                          <router-link v-else :key="subNestedItem" :to="subNestedItem.route">
                             <v-list-item>
                               <v-list-item-title :style="{
                                 fontFamily: 'Noto Sans Thai, sans-serif',
@@ -172,7 +172,7 @@
                         </template>
                       </v-list>
                     </v-menu>
-                    <router-link v-else :to="nestedItem.route">
+                    <router-link v-else :key="nestedItem" :to="nestedItem.route">
                       <v-list-item>
                         <v-list-item-title :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }">
                           {{ nestedItem.title }}
@@ -182,7 +182,7 @@
                   </template>
                 </v-list>
               </v-menu>
-              <div v-else :to="subItem.route">
+              <div v-else :key="subItem" :to="subItem.route">
                 <router-link v-if="!subItem.external" :to="subItem.route">
                   <v-list-item>
                     <v-list-item-title :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }">
