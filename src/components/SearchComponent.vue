@@ -16,6 +16,7 @@
       no-data-text="ไม่พบผลลัพธ์"
       @change="navigateToPage"
       @keydown.enter="navigateToPage"
+      @update:modelValue="navigateToPage"
     ></v-autocomplete>
 </template>
 
@@ -42,16 +43,22 @@ export default {
         { name: "DIP", path: "/recmn/about/outside/DIP" },
         { name: "WIPO", path: "/recmn/about/outside/WIPO" },
         { name: "อวท.", path: "/recmn/about/outside/อวท" },
-        { name: "โครงสร้างองค์กร", path: "/about-us/ip-structure" },
-        { name: "บุคลากร", path: "/about-us/ip-staffs" },
+        { name: "โครงสร้างองค์กร", path: "https://mfii.mfu.ac.th/mfii-about/mfii-structure.html", external: true },
+        { name: "บุคลากร", path: "https://mfii.mfu.ac.th/mfii-ip-staff.html", external: true },
         { name: "ติดต่อเรา", path: "/about-us/contact" },
       ],
     };
   },
   methods: {
     navigateToPage() {
-      if (this.search) {
-        this.$router.push(this.search);
+      const selectedPage = this.pages.find(page => page.path === this.search);
+      if (selectedPage) {
+        if (selectedPage.external) {
+          window.open(selectedPage.path, '_blank');
+        } else {
+          this.$router.push(selectedPage.path);
+        }
+        this.search = "";
       }
     },
   },
