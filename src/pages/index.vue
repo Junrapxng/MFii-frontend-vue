@@ -4,8 +4,8 @@
     <v-main>
       <!-- Carousel Slide -->
       <!-- display only images -->
-      <v-container class="flex">
-        <v-container fluid style="width: 90%">
+      <!-- <v-container class="flex"> -->
+        <v-container fluid  class="flex" style="width: 90%">
           <v-carousel v-if="filteredImages.length" :key="carouselKey" class="Carousel" cycle show-arrows="hover"
             hide-delimiter-background height="370" :value="0">
             <v-carousel-item v-for="(path, index) in filteredImages" :key="index">
@@ -32,7 +32,7 @@
             </v-carousel-item>
           </v-carousel>
         </v-container>
-      </v-container>
+      <!-- </v-container> -->
 
       <!-- Youtube video -->
       <div class="txt flex justify-center">
