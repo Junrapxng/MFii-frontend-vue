@@ -24,7 +24,7 @@
 export default {
   data() {
     return {
-      search: "",
+      search: null,
       pages: [
         { name: "หน้าหลัก", path: "/" },
         { name: "ยกระดับงานวิจัยและนวัตกรรม", path: "/services/ups" },
