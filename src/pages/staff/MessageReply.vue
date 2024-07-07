@@ -15,7 +15,8 @@
                     <v-list-item-subtitle>ผู้ส่ง: {{ message.firstName }} {{ message.lastName }}</v-list-item-subtitle>
                   </v-list-item-content>
                   <v-list-item-action class="my-2">
-                    <v-btn @click="openReplyDialog(message._id)" class="bg-slate-800 text-white">ตอบกลับ</v-btn>
+                    <v-btn @click="openReplyDialog(message._id)" class="bg-slate-800 text-white mr-2">ตอบกลับ</v-btn>
+                    <v-btn @click="deleteMessage(message._id)" color="error">ลบ</v-btn>
                   </v-list-item-action>
                 </v-list-item>
               </v-list>
@@ -30,13 +31,13 @@
               <v-card-title class="headline text-lg-h5 font-semibold">เทคโนโลยีที่สนใจ: {{ selected.interestTech
                 }}</v-card-title>
               <v-card-subtitle>
-                กิจการ : {{ selected.businessName }} 
+                กิจการ : {{ selected.businessName }}
               </v-card-subtitle>
               <v-card-subtitle>
-                ประเภทกิจการ : {{ selected.businessType }} 
+                ประเภทกิจการ : {{ selected.businessType }}
               </v-card-subtitle>
               <v-card-subtitle>
-                ขอบเขตการใช้งาน : {{ selected.usesScope }} 
+                ขอบเขตการใช้งาน : {{ selected.usesScope }}
               </v-card-subtitle>
               <v-card-subtitle>
                 ผู้ส่ง : {{ selected.firstName }} {{ selected.lastName }} อีเมล: {{ selected.email }}
@@ -65,7 +66,6 @@
                         ]">
                           {{ reply.messages }}
                         </v-list-item-title>
-
                       </v-list-item-content>
                     </v-list-item>
                   </v-list>
@@ -94,8 +94,22 @@
           </template>
         </v-snackbar>
       </div>
-
+      <!-- confirm delete -->
+      <v-dialog v-model="confirmDialog" max-width="600px">
+        <v-card class="rounded-xl pa-4">
+          <v-card-title class="text-h5 text-center text-red-500">Are you sure you want to delete this
+            Message?</v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="'blue-grey-darken-1" variant="outlined" class="hover:bg-gray-500"
+              @click="closeDelete">Cancel</v-btn>
+            <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300" @click="confirmDelete">OK</v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-main>
+
   </v-app>
 </template>
 
@@ -103,7 +117,7 @@
 import {
   useUserStore
 } from "@/stores/user";
-import {api} from "../../axios";
+import { api } from "../../axios";
 import StaffLayout from "@/layouts/staff.vue";
 export default {
   name: "staff-MessageReply-page",
@@ -124,6 +138,8 @@ export default {
       user: {
         _id: ''
       },
+      confirmDialog: false,
+      messageToDelete: null,
     };
   },
   async created() {
@@ -234,6 +250,42 @@ export default {
       this.isDialogOpen = false;
     },
 
+    // Delete Message ============================
+
+    closeDelete() {
+      this.confirmDialog = false;
+    },
+
+    async deleteMessage(id) {
+      this.messageToDelete = id;
+      this.confirmDialog = true;
+    },
+    async confirmDelete() {
+      this.confirmDialog = false;
+      if (this.messageToDelete) {
+        try {
+          await api.delete('/mesDelete/' + this.messageToDelete, {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          });
+          this.snackbar.message = "Deleted Successfully";
+          this.snackbar.color = "success";
+          this.snackbar.show = true;
+          this.fetchMessages();
+        } catch (error) {
+          console.error("Error Deleting Message:", error);
+          if (error.response) {
+            this.snackbar.message = "Error Deleting Message: " + error.response.data.description.description + " Code: " + error.response.status;
+          } else {
+            this.snackbar.message = "Error Deleting Message: " + error;
+          }
+          this.snackbar.color = "error";
+          this.snackbar.show = true;
+        }
+        this.messageToDelete = null;
+      }
+    },
   },
 };
 </script>
