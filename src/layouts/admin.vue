@@ -35,6 +35,14 @@
           </v-list-item-icon>
           <v-list-item-title class="inline">Staff Page</v-list-item-title>
         </v-list-item>
+
+        <v-list-item to="/">
+            <v-list-item-icon>
+              <v-icon class="mr-2">mdi-home-floor-a</v-icon>
+            </v-list-item-icon>
+            <v-list-item-title class="inline">Home page</v-list-item-title>
+          </v-list-item>
+
       </v-list>
 
       

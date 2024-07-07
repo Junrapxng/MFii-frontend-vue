@@ -59,7 +59,9 @@
                         :color="item.techReadiness === 'ระดับการทดลอง' ? 'purple' : item.techReadiness === 'ระดับต้นแบบ' ? 'blue' : item.techReadiness === 'ระดับถ่ายทอด' ? 'orange' : 'default'">
                         {{ item.techReadiness }}
                       </v-chip>
-                
+                      <v-chip class="mx-2">
+                      {{ count[item._id] || 0 }} views
+                    </v-chip>
                     </v-card-actions>
                   </v-card>
                 </router-link>
@@ -115,7 +117,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 8, // จำนวนรายการต่อหน้า
       baseUrl: '',
-
+      count: {},
       indust: [
         { value: "cosme", text: "เครื่องสำอาง" },
         { value: "agtech", text: "การเกษตรและเทคโนโลยีชีวภาพ" },
@@ -216,11 +218,29 @@ export default {
           this.loading = false;
         });
     },
+
+    // Get view count ===========================================================================
+    async getviewCount() {
+      try {
+        // Make a single API call to fetch all product counts
+        const response = await api.get("/getStatProduct");
+        const productCounts = response.data.result;
+
+        // Store product counts in the component's data
+        this.count = productCounts;
+
+        console.log("Product counts:", this.count);
+      } catch (error) {
+        console.error("Error fetching product counts:", error);
+      }
+    },
+    // ============================================================================================
   },
 
   async mounted() {
     this.baseUrl = url
     this.fetchResearchData();
+    this.getviewCount();
   try {
     const api1Response = await Promise.all([
       api.get("/getsResearch/all/all/all/all"),

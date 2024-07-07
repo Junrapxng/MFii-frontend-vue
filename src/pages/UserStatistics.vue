@@ -7,25 +7,25 @@
           <v-col>
             <v-card>
               <v-card-title>จำนวนผู้ใช้งานวันนี้</v-card-title>
-              <v-card-text>{{ todayUsers }}</v-card-text>
+              <v-card-text>{{ todayUsers || 0}}</v-card-text>
             </v-card>
           </v-col>
           <v-col>
             <v-card>
               <v-card-title>จำนวนผู้ใช้งานเดือนนี้</v-card-title>
-              <v-card-text>{{ monthlyUsers }}</v-card-text>
+              <v-card-text>{{ monthlyUsers || 0}}</v-card-text>
             </v-card>
           </v-col>
           <v-col>
             <v-card>
               <v-card-title>จำนวนผู้ใช้งานปีนี้</v-card-title>
-              <v-card-text>{{ yearlyUsers }}</v-card-text>
+              <v-card-text>{{ yearlyUsers || 0}}</v-card-text>
             </v-card>
           </v-col>
           <v-col>
             <v-card>
               <v-card-title>จำนวนผู้ใช้งานทั้งหมด</v-card-title>
-              <v-card-text>{{ totalUsers }}</v-card-text>
+              <v-card-text>{{ totalUsers || 0}}</v-card-text>
             </v-card>
           </v-col>
         </v-row>

@@ -38,7 +38,7 @@
       <div class="txt flex justify-center">
         <h1 class="text-2xl font-bold mb-3">Success Case</h1>
       </div>
-      <v-container class="youtubeContainer" fluid >
+      <v-container class="youtubeContainer" fluid>
         <v-carousel v-if="filteredVideos.length > 0" :key="carouselKey" class="myCarousel" hide-delimiter-background
           height="400" :value="0">
           <v-carousel-item v-for="(item, index) in filteredVideos" :key="index">
@@ -68,18 +68,18 @@
                   </v-img>
                   <v-card-title class="text-lg">{{
                     item.nameOnMedia
-                  }}</v-card-title>
+                    }}</v-card-title>
                   <v-card-subtitle class="text-sm">{{
                     item.industryType
-                  }}</v-card-subtitle>
+                    }}</v-card-subtitle>
                   <v-card-actions>
                     <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
-                        ? 'purple'
-                        : item.techReadiness === 'ระดับต้นแบบ'
-                          ? 'blue'
-                          : item.techReadiness === 'ระดับถ่ายทอด'
-                            ? 'orange'
-                            : 'default'
+                      ? 'purple'
+                      : item.techReadiness === 'ระดับต้นแบบ'
+                        ? 'blue'
+                        : item.techReadiness === 'ระดับถ่ายทอด'
+                          ? 'orange'
+                          : 'default'
                       " class="text-xs">
                       {{ item.techReadiness }}
                     </v-chip>
@@ -121,18 +121,18 @@
                   </v-img>
                   <v-card-title class="text-lg">{{
                     item.nameOnMedia
-                  }}</v-card-title>
+                    }}</v-card-title>
                   <v-card-subtitle class="text-sm">{{
                     item.industryType
-                  }}</v-card-subtitle>
+                    }}</v-card-subtitle>
                   <v-card-actions>
                     <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
-                        ? 'purple'
-                        : item.techReadiness === 'ระดับต้นแบบ'
-                          ? 'blue'
-                          : item.techReadiness === 'ระดับถ่ายทอด'
-                            ? 'orange'
-                            : 'default'
+                      ? 'purple'
+                      : item.techReadiness === 'ระดับต้นแบบ'
+                        ? 'blue'
+                        : item.techReadiness === 'ระดับถ่ายทอด'
+                          ? 'orange'
+                          : 'default'
                       " class="text-xs">
                       {{ item.techReadiness }}
                     </v-chip>
@@ -200,14 +200,11 @@ export default defineComponent({
 
   async created() {
     this.baseUrl = url;
-    // Fetch api research and News(Banner) =======================================================================================
+    // Fetch api research =======================================================================================
     try {
-      const [api1Response, api2Response] = await Promise.all([
-        api.get("/getsResearch/all/all/all/all"),
-        api.get("/getsNews"),
-      ]);
+      const api1Response = await api.get("/getsResearch/all/all/all/all")
 
-      if (api1Response.status == 200 && api2Response.status == 200) {
+      if (api1Response.status == 200) {
         // Filter out the data to get only those with status "active"
         console.log("test " + api1Response.data);
         this.sessionId = api1Response.data.sessionId;
@@ -217,8 +214,6 @@ export default defineComponent({
         if (activeData.length > 0) {
           this.info = activeData;
           this.newinfo = [...activeData].reverse(); // Reverse only newinfo
-          this.images = api2Response.data.result;
-          console.log("images is " + this.images);
         } else {
           console.log("No active data found");
           this.snackbar.message = "No active data found.";
@@ -226,8 +221,11 @@ export default defineComponent({
           this.snackbar.show = true;
         }
       } else {
-        const errorMessage = `API responses not OK: Research API status: ${api1Response.status}, News API status: ${api2Response.status}`;
+        const errorMessage = `API responses not OK: Research API status: ${api1Response.status},`;
         this.error = new Error(errorMessage);
+        this.snackbar.message = "ERROR: " + errorMessage;
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
         console.error(errorMessage);
       }
     } catch (error) {
@@ -249,6 +247,7 @@ export default defineComponent({
     }
 
     this.getviewCount();
+    this.Getnews();
     // ==============================================================================================================================
   },
 
@@ -310,9 +309,12 @@ export default defineComponent({
             } else {
               this.info = [];
               console.log("No active data found");
+              this.snackbar.message = "No active data found";
+              this.snackbar.color = "error"; // Set error color
+              this.snackbar.show = true;
             }
           } else {
-            this.error = new Error("One or both API responses are not OK");
+            this.error = new Error("API responses is not OK");
           }
           this.loading = false;
         })
@@ -321,8 +323,35 @@ export default defineComponent({
             "There was an error fetching the research data:",
             error
           );
+          if (!error.response) {
+            this.snackbar.message = "Error: " + error;
+          } else {
+            this.snackbar.message = "Error geting news" + error.response.description.description + "Code: " + error.response.status;
+          }
+          this.snackbar.color = "error"; // Set error color
+          this.snackbar.show = true;
+
+
           this.loading = false;
         });
+    },
+
+    // getNews==============================================================================
+
+    async Getnews() {
+      try {
+        const response = await api.get("/getsNews")
+        this.images = response.data.result;
+      } catch (error) {
+        console.log(error);
+        if (!error.response) {
+          this.snackbar.message = "Error geting news" + error;
+        } else {
+          this.snackbar.message = "Error geting news" + error.response.description.description + "Code: " + error.response.status;
+        }
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+      }
     },
 
     // Get view count ===========================================================================
