@@ -103,7 +103,6 @@ export default {
           "/getResearch?researchId=" + this.id
         ); // Replace with your API endpoint
         this.research = response.data.result;
-        console.log(this.research);
       } catch (error) {
         console.error("Error fetching data:", error);
         if (!error.response) {

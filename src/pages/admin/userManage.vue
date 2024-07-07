@@ -253,7 +253,6 @@ export default {
           },
         });
         this.users = response.data;
-        console.log(this.users);
       } catch (error) {
         console.error("Error getting user :", error);
         if (!error.response) {
@@ -275,7 +274,6 @@ export default {
 
     async deleteItemConfirm() {
       this.users.resutl.splice(this.editedIndex, 1);
-      console.log(this.editedItem._id);
       try {
         const res = await api.delete(
           "/admin/deleteUser/" + this.editedItem._id, {
@@ -284,7 +282,6 @@ export default {
           },
         }
         );
-        console.log(res);
         this.snackbar.message = "User deleted successfully";
         this.snackbar.color = "success"; // Set success color
         this.snackbar.show = true;
@@ -334,7 +331,6 @@ export default {
       }
       if (this.editedIndex > -1) {
         Object.assign(this.users.resutl[this.editedIndex], this.editedItem);
-        console.log(this.editedItem._id);
         try {
           await api.patch(
             "/admin/updatePatch/" + this.editedItem._id, {

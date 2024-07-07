@@ -206,7 +206,6 @@ export default defineComponent({
 
       if (api1Response.status == 200) {
         // Filter out the data to get only those with status "active"
-        console.log("test " + api1Response.data);
         this.sessionId = api1Response.data.sessionId;
         const activeData = api1Response.data.result.filter(
           (item) => item.status === "active"
@@ -363,8 +362,6 @@ export default defineComponent({
 
         // Store product counts in the component's data
         this.count = productCounts;
-
-        console.log("Product counts:", this.count);
       } catch (error) {
         console.error("Error fetching product counts:", error);
       }

@@ -126,7 +126,6 @@ export default {
       }
       if (userStore.user) {
         this.user = userStore.user.resutl;
-        console.log(this.user);
       }
     } catch (error) {
       console.log("Error getting user " + error);
@@ -196,8 +195,6 @@ export default {
         });
         // Clear the reply text
         this.replyText = "";
-
-        console.log(this.selectedMessage);
       } catch (error) {
         console.error("Error sending reply:", error);
         if (!error.response) {
@@ -219,7 +216,6 @@ export default {
           },
         });
         this.messages = response.data.result;
-        console.log(this.messages);
       } catch (error) {
         console.error("Error Getting messages:", error);
         if (!error.response) {

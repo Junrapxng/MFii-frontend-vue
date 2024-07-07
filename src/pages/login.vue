@@ -80,7 +80,6 @@ export default {
             password: this.form.password.trim(),
           });
           localStorage.setItem("token", response.data.result.token);
-          console.log(response.data.result.token);
           if (!userStore.user) {
             await userStore.fetchUser();
           }
