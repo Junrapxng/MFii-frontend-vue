@@ -23,7 +23,6 @@ export const useUserStore = defineStore('user', {
             },
           });
           this.user = response.data;
-          console.log("state management " + this.user);
         } catch (error) {
           this.error = error;
         } finally {

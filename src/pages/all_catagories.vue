@@ -228,8 +228,6 @@ export default {
 
         // Store product counts in the component's data
         this.count = productCounts;
-
-        console.log("Product counts:", this.count);
       } catch (error) {
         console.error("Error fetching product counts:", error);
       }

@@ -173,7 +173,6 @@ export default {
             }
           });
 
-          console.log(response.data);
           this.fetchImg(); // Reload images after upload
           this.news.images = [];
           this.news.linkVideo = '';
@@ -229,7 +228,6 @@ export default {
           }
         });
         this.fetchImg();
-        console.log(response.data);
         this.imgs[this.deleteIndex].filePath.splice(this.deleteIndex, 1);
         this.dialog = false; // Close dialog
         this.snackbar.message = "Delete successfully";

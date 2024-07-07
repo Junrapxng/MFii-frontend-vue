@@ -158,6 +158,7 @@ export default defineComponent({
       const api1Response = await api.get("/getsResearch/all/all/all/all");
 
       if (api1Response.status == 200) {
+        // Filter out the data to get only those with status "active"
         this.sessionId = api1Response.data.sessionId;
         const activeData = api1Response.data.result.filter(
           (item) => item.status === "active"
@@ -252,7 +253,6 @@ export default defineComponent({
         const response = await api.get("/getStatProduct");
         const productCounts = response.data.result;
         this.count = productCounts;
-        console.log("Product counts:", this.count);
       } catch (error) {
         console.error("Error fetching product counts:", error);
       }

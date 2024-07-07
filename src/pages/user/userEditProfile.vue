@@ -102,7 +102,6 @@ export default {
             Authorization: localStorage.getItem("token"),
           },
         })
-        console.log('Profile saved:', this.user)
         this.snackbar.message = "User Edited successfully";
         this.snackbar.color = "success"; // Set success color
         this.snackbar.show = true;

@@ -115,7 +115,6 @@ export default {
       }
       if (userStore.user) {
         this.user = userStore.user.resutl;
-        console.log(this.user);
       }
     } catch (error) {
       console.log(error)
