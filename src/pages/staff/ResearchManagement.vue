@@ -88,9 +88,10 @@
                     <v-checkbox v-model="currentResearch.ipType" label="Portfolio" value="portfolio"></v-checkbox>
                     <v-checkbox v-model="currentResearch.ipType" label="Prototype" value="prototype"></v-checkbox>
                   </v-container>
+
+                  <p class="ml-10 text-red-500">อัพโหลดปกรูปภาพขนาด 800 X 530 </p>
                   <v-file-input label="Upload Images" multiple @change="handleFileUpload" variant="solo-filled"
                     accept="image/*" prepend-icon="mdi-camera"></v-file-input>
-
 
                   <v-file-input label="Upload PDF" @change="handlePdfUpload" variant="solo-filled"
                     accept="application/pdf" prepend-icon="mdi-file-pdf-box"></v-file-input>
