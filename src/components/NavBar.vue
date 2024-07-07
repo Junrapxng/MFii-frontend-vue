@@ -182,20 +182,22 @@
                   </template>
                 </v-list>
               </v-menu>
-              <router-link v-if="!subItem.external" :to="subItem.route">
-                <v-list-item>
-                  <v-list-item-title :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }">
-                    {{ subItem.title }}
-                  </v-list-item-title>
-                </v-list-item>
-              </router-link>
-              <a v-else :href="subItem.route" target="_blank" rel="noopener noreferrer">
-                <v-list-item>
-                  <v-list-item-title :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }">
-                    {{ subItem.title }}
-                  </v-list-item-title>
-                </v-list-item>
-              </a>
+              <div v-else :to="subItem.route">
+                <router-link v-if="!subItem.external" :to="subItem.route">
+                  <v-list-item>
+                    <v-list-item-title :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }">
+                      {{ subItem.title }}
+                    </v-list-item-title>
+                  </v-list-item>
+                </router-link>
+                <a v-else :href="subItem.route" target="_blank" rel="noopener noreferrer">
+                  <v-list-item>
+                    <v-list-item-title :style="{ fontFamily: 'Noto Sans Thai, sans-serif' }">
+                      {{ subItem.title }}
+                    </v-list-item-title>
+                  </v-list-item>
+                </a>
+              </div>
             </template>
           </v-list>
         </v-menu>
