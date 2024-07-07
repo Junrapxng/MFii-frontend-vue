@@ -105,11 +105,11 @@ export default {
         this.research = response.data.result;
       } catch (error) {
         console.error("Error fetching data:", error);
-        if (!error.response) {
-          this.snackbar.message = "Error : " + error;
-        } else {
-          this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
-        }
+        if (error.response) {
+            this.snackbar.message  = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+          } else {
+            this.snackbar.message  = "Error  Logging in: " + error;
+          }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       } finally {
@@ -137,6 +137,8 @@ export default {
     },
   },
   computed: {
+
+
     filteredImages() {
       if (this.research) {
         return this.research.filePath.filter(pic => !pic.toLowerCase().endsWith('.pdf'));

@@ -343,11 +343,11 @@ export default {
             this.snackbar.color = "success";
           } catch (error) {
             console.error("Error Editing research:", error);
-            if (!error.response) {
-              this.snackbar.message = "Error Editing research: " + error;
-            } else {
-              this.snackbar.message = "Error Editing research: " + error.response.data.description.description + " Code: " + error.response.status;
-            }
+            if (error.response) {
+            this.snackbar.message  = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+          } else {
+            this.snackbar.message  = "Error  Logging in: " + error;
+          }
             this.snackbar.color = "error"; // Set error color
             this.snackbar.show = true;
           }
@@ -367,11 +367,11 @@ export default {
 
       } catch (error) {
         console.error("Error adding research:", error);
-        if (!error.response) {
-          this.snackbar.message = "Error adding research: " + error;
-        } else {
-          this.snackbar.message = "Error adding research: " + error.response.data.description.description + " Code: " + error.response.status;
-        }
+        if (error.response) {
+            this.snackbar.message  = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+          } else {
+            this.snackbar.message  = "Error  Logging in: " + error;
+          }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
@@ -407,11 +407,11 @@ export default {
 
       } catch (error) {
         console.log("Error deleting research: " + error);
-        if (!error.response) {
-          this.snackbar.message = "Error deleting research: " + error;
-        } else {
-          this.snackbar.message = "Error deleting research: " + error.response.data.description.description + " Code: " + error.response.status;
-        }
+        if (error.response) {
+            this.snackbar.message  = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+          } else {
+            this.snackbar.message  = "Error  Logging in: " + error;
+          }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
@@ -434,11 +434,11 @@ export default {
 
       } catch (error) {
         console.error("Error fetching research:", error);
-        if (!error.response) {
-          this.snackbar.message = "Error fetching research: " + error;
-        } else {
-          this.snackbar.message = "Error fetching research: " + error.response.data.description.description + " Code: " + error.response.status;
-        }
+        if (error.response) {
+            this.snackbar.message  = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+          } else {
+            this.snackbar.message  = "Error  Logging in: " + error;
+          }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }

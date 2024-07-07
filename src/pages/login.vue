@@ -95,10 +95,10 @@ export default {
         } catch (error) {
           console.error("Error Logging in:", error);
           this.responseMessage = error;
-          if (!error.response) {
-            this.responseMessage = "Error  Logging in: " + error;
-          } else {
+          if (error.response) {
             this.responseMessage = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+          } else {
+            this.responseMessage = "Error  Logging in: " + error;
           }
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;

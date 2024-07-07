@@ -230,15 +230,11 @@ export default defineComponent({
     } catch (error) {
       this.error = error;
       console.error("Error fetching data:", error);
-      if (!error.response) {
-        this.snackbar.message = "Error fetching data: " + error;
-      } else {
-        this.snackbar.message =
-          "Error fetching data: " +
-          error.response.data.description.description +
-          " Code: " +
-          error.response.status;
-      }
+      if (error.response) {
+            this.snackbar.message  = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+          } else {
+            this.snackbar.message  = "Error  Logging in: " + error;
+          }
       this.snackbar.color = "error"; // Set error color
       this.snackbar.show = true;
     } finally {
@@ -322,10 +318,10 @@ export default defineComponent({
             "There was an error fetching the research data:",
             error
           );
-          if (!error.response) {
-            this.snackbar.message = "Error: " + error;
+          if (error.response) {
+            this.snackbar.message  = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
           } else {
-            this.snackbar.message = "Error geting news" + error.response.description.description + "Code: " + error.response.status;
+            this.snackbar.message  = "Error  Logging in: " + error;
           }
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
@@ -343,11 +339,11 @@ export default defineComponent({
         this.images = response.data.result;
       } catch (error) {
         console.log(error);
-        if (!error.response) {
-          this.snackbar.message = "Error geting news" + error;
-        } else {
-          this.snackbar.message = "Error geting news" + error.response.description.description + "Code: " + error.response.status;
-        }
+        if (error.response) {
+            this.snackbar.message  = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+          } else {
+            this.snackbar.message  = "Error  Logging in: " + error;
+          }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
@@ -359,7 +355,6 @@ export default defineComponent({
         // Make a single API call to fetch all product counts
         const response = await api.get("/getStatProduct");
         const productCounts = response.data.result;
-
         // Store product counts in the component's data
         this.count = productCounts;
       } catch (error) {

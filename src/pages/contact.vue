@@ -130,14 +130,14 @@ export default {
               window.location.reload();
             }, 1000); // Reloads the page after 2 seconds
           } catch (error) {
-            if (!error.response) {
-              this.snackbar.message = "Error Sending request: " + error;
+            if (error.response) {
+              this.snackbar.message = "Error Sending request: " + error.response.data.description.description + " Code: " + error.response.status;
             }
             if (error.response.status == 500) {
               this.snackbar.message = "Error Sending request: " + error;
             }
             else {
-              this.snackbar.message = "Error Sending request: " + error.response.data.description.description + " Code: " + error.response.status;
+              this.snackbar.message = "Error Sending request: " + error;
             }
             this.snackbar.color = "error";
             this.snackbar.show = true;
@@ -162,10 +162,10 @@ export default {
           this.user = userStore.user.resutl;
         }
       } catch (error) {
-        if (!error.response) {
-          this.snackbar.message = "Error getting user : " + error;
-        } else {
+        if (error.response) {
           this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+        } else {
+          this.snackbar.message = "Error getting user : " + error;
         }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;

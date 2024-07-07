@@ -50,10 +50,10 @@ export default {
         research.value = res.data.result;
       } catch (error) {
         console.error("Error fetching research:", error);
-        if (!error.response) {
-          snackbar.message = "Error : " + error;
+       if (error.response) {
+          this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
         } else {
-          snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+          this.snackbar.message = "Error getting user : " + error;
         }
         snackbar.color = "error";
         snackbar.show = true;

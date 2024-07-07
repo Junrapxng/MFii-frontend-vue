@@ -77,10 +77,10 @@ export default {
         this.monthlyUsers = viewerCounts.monthlyAccess
         this.yearlyUsers = viewerCounts.yearlyAccess
       } catch (error) {
-        if (!error.response) {
-          this.snackbar.message = "Error Sending request: " + error;
+        if (error.response) {
+          this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
         } else {
-          this.snackbar.message = "Error Sending request: " + error.response.data.description.description + " Code: " + error.response.status;
+          this.snackbar.message = "Error getting user : " + error;
         }
         this.snackbar.color = "error";
         this.snackbar.show = true;

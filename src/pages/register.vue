@@ -137,10 +137,10 @@ export default {
         } catch (error) {
           console.error("Error registering:", error);
           this.responseMessage = error;
-          if (!error.response) {
-            this.responseMessage = "Error registering: " + error;
+          if (error.response) {
+            this.responseMessage = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
           } else {
-            this.responseMessage = "Error registering: " + error.response.data.description.description + " Code: " + error.response.status;
+            this.responseMessage = "Error  Logging in: " + error;
           }
         }
       } else {

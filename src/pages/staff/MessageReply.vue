@@ -159,11 +159,11 @@ export default {
         this.isDialogOpen = true;
       } catch (error) {
         console.error("Error getting detail message:", error);
-        if (!error.response) {
-          this.snackbar.message = "Error getting detail message: " + error;
-        } else {
-          this.snackbar.message = "Error getting detail message: " + error.response.data.description.description + " Code: " + error.response.status;
-        }
+        if (error.response) {
+            this.snackbar.message  = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+          } else {
+            this.snackbar.message  = "Error  Logging in: " + error;
+          }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
@@ -198,11 +198,11 @@ export default {
         this.replyText = '';
         // console.log(this.selectedMessage);
       } catch (error) {
-        if (!error.response) {
-          this.snackbar.message = "Error sending reply: " + error;
-        } else {
-          this.snackbar.message = "Error sending reply: " + error.response.data.description.description + " Code: " + error.response.status;
-        }
+        if (error.response) {
+            this.snackbar.message  = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+          } else {
+            this.snackbar.message  = "Error  Logging in: " + error;
+          }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
@@ -219,11 +219,11 @@ export default {
         // console.log(this.messages);
       } catch (error) {
         console.error("Error fetching message data:", error);
-        if (!error.response) {
-          this.snackbar.message = "Error message data: " + error;
-        } else {
-          this.snackbar.message = "Error message data: " + error.response.data.description.description + " Code: " + error.response.status;
-        }
+        if (error.response) {
+            this.snackbar.message  = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+          } else {
+            this.snackbar.message  = "Error  Logging in: " + error;
+          }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
       }
