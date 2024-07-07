@@ -2,7 +2,8 @@
   <v-app>
     <NavBar></NavBar>
     <main>
-      <v-container fluid class="mt-10">
+      <v-container class="font-noto-sans-thai text-gray-600 mt-10">
+          <h1 class="font-weight-medium text-3xl pb-4">ยกระดับงานวิจัยและนวัตกรรม Upscaling Innovation</h1>
         <NewsAndVideo></NewsAndVideo>
       </v-container>
     </main>
