@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid class="mb-10 my-0 ">
-    <v-container fluid class="header flex-wrap ">
+  <!-- <v-container fluid class="mb-10 my-0 "> -->
+    <v-container fluid class="header flex-wrap m-0">
       <!-- Logo, Title, and Buttons Section -->
       <v-row>
         <!-- Logo column -->
@@ -43,7 +43,7 @@
             </div>
 
             <!-- if user loggedin -->
-            <v-container v-if="!userStore.loading && !userStore.error" class="profileIcon flex align-center justify-end">
+            <v-container v-if="!userStore.loading && !userStore.error" class="profileIcon flex align-center justify-center">
               <h1 class="name">
                คุณ {{ userStore.user.resutl.firstName }} {{ userStore.user.resutl.lastName }}
               </h1>
@@ -238,7 +238,7 @@
         <v-spacer></v-spacer>
       </v-app-bar>
 
-      <v-navigation-drawer v-model="drawer" temporary class="d-md-none">
+      <v-navigation-drawer v-model="drawer" temporary class="d-md-none font-noto-sans-thai">
         <v-list>
           <template v-for="item in menuItems" :key="item.title">
             <v-list-group v-if="item.subItems && item.subItems.length" :value="item.title">
@@ -263,7 +263,7 @@
         </v-list>
       </v-navigation-drawer>
     </v-container>
-  </v-container>
+  <!-- </v-container> -->
 </template>
 <script>
 import { useUserStore } from "@/stores/user";
