@@ -232,7 +232,7 @@ export default {
         formData.append('description', this.currentResearch.description);
         formData.append('intelProp', this.currentResearch.intelProp);
         formData.append('industryType', this.currentResearch.industryType);
-        formData.append('highlight', this.currentResearch.highlight);
+        formData.append('highlight', this.currentResearch.highlight.split(','));
         formData.append('techReadiness', this.currentResearch.techReadiness);
         formData.append('coop', this.currentResearch.coop);
         formData.append('link', this.currentResearch.link);
@@ -261,7 +261,7 @@ export default {
               description: this.currentResearch.description,
               intelProp: this.currentResearch.intelProp,
               industryType: this.currentResearch.industryType,
-              highlight: this.currentResearch.highlight,
+              highlight: this.currentResearch.highlight.split(','),
               techReadiness: this.currentResearch.techReadiness,
               coop: this.currentResearch.coop,
               link: this.currentResearch.link,
