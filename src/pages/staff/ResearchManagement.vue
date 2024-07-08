@@ -341,7 +341,7 @@ export default {
             this.snackbar.message = "Edit research successfully";
             this.snackbar.color = "success";
           } catch (error) {
-            console.error("Error Editing research:", error);
+            console.log(error);
             if (!error.response) {
               this.snackbar.message = "Error Editing research: " + error;
             } else {
@@ -365,7 +365,7 @@ export default {
         this.fetchResearches();
 
       } catch (error) {
-        console.error("Error adding research:", error);
+        console.log(error);
         if (!error.response) {
           this.snackbar.message = "Error adding research: " + error;
         } else {

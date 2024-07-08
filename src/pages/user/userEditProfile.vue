@@ -17,8 +17,14 @@
                       <v-text-field v-model="user.firstName" label="First Name" prepend-inner-icon="mdi-account"
                         :rules="[rules.required, rules.notEmpty]" required></v-text-field>
                       <v-text-field v-model="user.lastName" label="Last Name" prepend-inner-icon="mdi-account"
-                        :rules="[rules.required,rules.notEmpty]" required></v-text-field>
+                        :rules="[rules.required, rules.notEmpty]" required></v-text-field>
                     </v-col>
+                    <div>
+                      <p class="text-warning">
+                        <v-icon color="warning">mdi-alert-circle-outline</v-icon>
+                        ใช้ได้แค่ gmail, hotmail, mfu.ac.th, lamduan.mfu.ac.th
+                      </p>
+                    </div>
                     <v-col cols="12">
                       <v-text-field v-model="user.email" label="Email" prepend-inner-icon="mdi-email"
                         :rules="[rules.required, rules.email, rules.notEmpty]" required></v-text-field>
@@ -58,7 +64,7 @@
 
 <script>
 import { useUserStore } from '@/stores/user';
-import {api} from "../../axios";
+import { api } from "../../axios";
 export default {
   name: 'user-profile-page',
   data() {
@@ -76,70 +82,67 @@ export default {
         picture: ''
       },
       rules: {
-      required: value => !!value || 'This field is required.',
-      email: value => {
-    const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    
-    if (!emailPattern.test(value)) {
-      return 'โปรดกรอกอีเมลให้ถูกต้อง';
-    }
+        required: value => !!value || 'This field is required.',
+        email: value => {
+          const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(gmail\.com|hotmail\.com|outlook\.com|lamduan\.mfu\.ac\.th|mfu\.ac\.th)$/i;
 
-    // Extract the domain part from the email
-    const domain = value.split('@')[1];
+          if (!emailPattern.test(value)) {
+            return 'โปรดกรอกอีเมลให้ถูกต้อง';
+          }
 
-    // Define the pattern to match the specific TLDs
-    const tldPattern = /\.(biz|info|name|pro|mobi|asia|travel|jobs|tel|xxx|us|uk|de|fr|jp|cn|in|ru|br|au|gov|edu|mil|int|arpa|app|blog|shop|club|store|online|design|tech|space|media|aero|coop|museum|com|net|org|ac.th)$/i;
-
-    // Check if the domain ends with one of the specified TLDs
-    if (!tldPattern.test(domain)) {
-      return 'โปรดกรอกอีเมลที่ใช้งานได้';
-    }
-
-    // Return true or undefined if the email is valid
-    return true;
-  },
-      phone: value => /^\d{10}$/.test(value) || 'Phone must be 10 digits.',
-      notEmpty: value => (value && value.trim().length > 0) || 'This field cannot be empty.'
-    }
+          // Return true or undefined if the email is valid
+          return true;
+        },
+        phone: value => /^\d{10}$/.test(value) || 'Phone must be 10 digits.',
+        notEmpty: value => (value && value.trim().length > 0) || 'This field cannot be empty.'
+      }
     }
   },
   methods: {
 
     async validateForm() {
-    const { valid } = await this.$refs.form.validate()
-    return valid
-  },
+      const { valid } = await this.$refs.form.validate()
+      return valid
+    },
 
 
     async saveProfile() {
-        if(await this.validateForm()){
-          try {
-        await api.patch('/user/updatePatch', this.user, {
-          headers: {
-            Authorization: localStorage.getItem("token"),
-          },
-        })
-        this.snackbar.message = "User Edited successfully";
-        this.snackbar.color = "success"; // Set success color
-        this.snackbar.show = true;
-        setTimeout(function () {
-          window.location.reload();
-        }, 1000);
-      } catch (error) {
-        console.log("Error", error);
-        if(!error.response){
-        this.snackbar.message = "Error saving profile: " + error;
-      } else {
-        this.snackbar.message = "Error saving profile: " + error.response.data.description.description + " Code: " + error.response.status;
-      }
-      this.snackbar.color = "error"; // Set error color
-      this.snackbar.show = true;
-      }
-        } else {
-          this.snackbar.message = "กรุณากรอกข้อมูลให้ครบถ้วน";
+      if (await this.validateForm()) {
+        try {
+          await api.patch('/user/updatePatch', this.user, {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          })
+          this.snackbar.message = "User Edited successfully";
+          this.snackbar.color = "success"; // Set success color
+          this.snackbar.show = true;
+          setTimeout(function () {
+            window.location.reload();
+          }, 1000);
+        } catch (error) {
+          console.log("Error", error);
+          if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error saving profile: " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
+          if (!error.response) {
+            this.snackbar.message = "Error saving profile: " + error;
+          } else {
+            this.snackbar.message = "Error saving profile: " + error.response.data.description.description + " Code: " + error.response.status;
+          }
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
         }
+      } else {
+        this.snackbar.message = "กรุณากรอกข้อมูลให้ครบถ้วน";
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+      }
     },
 
 

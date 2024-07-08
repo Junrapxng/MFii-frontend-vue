@@ -174,7 +174,15 @@ export default {
         this.replyText = ''; // Clear previous reply text
         this.isDialogOpen = true;
       } catch (error) {
-        console.error("Error getting detail message:", error);
+        console.log("Error getting detail message:", error);
+        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
         if (!error.response) {
           this.snackbar.message = "Error getting detail message: " + error;
         } else {
@@ -234,7 +242,15 @@ export default {
         this.messages = response.data.result
         // console.log(this.messages);
       } catch (error) {
-        console.error("Error fetching message data:", error);
+        console.log("Error fetching message data:", error);
+        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
         if (!error.response) {
           this.snackbar.message = "Error message data: " + error;
         } else {
@@ -274,7 +290,15 @@ export default {
           this.snackbar.show = true;
           this.fetchMessages();
         } catch (error) {
-          console.error("Error Deleting Message:", error);
+          console.log("Error Deleting Message:", error);
+          if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
           if (error.response) {
             this.snackbar.message = "Error Deleting Message: " + error.response.data.description.description + " Code: " + error.response.status;
           } else {

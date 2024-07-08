@@ -24,7 +24,11 @@
                   <v-radio label="นิติบุคคล" value="นิติบุคคล"></v-radio>
                 </v-radio-group>
               </div>
+
               <div>
+               <div>
+                <p class="mb-2 text-warning"> <v-icon color="warning">mdi-alert-circle-outline</v-icon> ถ้าไม่มีให้ใส่เครื่องหมาย - </p>
+               </div>
                 <v-text-field v-model="form.businessName" label="ระบุ ชื่อกิจการ" variant="outlined" outlined
                   color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ชื่อกิจการ']" required></v-text-field>
               </div>
@@ -40,9 +44,16 @@
                     :rules="[(v) => !!v || 'กรุณากรอก นามสกุล']" required></v-text-field>
                 </v-col>
 
+                <div>
+                  <p class="text-warning">
+                    <v-icon color="warning">mdi-alert-circle-outline</v-icon>
+                    ใช้ได้แค่ gmail, hotmail, mfu.ac.th, lamduan.mfu.ac.th
+                  </p>
+                </div>
                 <v-col cols="12" md="6">
+
                   <v-text-field v-model="form.email" label="อีเมล" prepend-inner-icon="mdi-email-outline"
-                    variant="outlined" outlined color="#BA984C" :rules ="[rules.required, rules.email]"></v-text-field>
+                    variant="outlined" outlined color="#BA984C" :rules="[rules.required, rules.email]"></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
@@ -100,29 +111,19 @@ export default {
       showPassword: false, // เพิ่มตรงนี้
       responseMessage: "",
       rules: {
-  required: value => !!value || 'กรุณากรอกอีเมล',
-  email: value => {
-    const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    
-    if (!emailPattern.test(value)) {
-      return 'โปรดกรอกอีเมลให้ถูกต้อง';
-    }
+        required: value => !!value || 'กรุณากรอกอีเมล',
+        email: value => {
+          const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(gmail\.com|hotmail\.com|outlook\.com|lamduan\.mfu\.ac\.th|mfu\.ac\.th)$/i;
 
-    // Extract the domain part from the email
-    const domain = value.split('@')[1];
+          if (!emailPattern.test(value)) {
+            return 'โปรดกรอกอีเมลให้ถูกต้อง';
+          }
 
-    // Define the pattern to match the specific TLDs
-    const tldPattern = /\.(biz|info|name|pro|mobi|asia|travel|jobs|tel|xxx|us|uk|de|fr|jp|cn|in|ru|br|au|gov|edu|mil|int|arpa|app|blog|shop|club|store|online|design|tech|space|media|aero|coop|museum|com|net|org|ac.th)$/i;
+          // Return true or undefined if the email is valid
+          return true;
+        }
 
-    // Check if the domain ends with one of the specified TLDs
-    if (!tldPattern.test(domain)) {
-      return 'โปรดกรอกอีเมลที่ใช้งานได้';
-    }
-
-    // Return true or undefined if the email is valid
-    return true;
-  }
-}
+      }
     };
   },
   methods: {

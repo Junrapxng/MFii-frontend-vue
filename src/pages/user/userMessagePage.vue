@@ -129,6 +129,14 @@ export default {
       }
     } catch (error) {
       console.log("Error getting user " + error);
+      if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error saving profile: " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
       if (!error.response) {
         this.snackbar.message = "Error getting user: " + error;
       } else {
@@ -154,6 +162,14 @@ export default {
         this.replyText = ""; // Clear previous reply text
         this.isDialogOpen = true;
       } catch (error) {
+        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
         if (!error.response) {
           this.snackbar.message = "Error getting detail message: " + error;
         } else {
@@ -197,6 +213,14 @@ export default {
         this.replyText = "";
       } catch (error) {
         console.error("Error sending reply:", error);
+        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
         if (!error.response) {
           this.snackbar.message = "Error sending message: " + error;
         } else {
@@ -218,6 +242,14 @@ export default {
         this.messages = response.data.result;
       } catch (error) {
         console.error("Error Getting messages:", error);
+        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
         if (!error.response) {
           this.snackbar.message = "Error Getting messages: " + error;
         } else {

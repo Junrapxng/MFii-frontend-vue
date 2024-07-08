@@ -254,7 +254,15 @@ export default {
         });
         this.users = response.data;
       } catch (error) {
-        console.error("Error getting user :", error);
+        console.log("Error getting user :", error);
+        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
         if (!error.response) {
             this.snackbar.message = "Error getting user :  " + error;
           } else {
@@ -287,7 +295,15 @@ export default {
         this.snackbar.show = true;
         this.fectchUser();
       } catch (error) {
-        console.error("Error deleting user:", error);
+        console.log("Error deleting user:", error);
+        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
         if (!error.response) {
             this.snackbar.message = "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง) : " + error;
           } else {
@@ -351,7 +367,15 @@ export default {
           this.snackbar.show = true;
           this.fectchUser();
         } catch (error) {
-          console.error("Error editing user:", error);
+          console.log("Error editing user:", error);
+          if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
           if (!error.response) {
             this.snackbar.message = "Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " + error;
           } else {
