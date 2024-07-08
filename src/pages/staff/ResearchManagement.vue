@@ -252,7 +252,7 @@ export default {
         filePath: null,
         img: null,
         link: '',
-        status: '',
+        status: 'active',
         keyword: null
       };
       this.markedForDeletion = [];
