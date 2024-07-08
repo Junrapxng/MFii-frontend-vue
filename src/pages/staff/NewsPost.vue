@@ -184,7 +184,15 @@ export default {
           alert('No images selected or all selected images are empty.');
         }
       } catch (error) {
-        console.error("Error adding News:", error);
+        console.log("Error adding News:", error);
+        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
         if (!error.response) {
           this.snackbar.message = "Error adding News: " + error;
         } else {
@@ -234,7 +242,15 @@ export default {
         this.snackbar.color = "success";
         this.snackbar.show = true;
       } catch (error) {
-        console.error('Error deleting image:', error);
+        console.log('Error deleting image:', error);
+        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
         if (!error.response) {
           this.snackbar.message = "Error deleting image: " + error;
         } else {

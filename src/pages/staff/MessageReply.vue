@@ -222,6 +222,14 @@ export default {
         this.replyText = '';
         // console.log(this.selectedMessage);
       } catch (error) {
+        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+          }
         if (!error.response) {
           this.snackbar.message = "Error sending reply: " + error;
         } else {
