@@ -78,9 +78,26 @@ export default {
       rules: {
       required: value => !!value || 'This field is required.',
       email: value => {
-        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-        return pattern.test(value) || 'Invalid e-mail.'
-      },
+    const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    
+    if (!emailPattern.test(value)) {
+      return 'โปรดกรอกอีเมลให้ถูกต้อง';
+    }
+
+    // Extract the domain part from the email
+    const domain = value.split('@')[1];
+
+    // Define the pattern to match the specific TLDs
+    const tldPattern = /\.(biz|info|name|pro|mobi|asia|travel|jobs|tel|xxx|us|uk|de|fr|jp|cn|in|ru|br|au|gov|edu|mil|int|arpa|app|blog|shop|club|store|online|design|tech|space|media|aero|coop|museum|com|net|org|ac.th)$/i;
+
+    // Check if the domain ends with one of the specified TLDs
+    if (!tldPattern.test(domain)) {
+      return 'โปรดกรอกอีเมลที่ใช้งานได้';
+    }
+
+    // Return true or undefined if the email is valid
+    return true;
+  },
       phone: value => /^\d{10}$/.test(value) || 'Phone must be 10 digits.',
       notEmpty: value => (value && value.trim().length > 0) || 'This field cannot be empty.'
     }

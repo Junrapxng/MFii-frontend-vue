@@ -68,7 +68,8 @@
       </v-container>
 
       <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
-        <div class="text-subtitle-1 pb-2"></div>
+        <div class="text-subtitle-1 pb-2" if="code === 410">โปรด <a style="text-decoration: underline;" href="/register">สมัครสมาชิก</a> หรือ <a style="text-decoration: underline;" href="/login"> เข้าสู่ระบบ </a></div>
+        <p > </p>  
         <p>{{ snackbar.message }}</p>
         <template v-slot:actions>
           <v-btn color="white" variant="text" @click="snackbar.show = false">
@@ -93,6 +94,7 @@ export default {
       snackbar: {
         show: false,
         message: "",
+        Errcode: "",
         color: "success", // Default color
       },
       user: [],
@@ -138,6 +140,9 @@ export default {
             }
             else {
               this.snackbar.message = "Error Sending request: " + error.response.data.description.description + " Code: " + error.response.status;
+              if(error.response.status == 401){
+                 this.snackbar.code = "401"
+              }
             }
             this.snackbar.color = "error";
             this.snackbar.show = true;
@@ -166,6 +171,7 @@ export default {
           this.snackbar.message = "Error getting user : " + error;
         } else {
           this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+
         }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
