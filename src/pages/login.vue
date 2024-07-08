@@ -43,6 +43,12 @@
                   <a class="hover:underline" style="color: #ba984c" href="/register">Forgot Password?</a>
                 </p>
               </div> -->
+              <div class="text-center justify-center pt-5 flex text-base">
+                <p>
+                  <a class="px-2 hover:underline" style="color: #ba984c" href="/register">สมัครสมาชิก</a>
+                </p>
+                <p class="text-gray-500">ท่านยังไม่สมัครสมาชิก</p>
+              </div>
             </v-form>
           </v-card-text>
         </v-card>

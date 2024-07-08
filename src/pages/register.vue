@@ -42,10 +42,7 @@
 
                 <v-col cols="12" md="6">
                   <v-text-field v-model="form.email" label="อีเมล" prepend-inner-icon="mdi-email-outline"
-                    variant="outlined" outlined color="#BA984C" :rules="[
-                      (v) => !!v || 'กรุณากรอก อีเมล',
-                      (v) => /.+@.+\..+/.test(v) || 'กรุณากรอกอีเมลให้ถูกต้อง',
-                    ]" required></v-text-field>
+                    variant="outlined" outlined color="#BA984C" :rules ="[rules.required, rules.email]"></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
@@ -102,6 +99,30 @@ export default {
       },
       showPassword: false, // เพิ่มตรงนี้
       responseMessage: "",
+      rules: {
+  required: value => !!value || 'กรุณากรอกอีเมล',
+  email: value => {
+    const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    
+    if (!emailPattern.test(value)) {
+      return 'โปรดกรอกอีเมลให้ถูกต้อง';
+    }
+
+    // Extract the domain part from the email
+    const domain = value.split('@')[1];
+
+    // Define the pattern to match the specific TLDs
+    const tldPattern = /\.(biz|info|name|pro|mobi|asia|travel|jobs|tel|xxx|us|uk|de|fr|jp|cn|in|ru|br|au|gov|edu|mil|int|arpa|app|blog|shop|club|store|online|design|tech|space|media|aero|coop|museum|com|net|org|ac.th)$/i;
+
+    // Check if the domain ends with one of the specified TLDs
+    if (!tldPattern.test(domain)) {
+      return 'โปรดกรอกอีเมลที่ใช้งานได้';
+    }
+
+    // Return true or undefined if the email is valid
+    return true;
+  }
+}
     };
   },
   methods: {
