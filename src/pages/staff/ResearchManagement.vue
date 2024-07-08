@@ -3,129 +3,72 @@
     <v-main>
       <staff-layout>
         <v-container class="font-noto-sans-thai">
-          <v-card class="rounded-3xl pa-2 mb-2 bg-gray-200">
-            <v-card-title class="d-flex align-center my-2">
-
-              <v-icon icon="mdi-clipboard-edit"></v-icon> &nbsp;
-              จัดการผลงานวิจัย
-
-              <v-spacer></v-spacer>
-
-              <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify"
-                variant="solo-filled" flat hide-details single-line clearable @click:clear="clearSearch" @input="searchResearch"></v-text-field>
-
-            </v-card-title>
-            <v-card-text>
-              <v-data-table :headers="headers" :items="researches.result" class="elevation-1">
-                <template v-slot:[`item.actions`]="{ item }">
-                  <v-container class="flex justify-center align-center">
-                    <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
-                    <v-icon small class="mr-2" :class="item.status == 'active' ? 'text-green' : 'text-red'"
-                      @click="toggleVisibility(item)">
-                      {{ item.status == 'active' ? 'mdi-eye' : 'mdi-eye-off' }}
-                    </v-icon>
-                    <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
-                  </v-container>
+    <v-card class="rounded-3xl pa-2 mb-2 bg-gray-200">
+      <v-card-title class="d-flex align-center my-2">
+        <v-icon icon="mdi-clipboard-edit"></v-icon> &nbsp; จัดการผลงานวิจัย
+        <v-spacer></v-spacer>
+        <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify" variant="solo-filled" flat hide-details single-line clearable @click:clear="clearSearch" @input="searchResearch"></v-text-field>
+      </v-card-title>
+      <v-card-text>
+        <v-data-table :headers="headers" :items="researches.result" class="elevation-1">
+          <template v-slot:[`item.actions`]="{ item }">
+            <v-container class="flex justify-center align-center">
+              <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
+              <v-icon small class="mr-2" :class="item.status == 'active' ? 'text-green' : 'text-red'" @click="toggleVisibility(item)">
+                {{ item.status == 'active' ? 'mdi-eye' : 'mdi-eye-off' }}
+              </v-icon>
+              <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+            </v-container>
+          </template>
+        </v-data-table>
+        <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
+      </v-card-text>
+    </v-card>
+    <v-dialog v-model="dialog" max-width="1050px">
+      <v-card class="rounded-xl">
+        <v-card-title>{{ isEdit ? 'แก้ไขผลงานวิจัย' : 'สร้างผลงานวิจัย' }}</v-card-title>
+        <v-card-text>
+          <v-form ref="form" v-model="valid">
+            <v-text-field label="ชื่อผลงาน" variant="solo-filled" v-model="currentResearch.nameOnMedia" :rules="[rules.required]" required></v-text-field>
+            <v-combobox v-model="currentResearch.inventor" label="ผู้ประดิษฐ์" variant="solo-filled" chips multiple :rules="[rules.required]" required></v-combobox>
+            <v-autocomplete variant="solo-filled" flat label="สังกัด" v-model="currentResearch.major" :items="['สำนักวิชาศิลปศาสตร์','สำนักวิชาวิทยาศาสตร์','สำนักวิชาการจัดการ','สำนักวิชาเทคโนโลยีสารสนเทศ','สำนักวิชาอุตสาหกรรมเกษตร','สำนักวิชานิติศาสตร์','สำนักวิชาวิทยาศาสตร์เครื่องสำอาง','สำนักวิชาวิทยาศาสตร์สุขภาพ','สำนักวิชาพยาบาลศาสตร์','สำนักวิชาเวชศาสตร์ชะลอวัยและฟื้นฟูสุขภาพ','สำนักวิชาแพทยศาสตร์','สำนักวิชาทันตแพทยศาสตร์','สำนักวิชานวัตกรรมสังคม','สำนักวิชาจีนวิทยา','สำนักวิชาการแพทย์บูรณาการ','อื่นๆ']" :rules="[rules.required]" required></v-autocomplete>
+            <v-autocomplete variant="solo-filled" flat label="ทรัพย์สินทางปัญญา" v-model="currentResearch.intelProp" :items="['สิทธิบัตรการประดิษฐ์','อนุสิทธิบัตร','สิทธิบัตรออกแบบ','ลิขสิทธิ์','ลิขสิทธิ์-โปรแกรมคอมพิวเตอร์','ผลงานวิจัย','ต้นแบบ','อื่น ๆ']" :rules="[rules.required]" required></v-autocomplete>
+            <v-autocomplete variant="solo-filled" flat label="ประเภทอุตสาหกรรม" v-model="currentResearch.industryType" :items="['เครื่องสำอาง','การเกษตรและเทคโนโลยีชีวภาพ','การแปรรูปอาหาร','เชื้อเพลิงชีวภาพและเคมีชีวภาพ','การแพทย์ครบวงจร','สร้างสรรค์','อิเล็กทรอนิกส์อัจฉริยะ','หุ่นยนต์','ดิจิตอล','การท่องเที่ยวกลุ่มรายได้ดีและการท่องเที่ยวเชิงสุขภาพ','การบินและระบบขนส่ง','ยานยนต์สมัยใหม่']" :rules="[rules.required]" required></v-autocomplete>
+            <v-autocomplete variant="solo-filled" flat label="ความพร้อมของเทคโนโลยี" v-model="currentResearch.techReadiness" :items="['ระดับการทดลอง','ระดับต้นแบบ','ระดับถ่ายทอด']" :rules="[rules.required]" required></v-autocomplete>
+            <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.description" :rules="[rules.required]" required></v-textarea>
+            <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.highlight"></v-textarea>
+            <v-combobox v-model="currentResearch.coop" label="ความร่วมมือที่เสาะหา" chips multiple variant="solo-filled" :rules="[rules.required]" required></v-combobox>
+            <v-text-field label="ปีงบประมาณ" variant="solo-filled" v-model="currentResearch.budgetYear" :rules="[rules.required]" required></v-text-field>
+            <v-combobox label="Keyword" variant="solo-filled" chips multiple v-model="currentResearch.keyword"></v-combobox>
+            <v-container class="flex">
+              <v-checkbox v-model="currentResearch.ipType" label="Portfolio" value="portfolio" :rules="[rules.required]" required></v-checkbox>
+              <v-checkbox v-model="currentResearch.ipType" label="Prototype" value="prototype" :rules="[rules.required]" required></v-checkbox>
+            </v-container>
+            <p class="ml-10 text-red-500">อัพโหลดปกรูปภาพขนาด 800 X 530 </p>
+            <v-file-input label="Upload Images" multiple @change="handleFileUpload" variant="solo-filled" accept="image/*" prepend-icon="mdi-camera"></v-file-input>
+            <v-file-input label="Upload PDF" @change="handlePdfUpload" variant="solo-filled" accept="application/pdf" prepend-icon="mdi-file-pdf-box"></v-file-input>
+            <v-container class="flex">
+              <v-card v-for="(img, index) in currentResearch.filePath" :key="index" class="mx-2" style="position: relative;">
+                <template v-if="typeof img === 'string' && img.toLowerCase().endsWith('.pdf')">
+                  <v-icon size="100" color="red">mdi-file-pdf-box</v-icon>
+                  <v-card-text class="text-center">{{ img.split('/').pop() }}</v-card-text>
                 </template>
-              </v-data-table>
-              <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
-            </v-card-text>
-          </v-card>
-          <v-dialog v-model="dialog" max-width="1050px">
-            <v-card class="rounded-xl">
-              <v-card-title>{{ isEdit ? 'แก้ไขผลงานวิจัย' : 'สร้างผลงานวิจัย' }}</v-card-title>
-              <v-card-text>
-                <v-form>
-                  <v-text-field label="ชื่อผลงาน" variant="solo-filled"
-                    v-model="currentResearch.nameOnMedia"></v-text-field>
-                  <v-combobox v-model="currentResearch.inventor" label="ผู้ประดิษฐ์" variant="solo-filled" chips
-                    multiple></v-combobox>
-                  <v-text-field label="สังกัด" variant="solo-filled" v-model="currentResearch.major"></v-text-field>
-
-                  <v-autocomplete variant="solo-filled" flat label="ทรัพย์สินทางปัญญา"
-                    v-model="currentResearch.intelProp" :items="[
-                      'สิทธิบัตรการประดิษฐ์',
-                      'อนุสิทธิบัตร',
-                      'สิทธิบัตรออกแบบ',
-                      'ลิขสิทธิ์',
-                      'ลิขสิทธิ์-โปรแกรมคอมพิวเตอร์',
-                      'ผลงานวิจัย',
-                      'ต้นแบบ',
-                      'อื่น ๆ',
-                    ]"></v-autocomplete>
-                  <v-autocomplete variant="solo-filled" flat label="ประเภทอุตสาหกรรม"
-                    v-model="currentResearch.industryType" :items="[
-                      'เครื่องสำอาง',
-                      'การเกษตรและเทคโนโลยีชีวภาพ',
-                      'การแปรรูปอาหาร',
-                      'เชื้อเพลิงชีวภาพและเคมีชีวภาพ',
-                      'การแพทย์ครบวงจร',
-                      'สร้างสรรค์',
-                      'อิเล็กทรอนิกส์อัจฉริยะ',
-                      'หุ่นยนต์',
-                      'ดิจิตอล',
-                      'การท่องเที่ยวกลุ่มรายได้ดีและการท่องเที่ยวเชิงสุขภาพ',
-                      'การบินและระบบขนส่ง',
-                      'ยานยนต์สมัยใหม่',
-                    ]"></v-autocomplete>
-                  <v-autocomplete variant="solo-filled" flat label="ความพร้อมของเทคโนโลยี"
-                    v-model="currentResearch.techReadiness" :items="[
-                      'ระดับการทดลอง',
-                      'ระดับต้นแบบ',
-                      'ระดับถ่ายทอด',
-                    ]"></v-autocomplete>
-
-                  <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.description"></v-textarea>
-                  <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.highlight"></v-textarea>
-                  <v-combobox v-model="currentResearch.coop" label="ความร่วมมือที่เสาะหา" chips multiple
-                    variant="solo-filled"></v-combobox>
-                  <v-text-field label="ปีงบประมาณ" variant="solo-filled"
-                    v-model="currentResearch.budgetYear"></v-text-field>
-                  <v-combobox label="Keyword" variant="solo-filled" chips multiple
-                    v-model="currentResearch.keyword"></v-combobox>
-
-                  <v-container class="flex">
-                    <v-checkbox v-model="currentResearch.ipType" label="Portfolio" value="portfolio"></v-checkbox>
-                    <v-checkbox v-model="currentResearch.ipType" label="Prototype" value="prototype"></v-checkbox>
-                  </v-container>
-
-                  <p class="ml-10 text-red-500">อัพโหลดปกรูปภาพขนาด 800 X 530 </p>
-                  <v-file-input label="Upload Images" multiple @change="handleFileUpload" variant="solo-filled"
-                    accept="image/*" prepend-icon="mdi-camera"></v-file-input>
-
-                  <v-file-input label="Upload PDF" @change="handlePdfUpload" variant="solo-filled"
-                    accept="application/pdf" prepend-icon="mdi-file-pdf-box"></v-file-input>
-
-                  <v-container class="flex">
-                    <v-card v-for="(img, index) in currentResearch.filePath" :key="index" class="mx-2"
-                      style="position: relative;">
-                      <template v-if="typeof img === 'string' && img.toLowerCase().endsWith('.pdf')">
-                        <v-icon size="100" color="red">mdi-file-pdf-box</v-icon>
-                        <v-card-text class="text-center">{{ img.split('/').pop() }}</v-card-text>
-                      </template>
-                      <template v-else>
-                        <!-- Handle other file types or cases where img is not a string -->
-                        <v-img :src="`${baseUrl}/${img}`" v-model="currentResearch.filePath" height="250px"
-                          width="300px" cover></v-img>
-                      </template>
-                      <v-btn v-if="isEdit" @click="markForDeletion(index)"
-                        :class="{ 'marked-for-deletion': markedForDeletion.includes(index) }"
-                        :icon="markedForDeletion.includes(index) ? 'mdi-check' : 'mdi-delete'"
-                        style="position: absolute; top: 5px; right: 5px;">
-                      </v-btn>
-                    </v-card>
-                  </v-container>
-                  <!-- <input type="file" @change="handleFileUpload"> -->
-                </v-form>
-              </v-card-text>
-              <v-card-actions>
-                <v-btn color="red darken-1" variant="tonal" class="" text @click="dialog = false">ยกเลิก</v-btn>
-                <v-btn color="green darken-1" variant="tonal" text @click="saveResearch">{{ isEdit ? 'บันทึก' : 'สร้าง'
-                  }}</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-container>
+                <template v-else>
+                  <v-img :src="`${baseUrl}/${img}`" v-model="currentResearch.filePath" height="250px" width="300px" cover></v-img>
+                </template>
+                <v-btn v-if="isEdit" @click="markForDeletion(index)" :class="{ 'marked-for-deletion': markedForDeletion.includes(index) }" :icon="markedForDeletion.includes(index) ? 'mdi-check' : 'mdi-delete'" style="position: absolute; top: 5px; right: 5px;">
+                </v-btn>
+              </v-card>
+            </v-container>
+          </v-form>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn color="red darken-1" variant="tonal" class="" text @click="dialog = false">ยกเลิก</v-btn>
+          <v-btn color="green darken-1" variant="tonal" text @click="validateForm">{{ isEdit ? 'บันทึก' : 'สร้าง' }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
       </staff-layout>
 
       <!-- Dialog delete research -->
@@ -204,6 +147,9 @@ export default {
         status: '',
         keyword: null
       },
+      rules: {
+        required: value => !!value || 'กรุณากรอกข้อมูลในช่อง'
+      }
     }
   },
 
@@ -265,8 +211,18 @@ export default {
       this.currentResearch.pdfPath = event.target.files[0];
     },
 
+    validateForm() {
+      this.$refs.form.validate();
+      if (this.valid) {
+        this.saveResearch();
+      }
+    },
+
     //  Add and Edit Research ===============================================================================
     async saveResearch() {
+      if (!this.valid) {
+        return;
+      }
       try {
         const formData = new FormData();
         formData.append('budgetYear', this.currentResearch.budgetYear);
@@ -276,7 +232,7 @@ export default {
         formData.append('description', this.currentResearch.description);
         formData.append('intelProp', this.currentResearch.intelProp);
         formData.append('industryType', this.currentResearch.industryType);
-        formData.append('highlight', this.currentResearch.highlight);
+        formData.append('highlight', this.currentResearch.highlight.split(','));
         formData.append('techReadiness', this.currentResearch.techReadiness);
         formData.append('coop', this.currentResearch.coop);
         formData.append('link', this.currentResearch.link);
@@ -305,7 +261,7 @@ export default {
               description: this.currentResearch.description,
               intelProp: this.currentResearch.intelProp,
               industryType: this.currentResearch.industryType,
-              highlight: this.currentResearch.highlight,
+              highlight: this.currentResearch.highlight.split(','),
               techReadiness: this.currentResearch.techReadiness,
               coop: this.currentResearch.coop,
               link: this.currentResearch.link,
@@ -358,7 +314,7 @@ export default {
               'Content-Type': 'multipart/form-data'
             },
           });
-          this.snackbar.message = "Added research successfully";
+          this.snackbar.message = "เพิ่มงานวิจัยเรียบร้อยแล้ว";
           this.snackbar.color = "success";
         }
         this.snackbar.show = true;
@@ -369,7 +325,8 @@ export default {
         if (!error.response) {
           this.snackbar.message = "Error adding research: " + error;
         } else {
-          this.snackbar.message = "Error adding research: " + error.response.data.description.description + " Code: " + error.response.status;
+          this.snackbar.message = "กรุณากรอกข้อมูลในช่องที่ต้องกรอกทั้งหมด";
+          // this.snackbar.message = "Error adding research: " + error.response.data.description.description + " Code: " + error.response.status;
         }
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
