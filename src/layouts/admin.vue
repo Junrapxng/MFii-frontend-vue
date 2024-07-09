@@ -7,33 +7,36 @@
           <v-img src="../assets/mfu_logo.png" width="240px"></v-img>
         </a>
       </div>
+      <div class="flex justify-center">
+        <h1 style="font-size: 3rem; font-weight: bold;">Admin</h1>
+      </div>
       <v-list dense>
         <v-list-item link to="/admin">
           <v-list-item-icon>
             <v-icon class="mr-2">mdi-view-dashboard</v-icon>
           </v-list-item-icon>
-          <v-list-item-title class="inline">Dashboard</v-list-item-title>
+          <v-list-item-title class="inline">หน้าหลัก</v-list-item-title>
         </v-list-item>
 
         <v-list-item link to="/admin/userManage">
           <v-list-item-icon>
             <v-icon class="mr-2">mdi-account-group</v-icon>
           </v-list-item-icon>
-          <v-list-item-title class="inline">User Management</v-list-item-title>
+          <v-list-item-title class="inline">จัดการผู้ใช้งาน</v-list-item-title>
         </v-list-item>
 
         <v-list-item link to="/admin/documents">
           <v-list-item-icon>
-            <v-icon class="mr-2">mdi-file-document-outline</v-icon>
+            <v-icon class="mr-2">mdi-arrow-down-bold-circle</v-icon>
           </v-list-item-icon>
-          <v-list-item-title class="inline">Documents</v-list-item-title>
+          <v-list-item-title class="inline">ดาวน์โหลดรายงานผู้เข้าชม</v-list-item-title>
         </v-list-item>
 
         <v-list-item link to="/staff">
           <v-list-item-icon>
-            <v-icon class="mr-2">mdi-file-document-outline</v-icon>
+            <v-icon class="mr-2">mdi-hand-pointing-right</v-icon>
           </v-list-item-icon>
-          <v-list-item-title class="inline">Staff Page</v-list-item-title>
+          <v-list-item-title class="inline">หน้าหลัก Staff</v-list-item-title>
         </v-list-item>
 
         <v-list-item to="/">
@@ -135,5 +138,8 @@ export default {
 </script>
 
 <style scoped>
+.v-list-item{
+  color: black  ;
+}
 /* Add custom styles for your layout */
 </style>

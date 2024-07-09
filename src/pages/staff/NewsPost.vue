@@ -5,18 +5,53 @@
         <v-container>
           <v-card class="rounded-xl pa-4">
             <v-card-title>สร้างโพสข่าวสาร</v-card-title>
-            <p class="ml-14 text-red-500">อัพโหลดรูปภาพขนาด 2048 X 799 </p>
-            <v-card-text>
-              <v-form @submit.prevent="addNews">
-                <v-text-field v-model="news.linkVideo" label="URL video" clearable prepend-icon="mdi-youtube"
-                  variant="solo-filled"></v-text-field>
-                <v-text-field v-model="news.linkImage" label="URL Images" clearable prepend-icon="mdi-web"
-                  variant="solo-filled"></v-text-field>
-                <v-file-input v-model="news.images" label="Upload Images" chips show-size variant="solo-filled"
-                  accept="image/*" :rules="[fileSizeRule]"></v-file-input>
-                <v-btn type="submit" class="bg-slate-800 text-white">บันทึก</v-btn>
-              </v-form>
-            </v-card-text>
+            <div class="d-inline-block">
+              <v-chip class="ma-2 pa-4 text-h10" elevation="2"
+                style="border-radius: 50px;">
+                อัพโหลดรูปภาพข่าวสาร
+              </v-chip>
+            </div>
+            <v-container class="flex align-center ">
+              <v-btn color="blue" @click="openDialog('images')" prepend-icon="mdi-file-image">อัพโหลดไฟล์รูปภาพ</v-btn>
+              <h1 class="mx-4">หรือ</h1>
+              <v-btn color="light-blue lighten-5" class="black--text" @click="openDialog('linkImage')"
+                prepend-icon="mdi-web">
+                อัพโหลดลิงค์รูปภาพ
+              </v-btn>
+            </v-container>
+            <div class="d-inline-block">
+              <v-chip class="ma-2 pa-4 text-h10" elevation="2"
+                style="border-radius: 50px;">
+                อัพโหลดลิงค์(Youtube) Success case
+              </v-chip>
+            </div>
+            
+            <v-container class="flex">
+              <v-btn color="red" class="white--text" @click="openDialog('linkVideo')" prepend-icon="mdi-youtube">
+                อัพโหลดลิงค์ youtube
+              </v-btn>
+            </v-container>
+            <v-dialog v-model="dialogNewpost" max-width="500px">
+              <v-card>
+                <v-card-text>
+                  <v-form @submit.prevent="addNews">
+                    <p class="ml-14 text-red-500 mb-2" v-if="activeField === 'linkImage' || activeField === 'images'">
+                      อัพโหลดรูปภาพขนาด 2048 X 799 </p>
+                    <v-text-field v-if="activeField === 'linkVideo'" v-model="news.linkVideo" label="URL video"
+                      clearable prepend-icon="mdi-youtube" variant="solo-filled"></v-text-field>
+                    <v-text-field v-if="activeField === 'linkImage'" v-model="news.linkImage" label="URL Images"
+                      clearable prepend-icon="mdi-web" variant="solo-filled"></v-text-field>
+                    <v-file-input v-if="activeField === 'images'" v-model="news.images" label="Upload Images" chips
+                      show-size variant="solo-filled" accept="image/*" :rules="[fileSizeRule]"></v-file-input>
+                  </v-form>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="primary" @click="dialogNewpost = false">Cancel</v-btn>
+                  <v-btn color="primary" type="submit" @click="addNews">บันทึก</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </v-card>
         </v-container>
 
@@ -126,6 +161,12 @@ export default {
       imgs: [], // Array to hold the fetched images
       currentSlide: 0, // For v-window v-model
       dialog: false, // Controls the visibility of the confirmation dialog
+      dialogNewpost: false,
+      activeField: '',
+      openDialog(field) {
+        this.activeField = field;
+        this.dialogNewpost = true;
+      },
       deleteIndex: -1, // Index of image to delete
       deleteImgId: '' // ID of image to delete
     };
@@ -180,19 +221,20 @@ export default {
           this.snackbar.message = "News and images uploaded successfully!";
           this.snackbar.color = "success";
           this.snackbar.show = true;
+          this.dialogNewpost = false;
         } else {
           alert('No images selected or all selected images are empty.');
         }
       } catch (error) {
         console.log("Error adding News:", error);
         if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-            this.snackbar.message = "Error " + error;
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
-            setTimeout(function () {
+          this.snackbar.message = "Error " + error;
+          this.snackbar.color = "error"; // Set error color
+          this.snackbar.show = true;
+          setTimeout(function () {
             window.location.reload()
           }, 1000);
-          }
+        }
         if (!error.response) {
           this.snackbar.message = "Error adding News: " + error;
         } else {
@@ -244,13 +286,13 @@ export default {
       } catch (error) {
         console.log('Error deleting image:', error);
         if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-            this.snackbar.message = "Error " + error;
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
-            setTimeout(function () {
+          this.snackbar.message = "Error " + error;
+          this.snackbar.color = "error"; // Set error color
+          this.snackbar.show = true;
+          setTimeout(function () {
             window.location.reload()
           }, 1000);
-          }
+        }
         if (!error.response) {
           this.snackbar.message = "Error deleting image: " + error;
         } else {

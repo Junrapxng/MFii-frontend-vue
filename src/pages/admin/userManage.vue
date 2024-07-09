@@ -470,7 +470,8 @@ export default {
           console.error("Error Adding user:", error);
           if (!error.response) {
             this.snackbar.message = "Error Adding user(ข้อมูลยังไม่ถูกเพิ่ม โปรดลองอีกครั้ง): " + error;
-          } else {
+          }
+          else {
             this.snackbar.message = "Error Adding user(ข้อมูลยังไม่ถูกเพิ่ม โปรดลองอีกครั้ง): " + error.response.data.description.description + " Code: " + error.response.status;
           }
           this.snackbar.color = "error"; // Set error color

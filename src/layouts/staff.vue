@@ -2,11 +2,14 @@
   <v-app>
     <!-- sidebar -->
     <v-navigation-drawer app style="position: fixed; height: 100vh; overflow-y: auto;"
-      class="bg-red-400 rounded-e-circle">
+      class="bg-slate-100">
       <div class="d-flex justify-center mt-4 mb-4">
         <a href="/staff">
           <v-img src="../assets/mfu_logo.png" width="240px"></v-img>
         </a>
+      </div>
+      <div class="flex justify-center">
+        <h1 style="font-size: 3rem; font-weight: bold;">Staff</h1>
       </div>
       <v-list dense class="text-white">
         <v-list-item link to="/staff">
@@ -18,7 +21,7 @@
 
         <v-list-item link to="/staff/newPost">
           <v-list-item-icon>
-            <v-icon class="mr-2">mdi-account-group</v-icon>
+            <v-icon class="mr-2">mdi-plus-box</v-icon>
           </v-list-item-icon>
           <v-list-item-title class="inline">สร้างโพสข่าวสาร</v-list-item-title>
         </v-list-item>
@@ -39,9 +42,9 @@
 
           <v-list-item v-if="user.role === 'admin'" to="/admin">
             <v-list-item-icon>
-              <v-icon class="mr-2">mdi-home-floor-a</v-icon>
+              <v-icon class="mr-2">mdi-hand-pointing-right</v-icon>
             </v-list-item-icon>
-            <v-list-item-title class="inline">หน้าหลัก ADMIN</v-list-item-title>
+            <v-list-item-title class="inline">หน้าหลัก Admin</v-list-item-title>
           </v-list-item>
 
 
@@ -132,8 +135,11 @@ export default {
 </script>
 
 <style scoped>
-.v-list-item:hover,
+/* .v-list-item:hover,
 .v-list-item:focus {
+  color: black;
+} */
+.v-list-item{
   color: black;
 }
 </style>
