@@ -20,19 +20,19 @@
                 <v-icon class="pr-2">mdi-plus</v-icon> New User
               </v-btn>
             </template>
+            <v-form ref="form" @submit.prevent="this.formTitle === 'New User' ? addsave() : editsave()" >
             <v-card class="rounded-xl pa-4">
               <v-card-title>
                 <span class="text-h5">{{ formTitle }}</span>
               </v-card-title>
-
-              <v-card-text>
+                <v-card-text>
                 <v-container>
                   <v-row>
                     <v-col cols="12" md="12" sm="12">
                       <v-text-field variant="solo-filled" flat v-model="editedItem.firstName"
-                        label="First Name"></v-text-field>
+                        label="First Name" :rules="[(v) => !!v || 'กรุณากรอก ชื่อจริง']" required></v-text-field>
                       <v-text-field variant="solo-filled" flat v-model="editedItem.lastName"
-                        label="Last Name"></v-text-field>
+                        label="Last Name" :rules="[(v) => !!v || 'กรุณากรอก นามสกุล']" required></v-text-field>
                       <v-text-field variant="solo-filled" flat v-model="editedItem.phoneNumber" label="Phone" :rules="[
                         (v) => !!v || 'กรุณากรอก เบอร์โทรศัพท์',
                         (v) =>
@@ -49,8 +49,6 @@
                 </div>
                     <v-col cols="12" md="12" sm="12">
                       <v-text-field variant="solo-filled" flat v-model="editedItem.email" label="Email" :rules="[rules.required, rules.email]"></v-text-field>
-
-
                       <v-text-field v-if="this.editedIndex === -1" v-model="editedItem.password" label="Password"
                         variant="solo-filled" flat :rules="[
                           (v) => !!v || 'กรุณากรอก รหัสผ่าน',
@@ -61,7 +59,7 @@
                     </v-col>
                     <v-col cols="12" md="6" sm="6">
                       <v-autocomplete variant="solo-filled" flat label="Role" v-model="editedItem.role"
-                        :items="['user', 'staff']"></v-autocomplete>
+                        :items="['user', 'staff']" :rules="[(v) => !!v || 'กรุณาเลือก role']" required></v-autocomplete>
                     </v-col>
                     <v-col cols="12" md="6" sm="6">
                       <v-autocomplete variant="solo-filled" flat label="Status" v-model="editedItem.status"
@@ -70,18 +68,20 @@
                   </v-row>
                 </v-container>
               </v-card-text>
-
+           
+          
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300" @click="close">
                   Cancel
                 </v-btn>
-                <v-btn color="green-darken-1" variant="outlined" class="hover:bg-green-200"
-                  @click="this.formTitle === 'New User' ? addsave() : editsave()">
+                <v-btn color="green-darken-1" variant="outlined" class="hover:bg-green-200" type="submit"
+                  >
                   Save
                 </v-btn>
               </v-card-actions>
             </v-card>
+          </v-form>
           </v-dialog>
 
           <!-- Delete User -->
@@ -389,11 +389,9 @@ export default {
     },
 
     async editsave() {
-      if (!this.editedItem.email || !/.+@.+\..+/.test(this.editedItem.email)) {
-        alert('Please enter a valid email.');
-        return; // Stop execution if email is not valid
-      }
-      if (this.editedIndex > -1) {
+      const { valid } = await this.$refs.form.validate();
+        if(valid){
+          if (this.editedIndex > -1) {
         Object.assign(this.users.resutl[this.editedIndex], this.editedItem);
         try {
           await api.patch(
@@ -436,20 +434,19 @@ export default {
         this.users.resutl.push(this.editedItem);
       }
       this.close();
+        }
+        else{
+          this.snackbar.message = "กรอกข้อมูลให้ครบถ้วนและถูกต้อง"
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+        }
     },
 
     // Add user =========================================================================================================================
     async addsave() {
-      if (!this.editedItem.email || !/.+@.+\..+/.test(this.editedItem.email)) {
-        alert('Please enter a valid email.');
-        return; // Stop execution if email is not valid
-      }
-
-      if (!this.editedItem.firstName || !this.editedItem.lastName || !this.editedItem.email || !this.editedItem.phoneNumber || !this.editedItem.password || !this.editedItem.status) {
-        alert('Please fill in all required fields.');
-        return;
-      }
-      if (!this.editedIndex > -1) {
+      const { valid } = await this.$refs.form.validate();
+      if(valid){
+        if (!this.editedIndex > -1) {
         //  Object.assign(this.users.resutl[this.editedIndex], this.editedItem);
         // console.log(this.editedItem._id);
         try {
@@ -483,6 +480,13 @@ export default {
         this.users.resutl.push(this.editedItem);
       }
       this.close();
+      }
+      else{
+        this.snackbar.message = "กรอกข้อมูลให้ครบถ้วนและถูกต้อง"
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
+      }
+   
     }
 
   },
