@@ -237,154 +237,154 @@ export default {
       };
       this.markedForDeletion = [];
     },
-    handleFileUpload(event) {
-      this.currentResearch.img = Array.from(event.target.files);
-    },
-
-    handlePdfUpload(event) {
-      this.currentResearch.pdfPath = event.target.files[0];
-    },
-
     validateForm() {
-      this.$refs.form.validate();
-      if (this.valid) {
-        this.saveResearch();
-      }
-    },
+    this.$refs.form.validate();
+    if (this.valid) {
+      this.saveResearch();
+    }
+  },
 
-    //  Add and Edit Research ===============================================================================
-    async saveResearch() {
-      if (!this.valid) {
-        return;
-      }
-      try {
-        const formData = new FormData();
-        formData.append('budgetYear', this.currentResearch.budgetYear);
-        formData.append('nameOnMedia', this.currentResearch.nameOnMedia);
-        formData.append('inventor', this.currentResearch.inventor);
-        formData.append('major', this.currentResearch.major);
-        formData.append('description', this.currentResearch.description);
-        formData.append('intelProp', this.currentResearch.intelProp);
-        formData.append('industryType', this.currentResearch.industryType);
-        formData.append('highlight', this.currentResearch.highlight.split(','));
-        formData.append('techReadiness', this.currentResearch.techReadiness);
-        formData.append('coop', this.currentResearch.coop);
-        formData.append('link', this.currentResearch.link);
-        formData.append('status', this.currentResearch.status);
-        formData.append('ipType', this.currentResearch.ipType);
-        formData.append('keyword', this.currentResearch.keyword);
+  handleFileUpload(event) {
+    this.currentResearch.img = Array.from(event.target.files);
+  },
 
-        if (this.currentResearch.img) {
-          this.currentResearch.img.forEach((file, index) => {
-            formData.append(`file${index + 1}`, file);
+  handlePdfUpload(event) {
+    this.currentResearch.pdfPath = event.target.files[0];
+  },
+
+  async saveResearch() {
+    if (!this.valid) {
+      return;
+    }
+    try {
+      const formData = new FormData();
+      formData.append('budgetYear', this.currentResearch.budgetYear);
+      formData.append('nameOnMedia', this.currentResearch.nameOnMedia);
+      formData.append('inventor', this.currentResearch.inventor);
+      formData.append('major', this.currentResearch.major);
+      formData.append('description', this.currentResearch.description);
+      formData.append('intelProp', this.currentResearch.intelProp);
+      formData.append('industryType', this.currentResearch.industryType);
+      formData.append('highlight', this.currentResearch.highlight);
+      formData.append('techReadiness', this.currentResearch.techReadiness);
+      formData.append('coop', this.currentResearch.coop);
+      formData.append('link', this.currentResearch.link);
+      formData.append('status', this.currentResearch.status);
+      formData.append('ipType', this.currentResearch.ipType);
+      formData.append('keyword', this.currentResearch.keyword);
+
+      if (this.currentResearch.img) {
+        this.currentResearch.img.forEach((file, index) => {
+          formData.append(`file${index + 1}`, file);
+        });
+      }
+
+      if (this.currentResearch.pdfPath) {
+        formData.append('pdf', this.currentResearch.pdfPath);
+      }
+
+      // Edit
+      if (this.isEdit) {
+        try {
+          await api.patch(`/staff/updateResearchData/${this.currentResearch._id}`, {
+            budgetYear: this.currentResearch.budgetYear,
+            nameOnMedia: this.currentResearch.nameOnMedia,
+            inventor: this.currentResearch.inventor,
+            major: this.currentResearch.major,
+            description: this.currentResearch.description,
+            intelProp: this.currentResearch.intelProp,
+            industryType: this.currentResearch.industryType,
+            highlight: this.currentResearch.highlight,
+            techReadiness: this.currentResearch.techReadiness,
+            coop: this.currentResearch.coop,
+            link: this.currentResearch.link,
+            status: this.currentResearch.status,
+            ipType: this.currentResearch.ipType,
+            keyword: this.currentResearch.keyword,
+          }, {
+            headers: {
+              Authorization: localStorage.getItem('token'),
+            },
           });
-        }
 
-        if (this.currentResearch.pdfPath) {
-          formData.append('pdf', this.currentResearch.pdfPath);
-        }
-
-        // Edit
-        if (this.isEdit) {
-          try {
-            await api.patch(`/staff/updateResearchData/${this.currentResearch._id}`, {
-              budgetYear: this.currentResearch.budgetYear,
-              nameOnMedia: this.currentResearch.nameOnMedia,
-              inventor: this.currentResearch.inventor,
-              major: this.currentResearch.major,
-              description: this.currentResearch.description,
-              intelProp: this.currentResearch.intelProp,
-              industryType: this.currentResearch.industryType,
-              highlight: this.currentResearch.highlight.split(','),
-              techReadiness: this.currentResearch.techReadiness,
-              coop: this.currentResearch.coop,
-              link: this.currentResearch.link,
-              status: this.currentResearch.status,
-              ipType: this.currentResearch.ipType,
-              keyword: this.currentResearch.keyword,
-            }, {
-              headers: {
-                Authorization: localStorage.getItem('token'),
-              },
-            });
-            // selected Images delete
-            if (this.markedForDeletion.length > 0) {
-              const deleteRequests = this.markedForDeletion.map(index => {
-                const img = this.currentResearch.filePath[index];
-                return api.patch(`/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
-                  filePath: img
-                }, {
-                  headers: {
-                    Authorization: localStorage.getItem('token'),
-                  },
-                });
+          // selected Images delete
+          if (this.markedForDeletion.length > 0) {
+            const deleteRequests = this.markedForDeletion.map(index => {
+              const img = this.currentResearch.filePath[index];
+              return api.patch(`/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
+                filePath: img
+              }, {
+                headers: {
+                  Authorization: localStorage.getItem('token'),
+                },
               });
-              await Promise.all(deleteRequests);
-            }
-            // Add file edit
-            await api.patch(`/staff/addFileResearch/${this.currentResearch._id}`, formData, {
-              headers: {
-                Authorization: localStorage.getItem('token'),
-                'Content-Type': 'multipart/form-data'
-              },
             });
-            this.snackbar.message = "Edit research successfully";
-            this.snackbar.color = "success";
-          } catch (error) {
-            console.log(error);
-            if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-              this.snackbar.message = "Error " + error;
-              this.snackbar.color = "error"; // Set error color
-              this.snackbar.show = true;
-              setTimeout(function () {
-                window.location.reload()
-              }, 1000);
-            }
-            if (!error.response) {
-              this.snackbar.message = "Error Editing research: " + error;
-            } else {
-              this.snackbar.message = "Error Editing research: " + error.response.data.description.description + " Code: " + error.response.status;
-            }
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
+            await Promise.all(deleteRequests);
           }
 
-        } else {
-          await api.post('/staff/addResearch', formData, {
+          // Add file edit
+          await api.patch(`/staff/addFileResearch/${this.currentResearch._id}`, formData, {
             headers: {
               Authorization: localStorage.getItem('token'),
               'Content-Type': 'multipart/form-data'
             },
           });
-          this.snackbar.message = "เพิ่มงานวิจัยเรียบร้อยแล้ว";
+          this.snackbar.message = "Edit research successfully";
           this.snackbar.color = "success";
-        }
-        this.snackbar.show = true;
-        this.fetchResearches();
-
-      } catch (error) {
-        console.log(error);
-        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-          this.snackbar.message = "Error " + error;
+        } catch (error) {
+          console.log(error);
+          if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+            this.snackbar.message = "Error " + error;
+            this.snackbar.color = "error"; // Set error color
+            this.snackbar.show = true;
+            setTimeout(function () {
+              window.location.reload();
+            }, 1000);
+          }
+          if (!error.response) {
+            this.snackbar.message = "Error Editing research: " + error;
+          } else {
+            this.snackbar.message = "Error Editing research: " + error.response.data.description.description + " Code: " + error.response.status;
+          }
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
-          setTimeout(function () {
-            window.location.reload()
-          }, 1000);
         }
-        if (!error.response) {
-          this.snackbar.message = "Error adding research: " + error;
-        } else {
-          this.snackbar.message = "กรุณากรอกข้อมูลในช่องที่ต้องกรอกทั้งหมด";
-          // this.snackbar.message = "Error adding research: " + error.response.data.description.description + " Code: " + error.response.status;
-        }
+
+      } else {
+        await api.post('/staff/addResearch', formData, {
+          headers: {
+            Authorization: localStorage.getItem('token'),
+            'Content-Type': 'multipart/form-data'
+          },
+        });
+        this.snackbar.message = "เพิ่มงานวิจัยเรียบร้อยแล้ว";
+        this.snackbar.color = "success";
+      }
+      this.snackbar.show = true;
+      this.fetchResearches();
+
+    } catch (error) {
+      console.log(error);
+      if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
+        this.snackbar.message = "Error " + error;
         this.snackbar.color = "error"; // Set error color
         this.snackbar.show = true;
+        setTimeout(function () {
+          window.location.reload();
+        }, 1000);
       }
-      this.dialog = false;
-      this.resetCurrentResearch();
-    },
-
+      if (!error.response) {
+        this.snackbar.message = "Error adding research: " + error;
+      } else {
+        this.snackbar.message = "กรุณากรอกข้อมูลในช่องที่ต้องกรอกทั้งหมด";
+        // this.snackbar.message = "Error adding research: " + error.response.data.description.description + " Code: " + error.response.status;
+      }
+      this.snackbar.color = "error"; // Set error color
+      this.snackbar.show = true;
+    }
+    this.dialog = false;
+    this.resetCurrentResearch();
+  },
 
     // =====================================================================================================
 
