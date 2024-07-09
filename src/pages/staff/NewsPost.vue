@@ -4,33 +4,52 @@
       <staff-layout>
         <v-container>
           <v-card class="rounded-xl pa-4">
-            <v-card-title>สร้างโพสข่าวสาร</v-card-title>
-            <div class="d-inline-block">
-              <v-chip class="ma-2 pa-4 text-h10" elevation="2"
-                style="border-radius: 50px;">
-                อัพโหลดรูปภาพข่าวสาร
-              </v-chip>
-            </div>
-            <v-container class="flex align-center ">
-              <v-btn color="blue" @click="openDialog('images')" prepend-icon="mdi-file-image">อัพโหลดไฟล์รูปภาพ</v-btn>
-              <h1 class="mx-4">หรือ</h1>
-              <v-btn color="light-blue lighten-5" class="black--text" @click="openDialog('linkImage')"
-                prepend-icon="mdi-web">
-                อัพโหลดลิงค์รูปภาพ
-              </v-btn>
+            <v-container class="flex justify-center"> <v-card-title class="text-h4">สร้างโพสข่าวสาร</v-card-title>
             </v-container>
-            <div class="d-inline-block">
-              <v-chip class="ma-2 pa-4 text-h10" elevation="2"
-                style="border-radius: 50px;">
-                อัพโหลดลิงค์(Youtube) Success case
-              </v-chip>
-            </div>
-            
-            <v-container class="flex">
-              <v-btn color="red" class="white--text" @click="openDialog('linkVideo')" prepend-icon="mdi-youtube">
-                อัพโหลดลิงค์ youtube
-              </v-btn>
+            <v-container class="containerPost d-flex justify-space-between">
+
+              <!-- news images -->
+              <v-container class="imageUpload">
+                <div>
+                  <div class="titleNews">
+                  <v-chip class=" ma-2 pa-5 text-10" elevation="2" style="border-radius: 50px; font-size: 1.2rem;">
+                    อัพโหลดรูปภาพข่าวสาร
+                  </v-chip>
+                </div>
+                <v-container class="imageUpload flex">
+                  <v-btn color="blue" @click="openDialog('images')"
+                    prepend-icon="mdi-file-image">อัพโหลดไฟล์รูปภาพ</v-btn>
+                 <div class="mx-4 flex align-center">
+                  <h1>หรือ</h1>
+                 </div>
+                  <v-btn color="light-blue lighten-5" class="black--text" @click="openDialog('linkImage')"
+                    prepend-icon="mdi-web">
+                    อัพโหลดลิงค์รูปภาพ
+                  </v-btn>
+                </v-container>
+                </div>
+              </v-container>
+
+              <!-- Spacer -->
+              <v-spacer></v-spacer>
+
+              <!-- youtube -->
+              <v-container class="youtubeContainer flex align-center">
+                <div>
+                  <div>
+                  <v-chip class="ma-2 pa-5 text-h10" elevation="2" style="border-radius: 50px;font-size: 1.2rem;">
+                    อัพโหลดลิงค์(Youtube) Success case
+                  </v-chip>
+                </div>
+                <v-container class="youtubeBtn d-flex">
+                  <v-btn color="red" class="white--text" @click="openDialog('linkVideo')" prepend-icon="mdi-youtube">
+                    อัพโหลดลิงค์ youtube
+                  </v-btn>
+                </v-container>
+                </div>
+              </v-container>
             </v-container>
+
             <v-dialog v-model="dialogNewpost" max-width="500px">
               <v-card>
                 <v-card-text>
@@ -339,4 +358,54 @@ export default {
 
 <style scoped>
 /* Your scoped styles here */
+
+.youtubeContainer{
+  justify-content: end;
+}
+@media (max-width: 1295px) {
+  .containerPost {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Centers items horizontally in a column layout */
+    justify-content: center;
+    /* Centers items vertically in a column layout */
+    height: 100%;
+  }
+  .imageUpload{
+    display: flex;
+    align-items: center;
+    /* Centers items horizontally in a column layout */
+    justify-content: center;
+    /* Centers items vertically in a column layout */
+    height: 100%;
+  }
+  .youtubeContainer{
+    display: flex;
+    justify-content: center;
+  }
+  .titleNews{
+    display: flex;
+    align-items: center;
+    /* Centers items horizontally in a column layout */
+    justify-content: center;
+    /* Centers items vertically in a column layout */
+  }
+  .youtubeBtn{
+    align-items: center;
+    /* Centers items horizontally in a column layout */
+    justify-content: center;
+    /* Centers items vertically in a column layout */
+  }
+  
+}
+
+@media (max-width: 465px) {
+  .containerPost .v-btn {
+  font-size: 10px;
+  padding: 4px 8px;
+  min-width: 50px;
+  height: 28px;
+}
+}
 </style>
