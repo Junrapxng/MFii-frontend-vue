@@ -132,7 +132,7 @@ export default {
       if (valid) {
         try {
           const response = await api.post("/register", {
-            email: this.form.email.trim(),
+            email: this.form.email.trim().toLowerCase(),
             password: this.form.password.trim(),
             firstName: this.form.firstName.trim(),
             lastName: this.form.lastName.trim(),

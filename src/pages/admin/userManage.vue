@@ -40,12 +40,17 @@
                           'กรุณากรอกเบอร์โทรศัพท์ 10 หลัก',
                       ]" required></v-text-field>
                     </v-col>
+
+                <div>
+                  <p class="text-warning">
+                    <v-icon color="warning">mdi-alert-circle-outline</v-icon>
+                    ใช้ได้แค่ gmail, hotmail, mfu.ac.th, lamduan.mfu.ac.th
+                  </p>
+                </div>
                     <v-col cols="12" md="12" sm="12">
-                      <v-text-field variant="solo-filled" flat v-model="editedItem.email" label="Email" :rules="[
-                        (v) => !!v || 'กรุณากรอก อีเมล',
-                        (v) =>
-                          /.+@.+\..+/.test(v) || 'กรุณากรอกอีเมลให้ถูกต้อง',
-                      ]" required></v-text-field>
+                      <v-text-field variant="solo-filled" flat v-model="editedItem.email" label="Email" :rules="[rules.required, rules.email]"></v-text-field>
+
+
                       <v-text-field v-if="this.editedIndex === -1" v-model="editedItem.password" label="Password"
                         variant="solo-filled" flat :rules="[
                           (v) => !!v || 'กรุณากรอก รหัสผ่าน',
@@ -152,6 +157,20 @@ export default {
     AdminLayout,
   },
   data: () => ({
+    rules: {
+        required: value => !!value || 'กรุณากรอกอีเมล',
+        email: value => {
+          const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(gmail\.com|hotmail\.com|outlook\.com|lamduan\.mfu\.ac\.th|mfu\.ac\.th)$/i;
+
+          if (!emailPattern.test(value)) {
+            return 'โปรดกรอกอีเมลให้ถูกต้อง';
+          }
+
+          // Return true or undefined if the email is valid
+          return true;
+        }
+
+      },
     search: "",
     users: [],
     snackbar: {
@@ -381,7 +400,7 @@ export default {
             "/admin/updatePatch/" + this.editedItem._id, {
             firstName: this.editedItem.firstName.trim(),
             lastName: this.editedItem.lastName.trim(),
-            email: this.editedItem.email.trim(),
+            email: this.editedItem.email.trim().toLowerCase(),
             phoneNumber: this.editedItem.phoneNumber.trim(),
             role: this.editedItem.role,
             status: this.editedItem.status,
@@ -438,7 +457,7 @@ export default {
             "/register", {
             firstName: this.editedItem.firstName.trim(),
             lastName: this.editedItem.lastName.trim(),
-            email: this.editedItem.email.trim(),
+            email: this.editedItem.email.trim().toLowerCase(),
             phoneNumber: this.editedItem.phoneNumber.trim(),
             password: this.editedItem.password.trim(),
             role: this.editedItem.role,
