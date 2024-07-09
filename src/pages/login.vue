@@ -3,9 +3,9 @@
     <NavBar></NavBar>
 
     <v-main>
-      <v-alert v-if="responseMessage"  type="error" icon="mdi-alert-circle-outline">{{
+      <v-alert v-if="responseMessage" type="error" icon="mdi-alert-circle-outline">{{
         responseMessage
-      }}</v-alert>
+        }}</v-alert>
       <v-container class="font-noto-sans-thai rounded-xl flex justify-center items-center bg-gray-100 mb-6">
         <v-card class="w-full max-w-lg rounded-xl p-8">
           <v-card-title>
@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import {api} from "../axios";
+import { api } from "../axios";
 import { useUserStore } from "@/stores/user";
 export default {
   name: "login-page",
@@ -77,7 +77,7 @@ export default {
   },
   methods: {
 
-    
+
     async login() {
       const { valid } = await this.$refs.form.validate();
       const userStore = useUserStore();
@@ -101,15 +101,37 @@ export default {
             }
           }
         } catch (error) {
-          console.error("Error Logging in:", error);
-          this.responseMessage = error;
-          if (!error.response) {
-            this.responseMessage = "Error  Logging in: " + error;
+          let errorMessage = "An unexpected error occurred";
+          let errorCode = "Unknown";
+          let errorDetails = "";
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            const errorDesc = error.response.data.description;
+            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+              // Handle specific error codes
+              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+              errorCode = errorDesc.code;
+            } else {
+              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+              errorCode = error.response.status;
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+          } else if (error.code === 'ERR_NETWORK') {
+            // Network error
+            errorMessage = "Network Error";
+            errorCode = error.code;
           } else {
-            this.responseMessage = "Error Logging in: " + error.response.data.description.description + " Code: " + error.response.status;
+            // Something happened in setting up the request that triggered an Error
+            errorMessage = error.message;
           }
-          this.snackbar.color = "error"; // Set error color
-          this.snackbar.show = true;
+          // Add more detailed error information
+          errorDetails = `${error.name}: ${error.message}`;
+          // Log the error
+          console.error(`Error : ${errorDetails}`, error);
+          this.responseMessage = `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`;
         }
       } else {
         console.log("Form is not valid");

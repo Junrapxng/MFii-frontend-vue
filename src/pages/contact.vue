@@ -38,7 +38,7 @@
               class="font-noto-sans-thai rounded-xl flex justify-center items-center min-h-fit min-w-full bg-gray-100">
               <v-card class="w-full max-w-full rounded-xl ">
                 <v-card-text>
-                  <v-form ref="form" @submit.prevent="sendRequest"  >
+                  <v-form ref="form" @submit.prevent="sendRequest">
                     <v-row>
                       <v-col cols="12" md="12" lg="12">
                         <div>
@@ -68,7 +68,9 @@
       </v-container>
 
       <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
-        <div  v-if="snackbar.Errcode == 401" class="text-subtitle-1 pb-2" >โปรด <a style="text-decoration: underline;" href="/register">สมัครสมาชิก</a> หรือ <a style="text-decoration: underline;" href="/login"> เข้าสู่ระบบ </a></div>
+        <div v-if="snackbar.Errcode === 40102 || snackbar.Errcode === 40107" class="text-subtitle-1 pb-2">โปรด <a style="text-decoration: underline;" 
+          href="/register">สมัครสมาชิก</a> หรือ <a style="text-decoration: underline;" href="/login"> เข้าสู่ระบบ </a>
+        </div>
         <p>{{ snackbar.message }}</p>
         <template v-slot:actions>
           <v-btn color="white" variant="text" @click="snackbar.show = false">
@@ -111,54 +113,69 @@ export default {
 
   methods: {
     async validateForm() {
-    const { valid } = await this.$refs.form.validate()
-    return valid
-  },
+      const { valid } = await this.$refs.form.validate()
+      return valid
+    },
 
     async sendRequest() {
       if (await this.validateForm()) {
-          this.form.messageReply.user = this.user._id;
-          try {
-            const response = await api.post('/user/mesRequest', this.form, {
-              headers: {
-                Authorization: localStorage.getItem("token"),
-              },
-            });
-            this.snackbar.message = "Requested Success!";
-            this.snackbar.color = "success";
-            this.snackbar.show = true;
-            setTimeout(() => {
-              window.location.reload();
-            }, 1000); // Reloads the page after 2 seconds
-          } catch (error) {
-          if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-            this.snackbar.message = "Error " + error;
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
-            setTimeout(function () {
-            window.location.reload()
-          }, 1000);
+        this.form.messageReply.user = this.user._id;
+        try {
+          const response = await api.post('/user/mesRequest', this.form, {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          });
+          this.snackbar.message = "Requested Success!";
+          this.snackbar.color = "success";
+          this.snackbar.show = true;
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000); // Reloads the page after 2 seconds
+        } catch (error) {
+          let errorMessage = "An unexpected error occurred";
+          let errorCode = "Unknown";
+          let errorDetails = "";
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            const errorDesc = error.response.data.description;
+            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+              // Handle specific error codes
+              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+              errorCode = errorDesc.code;
+            } else {
+              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+              errorCode = error.response.status;
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+          } else if (error.code === 'ERR_NETWORK') {
+            // Network error
+            errorMessage = "Network Error";
+            errorCode = error.code;
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            errorMessage = error.message;
           }
-            if (!error.response) {
-              this.snackbar.message = "Error Sending request: " + error;
-            }
-            if (error.response.status == 500) {
-              this.snackbar.message = "Error Sending request: " + error;
-            }
-            else {
-              this.snackbar.message = "Error Sending request: " + error.response.data.description.description + " Code: " + error.response.status;
-              if(error.response.status == 401){
-                this.snackbar.Errcode = error.response.status
-              }
-            }
-            this.snackbar.color = "error";
-            this.snackbar.show = true;
+          // Add more detailed error information
+          errorDetails = `${error.name}: ${error.message}`;
+          // Log the error
+          console.error(`Error : ${errorDetails}`, error);
+
+          this.snackbar = {
+            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+            color: "error",
+            Errcode: errorCode,
+            show: true
+          };
         }
       } else {
         this.snackbar.message = "กรุณากรอกข้อมูลให้ครบถ้วน";
-          this.snackbar.color = "error";
-          this.snackbar.show = true;
-          return;
+        this.snackbar.color = "error";
+        this.snackbar.show = true;
+        return;
       }
 
     },

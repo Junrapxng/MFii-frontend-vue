@@ -5,7 +5,7 @@
     <v-main>
       <v-alert v-if="responseMessage" type="error" icon="mdi-alert-circle-outline">{{
         responseMessage
-      }}</v-alert>
+        }}</v-alert>
       <v-container class="font-noto-sans-thai rounded-xl flex justify-center items-center bg-gray-100 mb-5">
         <v-card class="w-full max-w-2xl rounded-xl p-8">
           <v-card-title>
@@ -26,9 +26,10 @@
               </div>
 
               <div>
-               <div>
-                <p class="mb-2 text-warning"> <v-icon color="warning">mdi-alert-circle-outline</v-icon> ถ้าไม่มีให้ใส่เครื่องหมาย - </p>
-               </div>
+                <div>
+                  <p class="mb-2 text-warning"> <v-icon color="warning">mdi-alert-circle-outline</v-icon>
+                    ถ้าไม่มีให้ใส่เครื่องหมาย - </p>
+                </div>
                 <v-text-field v-model="form.businessName" label="ระบุ ชื่อกิจการ" variant="outlined" outlined
                   color="#BA984C" :rules="[(v) => !!v || 'กรุณากรอก ชื่อกิจการ']" required></v-text-field>
               </div>
@@ -144,13 +145,37 @@ export default {
           localStorage.setItem("token", response.data.result.token);
           this.$router.push("/");
         } catch (error) {
-          console.error("Error registering:", error);
-          this.responseMessage = error;
-          if (!error.response) {
-            this.responseMessage = "Error registering: " + error;
+          let errorMessage = "An unexpected error occurred";
+          let errorCode = "Unknown";
+          let errorDetails = "";
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            const errorDesc = error.response.data.description;
+            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+              // Handle specific error codes
+              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+              errorCode = errorDesc.code;
+            } else {
+              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+              errorCode = error.response.status;
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+          } else if (error.code === 'ERR_NETWORK') {
+            // Network error
+            errorMessage = "Network Error";
+            errorCode = error.code;
           } else {
-            this.responseMessage = "Error registering: " + error.response.data.description.description + " Code: " + error.response.status;
+            // Something happened in setting up the request that triggered an Error
+            errorMessage = error.message;
           }
+          // Add more detailed error information
+          errorDetails = `${error.name}: ${error.message}`;
+          // Log the error
+          console.error(`Error : ${errorDetails}`, error);
+          this.responseMessage = `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`;
         }
       } else {
         console.log("Form is not valid");

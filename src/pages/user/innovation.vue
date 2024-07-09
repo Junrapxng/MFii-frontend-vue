@@ -13,13 +13,13 @@
                 </ul>
                 <ul>ผู้ประดิษฐ์</ul>
                 <li v-for="( inventor, index ) in research.inventor" :key="index" class="pl-10">{{ inventor }}</li>
-                <ul>สังกัด: <span  class="text-gray-700">{{ research.major }}</span></ul>
+                <ul>สังกัด: <span class="text-gray-700">{{ research.major }}</span></ul>
                 <ul>ทรัพย์สินทางปัญญา: <span class="text-red-600">{{ research.intelProp }}</span></ul>
                 <ul>ประเภทอุตสาหกรรม: <span class="text-green-600">{{ research.industryType }}</span></ul>
                 <ul>รายละเอียดผลงาน</ul>
-                  <p class="pl-10">
-                    {{ research.description }}
-                  </p>
+                <p class="pl-10">
+                  {{ research.description }}
+                </p>
                 <ul>จุดเด่น</ul>
                 <li v-for="( highlight, index ) in research.highlight" :key="index" class="pl-10">{{ highlight }}</li>
                 <ul>ความพร้อมของเทคโนโลยี: <span class="text-pink-600">{{ research.techReadiness }}</span></ul>
@@ -31,16 +31,17 @@
           <v-col cols="12" md="5" lg="5">
             <div class="d-flex justify-center items-center">
               <v-carousel show-arrows="hover" cycle hide-delimiter-background>
-                <v-carousel-item v-for="(pic, index) in filteredImages" :key="index"
-                  :src="`${baseUrl}/${pic}`" fit></v-carousel-item>
+                <v-carousel-item v-for="(pic, index) in filteredImages" :key="index" :src="`${baseUrl}/${pic}`"
+                  fit></v-carousel-item>
               </v-carousel>
             </div>
           </v-col>
           <v-col cols="12" md="2" lg="2">
             <v-container class="text-center">
               <div>
-                <v-btn class="responsive-btn" variant="outlined" rounded="xl" size="small" block style="display: flex; align-items: center; justify-content: center;" @click="downloadPdf()">
-                  <v-icon left class="mr-1">mdi-download</v-icon>  
+                <v-btn class="responsive-btn" variant="outlined" rounded="xl" size="small" block
+                  style="display: flex; align-items: center; justify-content: center;" @click="downloadPdf()">
+                  <v-icon left class="mr-1">mdi-download</v-icon>
                   <span>Download PDF</span>
                 </v-btn>
               </div>
@@ -75,7 +76,7 @@
 </template>
 
 <script>
-import {api, url} from "../../axios";
+import { api, url } from "../../axios";
 export default {
   name: "innovation-page",
   props: ["id"],
@@ -92,7 +93,7 @@ export default {
     };
   },
 
-  created(){
+  created() {
     this.baseUrl = url
   },
 
@@ -104,19 +105,48 @@ export default {
         ); // Replace with your API endpoint
         this.research = response.data.result;
       } catch (error) {
-        console.error("Error fetching data:", error);
-        if (!error.response) {
-          this.snackbar.message = "Error : " + error;
+        let errorMessage = "An unexpected error occurred";
+        let errorCode = "Unknown";
+        let errorDetails = "";
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          const errorDesc = error.response.data.description;
+          if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+            // Handle specific error codes
+            errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+            errorCode = errorDesc.code;
+          } else {
+            errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+            errorCode = error.response.status;
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+        } else if (error.code === 'ERR_NETWORK') {
+          // Network error
+          errorMessage = "Network Error";
+          errorCode = error.code;
         } else {
-          this.snackbar.message = "Error : " + error.response.data.description.description + " Code: " + error.response.status;
+          // Something happened in setting up the request that triggered an Error
+          errorMessage = error.message;
         }
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
+        // Add more detailed error information
+        errorDetails = `${error.name}: ${error.message}`;
+        // Log the error
+        console.error(`Error : ${errorDetails}`, error);
+
+        this.snackbar = {
+          message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+          color: "error",
+          Errcode: errorCode,
+          show: true
+        };
       } finally {
         this.isLoading = false;
       }
     },
-    
+
     downloadPdf() {
       if (this.research.filePath && this.research.filePath.length > 0) {
         const pdfPath = this.research.filePath.find(path => path.toLowerCase().endsWith('.pdf'));
@@ -156,12 +186,16 @@ ul {
   font-weight: 600;
   padding: 5px;
 }
-span{
+
+span {
   font-weight: 400;
 }
+
 /* Smaller text for iPad screen sizes */
 @media (max-width: 1024px) {
-  .responsive-btn span, v-icon {
+
+  .responsive-btn span,
+  v-icon {
     font-size: 8px;
   }
 }

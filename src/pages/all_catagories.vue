@@ -18,8 +18,8 @@
               </v-col>
               <v-col cols="12" sm="6" md="4" lg="3">
                 <v-combobox v-model="Intellectual_property_type" :items="prop" item-value="value" item-title="text"
-                  clearable @click:clear="clearIntellectualType" @update:modelValue="fetchResearchData" chips variant="outlined"
-                  label="ประเภทอุตสาหกรรม"></v-combobox>
+                  clearable @click:clear="clearIntellectualType" @update:modelValue="fetchResearchData" chips
+                  variant="outlined" label="ประเภทอุตสาหกรรม"></v-combobox>
               </v-col>
               <v-col cols="12" sm="6" md="4" lg="3">
                 <v-combobox v-model="Technology_type" :items="tech" item-value="value" item-title="text" clearable
@@ -48,7 +48,7 @@
                     <v-img :src="`${baseUrl}/${item.filePath[0]}`" cover height="200px">
                       <template v-slot:placeholder>
                         <div class="d-flex align-center justify-center fill-height">
-                          Loading...  
+                          Loading...
                         </div>
                       </template>
                     </v-img>
@@ -60,8 +60,8 @@
                         {{ item.techReadiness }}
                       </v-chip>
                       <v-chip class="mx-2">
-                      {{ count[item._id] || 0 }} views
-                    </v-chip>
+                        {{ count[item._id] || 0 }} views
+                      </v-chip>
                     </v-card-actions>
                   </v-card>
                 </router-link>
@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import {api, url} from "../axios";
+import { api, url } from "../axios";
 export default {
   name: "all-categories-page",
   data() {
@@ -211,11 +211,43 @@ export default {
           this.loading = false;
         })
         .catch((error) => {
-          console.error(
-            "There was an error fetching the research data:",
-            error
-          );
-          this.loading = false;
+          let errorMessage = "An unexpected error occurred";
+      let errorCode = "Unknown";
+      let errorDetails = "";
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        const errorDesc = error.response.data.description;
+        if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+          // Handle specific error codes
+          errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+          errorCode = errorDesc.code;
+        } else {
+          errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+          errorCode = error.response.status;
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+      } else if (error.code === 'ERR_NETWORK') {
+        // Network error
+        errorMessage = "Network Error";
+        errorCode = error.code;
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        errorMessage = error.message;
+      }
+      // Add more detailed error information
+      errorDetails = `${error.name}: ${error.message}`;
+      // Log the error
+      console.error(`Error : ${errorDetails}`, error);
+
+      this.snackbar = {
+        message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+        color: "error",
+        Errcode: errorCode,
+        show: true
+      };
         });
     },
 
@@ -239,42 +271,67 @@ export default {
     this.baseUrl = url
     this.fetchResearchData();
     this.getviewCount();
-  try {
-    const api1Response = await Promise.all([
-      api.get("/getsResearch/all/all/all/all"),
-    ]);
+    try {
+      const api1Response = await Promise.all([
+        api.get("/getsResearch/all/all/all/all"),
+      ]);
 
-    if (api1Response.status == 200) {
-      // Filter out the data to get only those with status "active"
-      const activeData = api1Response.data.result.filter(
-        (item) => item.status === "active"
-      );
-      if (activeData.length > 0) {
-        this.info = activeData;
+      if (api1Response.status == 200) {
+        // Filter out the data to get only those with status "active"
+        const activeData = api1Response.data.result.filter(
+          (item) => item.status === "active"
+        );
+        if (activeData.length > 0) {
+          this.info = activeData;
+        } else {
+          console.log("No active data found");
+        }
       } else {
-        console.log("No active data found");
+        this.error = new Error("One or both API responses are not OK");
       }
-    } else {
-      this.error = new Error("One or both API responses are not OK");
+    } catch (error) {
+      let errorMessage = "An unexpected error occurred";
+      let errorCode = "Unknown";
+      let errorDetails = "";
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        const errorDesc = error.response.data.description;
+        if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+          // Handle specific error codes
+          errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+          errorCode = errorDesc.code;
+        } else {
+          errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+          errorCode = error.response.status;
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+      } else if (error.code === 'ERR_NETWORK') {
+        // Network error
+        errorMessage = "Network Error";
+        errorCode = error.code;
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        errorMessage = error.message;
+      }
+      // Add more detailed error information
+      errorDetails = `${error.name}: ${error.message}`;
+      // Log the error
+      console.error(`Error : ${errorDetails}`, error);
+
+      this.snackbar = {
+        message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+        color: "error",
+        Errcode: errorCode,
+        show: true
+      };
+
+    } finally {
+      this.loading = false;
     }
-  } catch (error) {
-    this.error = `'Error fetching data: ${error}'`;
-    console.error("Error fetching data:", error);
-    if (!error.response) {
-      this.snackbar.message = "Error : " + error;
-    } else {
-      this.snackbar.message =
-        "Error : " +
-        error.response.data.description.description +
-        " Code: " +
-        error.response.status;
-    }
-    this.snackbar.color = "error"; // Set error color
-    this.snackbar.show = true;
-  } finally {
-    this.loading = false;
   }
-}
 };
 </script>
 

@@ -121,22 +121,46 @@ export default {
             window.location.reload();
           }, 1000);
         } catch (error) {
-          console.log("Error", error);
-          if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-            this.snackbar.message = "Error saving profile: " + error;
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
-            setTimeout(function () {
-            window.location.reload()
+          let errorMessage = "An unexpected error occurred";
+          let errorCode = "Unknown";
+          let errorDetails = "";
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            const errorDesc = error.response.data.description;
+            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+              // Handle specific error codes
+              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+              errorCode = errorDesc.code;
+              setTimeout(function () {
+            window.location.reload();
           }, 1000);
-          }
-          if (!error.response) {
-            this.snackbar.message = "Error saving profile: " + error;
+            } else {
+              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+              errorCode = error.response.status;
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+          } else if (error.code === 'ERR_NETWORK') {
+            // Network error
+            errorMessage = "Network Error";
+            errorCode = error.code;
           } else {
-            this.snackbar.message = "Error saving profile: " + error.response.data.description.description + " Code: " + error.response.status;
+            // Something happened in setting up the request that triggered an Error
+            errorMessage = error.message;
           }
-          this.snackbar.color = "error"; // Set error color
-          this.snackbar.show = true;
+          // Add more detailed error information
+          errorDetails = `${error.name}: ${error.message}`;
+          // Log the error
+          console.error(`Error : ${errorDetails}`, error);
+
+          this.snackbar = {
+            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+            color: "error",
+            Errcode: errorCode,
+            show: true
+          };
         }
       } else {
         this.snackbar.message = "กรุณากรอกข้อมูลให้ครบถ้วน";

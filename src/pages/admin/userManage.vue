@@ -302,22 +302,46 @@ export default {
         });
         this.users = response.data;
       } catch (error) {
-        console.log("Error getting user :", error);
-        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-          this.snackbar.message = "Error " + error;
-          this.snackbar.color = "error"; // Set error color
-          this.snackbar.show = true;
-          setTimeout(function () {
-            window.location.reload()
+        let errorMessage = "An unexpected error occurred";
+          let errorCode = "Unknown";
+          let errorDetails = "";
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            const errorDesc = error.response.data.description;
+            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+              // Handle specific error codes
+              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+              errorCode = errorDesc.code;
+              setTimeout(function () {
+            window.location.reload();
           }, 1000);
-        }
-        if (!error.response) {
-          this.snackbar.message = "Error getting user :  " + error;
-        } else {
-          this.snackbar.message = "Error getting user :  " + error.response.data.description.description + " Code: " + error.response.status;
-        }
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
+            } else {
+              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+              errorCode = error.response.status;
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+          } else if (error.code === 'ERR_NETWORK') {
+            // Network error
+            errorMessage = "Network Error";
+            errorCode = error.code;
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            errorMessage = error.message;
+          }
+          // Add more detailed error information
+          errorDetails = `${error.name}: ${error.message}`;
+          // Log the error
+          console.error(`Error : ${errorDetails}`, error);
+
+          this.snackbar = {
+            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+            color: "error",
+            Errcode: errorCode,
+            show: true
+          };
       }
     },
 
@@ -343,22 +367,46 @@ export default {
         this.snackbar.show = true;
         this.fectchUser();
       } catch (error) {
-        console.log("Error deleting user:", error);
-        if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-          this.snackbar.message = "Error " + error;
-          this.snackbar.color = "error"; // Set error color
-          this.snackbar.show = true;
-          setTimeout(function () {
-            window.location.reload()
+        let errorMessage = "An unexpected error occurred";
+          let errorCode = "Unknown";
+          let errorDetails = "";
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            const errorDesc = error.response.data.description;
+            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+              // Handle specific error codes
+              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+              errorCode = errorDesc.code;
+              setTimeout(function () {
+            window.location.reload();
           }, 1000);
-        }
-        if (!error.response) {
-          this.snackbar.message = "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง) : " + error;
-        } else {
-          this.snackbar.message = "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง) : " + error.response.data.description.description + " Code: " + error.response.status;
-        }
-        this.snackbar.color = "error"; // Set error color
-        this.snackbar.show = true;
+            } else {
+              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+              errorCode = error.response.status;
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+          } else if (error.code === 'ERR_NETWORK') {
+            // Network error
+            errorMessage = "Network Error";
+            errorCode = error.code;
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            errorMessage = error.message;
+          }
+          // Add more detailed error information
+          errorDetails = `${error.name}: ${error.message}`;
+          // Log the error
+          console.error(`Error : ${errorDetails}`, error);
+
+          this.snackbar = {
+            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+            color: "error",
+            Errcode: errorCode,
+            show: true
+          };
       }
       this.closeDelete();
     },
@@ -413,22 +461,46 @@ export default {
           this.snackbar.show = true;
           this.fectchUser();
         } catch (error) {
-          console.log("Error editing user:", error);
-          if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-            this.snackbar.message = "Error " + error;
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
-            setTimeout(function () {
-              window.location.reload()
-            }, 1000);
-          }
-          if (!error.response) {
-            this.snackbar.message = "Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " + error;
+          let errorMessage = "An unexpected error occurred";
+          let errorCode = "Unknown";
+          let errorDetails = "";
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            const errorDesc = error.response.data.description;
+            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+              // Handle specific error codes
+              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+              errorCode = errorDesc.code;
+              setTimeout(function () {
+            window.location.reload();
+          }, 1000);
+            } else {
+              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+              errorCode = error.response.status;
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+          } else if (error.code === 'ERR_NETWORK') {
+            // Network error
+            errorMessage = "Network Error";
+            errorCode = error.code;
           } else {
-            this.snackbar.message = "Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " + error.response.data.description.description + " Code: " + error.response.status;
+            // Something happened in setting up the request that triggered an Error
+            errorMessage = error.message;
           }
-          this.snackbar.color = "error"; // Set error color
-          this.snackbar.show = true;
+          // Add more detailed error information
+          errorDetails = `${error.name}: ${error.message}`;
+          // Log the error
+          console.error(`Error : ${errorDetails}`, error);
+
+          this.snackbar = {
+            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+            color: "error",
+            Errcode: errorCode,
+            show: true
+          };
         }
       } else {
         this.users.resutl.push(this.editedItem);
@@ -467,15 +539,46 @@ export default {
           this.snackbar.show = true;
           this.fectchUser();
         } catch (error) {
-          console.error("Error Adding user:", error);
-          if (!error.response) {
-            this.snackbar.message = "Error Adding user(ข้อมูลยังไม่ถูกเพิ่ม โปรดลองอีกครั้ง): " + error;
+          let errorMessage = "An unexpected error occurred";
+          let errorCode = "Unknown";
+          let errorDetails = "";
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            const errorDesc = error.response.data.description;
+            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+              // Handle specific error codes
+              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+              errorCode = errorDesc.code;
+              setTimeout(function () {
+            window.location.reload();
+          }, 1000);
+            } else {
+              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+              errorCode = error.response.status;
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+          } else if (error.code === 'ERR_NETWORK') {
+            // Network error
+            errorMessage = "Network Error";
+            errorCode = error.code;
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            errorMessage = error.message;
           }
-          else {
-            this.snackbar.message = "Error Adding user(ข้อมูลยังไม่ถูกเพิ่ม โปรดลองอีกครั้ง): " + error.response.data.description.description + " Code: " + error.response.status;
-          }
-          this.snackbar.color = "error"; // Set error color
-          this.snackbar.show = true;
+          // Add more detailed error information
+          errorDetails = `${error.name}: ${error.message}`;
+          // Log the error
+          console.error(`Error : ${errorDetails}`, error);
+
+          this.snackbar = {
+            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+            color: "error",
+            Errcode: errorCode,
+            show: true
+          };
         }
       } else {
         this.users.resutl.push(this.editedItem);
