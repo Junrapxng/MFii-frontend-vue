@@ -99,6 +99,7 @@
         </v-card-title>
         <v-divider></v-divider>
 
+
         <!-- data table -->
         <v-data-table v-model:search="search" :headers="headers" :items="users.resutl" :items-per-page="-1"
           :sort-by="[{ key: 'userId', order: 'asc' }]" :fixed-header="true" height="400">
@@ -110,6 +111,11 @@
               </v-chip>
             </div>
           </template>
+
+          <template v-slot:item.createdAt="{ item }">
+            {{ formatDate(item.createdAt) }}
+          </template>
+
 
           <template v-slot:item.actions="{ item }">
             <v-icon class="me-2" size="small" @click="editItem(item)">
@@ -139,7 +145,8 @@
 
 <script>
 import AdminLayout from "@/layouts/admin.vue";
-import {api} from "../../axios";
+import { api } from "../../axios";
+// import { format, parseISO, addHours } from 'date-fns'
 export default {
   components: {
     AdminLayout,
@@ -183,7 +190,12 @@ export default {
     },
     {
       title: "Create Date",
-      key: "createdAt"
+      key: "createdAt",
+      formatter: (value) => {
+        if (!value) return '';
+        const date = new Date(value);
+        return date.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' });
+      }
     },
     {
       title: "Role",
@@ -244,6 +256,23 @@ export default {
     initialize() {
       this.search = "";
     },
+
+    // datetime format
+    formatDate(dateString) {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+      timeZone: 'Asia/Bangkok',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    });
+  },
+
+
     // fetch users =============================================================
     async fectchUser() {
       try {
@@ -256,20 +285,20 @@ export default {
       } catch (error) {
         console.log("Error getting user :", error);
         if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-            this.snackbar.message = "Error " + error;
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
-            setTimeout(function () {
-            window.location.reload()
-          }, 1000);
-          }
-        if (!error.response) {
-            this.snackbar.message = "Error getting user :  " + error;
-          } else {
-            this.snackbar.message = "Error getting user :  " + error.response.data.description.description + " Code: " + error.response.status;
-          }
+          this.snackbar.message = "Error " + error;
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
+          setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+        }
+        if (!error.response) {
+          this.snackbar.message = "Error getting user :  " + error;
+        } else {
+          this.snackbar.message = "Error getting user :  " + error.response.data.description.description + " Code: " + error.response.status;
+        }
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
     },
 
@@ -297,20 +326,20 @@ export default {
       } catch (error) {
         console.log("Error deleting user:", error);
         if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-            this.snackbar.message = "Error " + error;
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
-            setTimeout(function () {
-            window.location.reload()
-          }, 1000);
-          }
-        if (!error.response) {
-            this.snackbar.message = "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง) : " + error;
-          } else {
-            this.snackbar.message = "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง) : " + error.response.data.description.description + " Code: " + error.response.status;
-          }
+          this.snackbar.message = "Error " + error;
           this.snackbar.color = "error"; // Set error color
           this.snackbar.show = true;
+          setTimeout(function () {
+            window.location.reload()
+          }, 1000);
+        }
+        if (!error.response) {
+          this.snackbar.message = "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง) : " + error;
+        } else {
+          this.snackbar.message = "Error deleting user(ข้อมูลยังไม่ถูกลบ โปรดลองอีกครั้ง) : " + error.response.data.description.description + " Code: " + error.response.status;
+        }
+        this.snackbar.color = "error"; // Set error color
+        this.snackbar.show = true;
       }
       this.closeDelete();
     },
@@ -373,8 +402,8 @@ export default {
             this.snackbar.color = "error"; // Set error color
             this.snackbar.show = true;
             setTimeout(function () {
-            window.location.reload()
-          }, 1000);
+              window.location.reload()
+            }, 1000);
           }
           if (!error.response) {
             this.snackbar.message = "Error editing user(ข้อมูลยังไม่ถูกแก้ไข โปรดลองอีกครั้ง): " + error;
@@ -404,19 +433,6 @@ export default {
       if (!this.editedIndex > -1) {
         //  Object.assign(this.users.resutl[this.editedIndex], this.editedItem);
         // console.log(this.editedItem._id);
-        const options = {
-          timeZone: 'Asia/Bangkok',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false,
-        };
-        const formatter = new Intl.DateTimeFormat('en-GB', options);
-        const parts = formatter.formatToParts(new Date());
-        const createDate = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}T${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}:${parts.find(p => p.type === 'second').value}.000Z`;
         try {
           await api.post(
             "/register", {
@@ -427,7 +443,7 @@ export default {
             password: this.editedItem.password.trim(),
             role: this.editedItem.role,
             status: this.editedItem.status,
-            createDate: createDate,
+            // createDate: createDate,
           },
           );
           this.snackbar.message = "User Added successfully";

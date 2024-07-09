@@ -130,19 +130,6 @@ export default {
     async register() {
       const { valid } = await this.$refs.form.validate();
       if (valid) {
-        const options = {
-          timeZone: 'Asia/Bangkok',
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          hour12: false,
-        };
-        const formatter = new Intl.DateTimeFormat('en-GB', options);
-        const parts = formatter.formatToParts(new Date());
-        const createDate = `${parts.find(p => p.type === 'year').value}-${parts.find(p => p.type === 'month').value}-${parts.find(p => p.type === 'day').value}T${parts.find(p => p.type === 'hour').value}:${parts.find(p => p.type === 'minute').value}:${parts.find(p => p.type === 'second').value}.000Z`;
         try {
           const response = await api.post("/register", {
             email: this.form.email.trim(),
@@ -152,7 +139,7 @@ export default {
             phoneNumber: this.form.phone.trim(),
             businessType: this.form.businessType,
             businessName: this.form.businessName.trim(),
-            createDate: createDate, // Set create date
+            // createDate: createDate, // Set create date
           });
           localStorage.setItem("token", response.data.result.token);
           this.$router.push("/");
