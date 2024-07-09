@@ -3,78 +3,112 @@
     <v-main>
       <staff-layout>
         <v-container class="font-noto-sans-thai">
-    <v-card class="rounded-3xl pa-2 mb-2 bg-gray-200">
-      <v-card-title class="d-flex align-center my-2">
-        <v-icon icon="mdi-clipboard-edit"></v-icon> &nbsp; จัดการผลงานวิจัย
-        <v-spacer></v-spacer>
-        <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify" variant="solo-filled" flat hide-details single-line clearable @click:clear="clearSearch" @input="searchResearch"></v-text-field>
-      </v-card-title>
-      <v-card-text>
-        <v-data-table :headers="headers" :items="researches.result" class="elevation-1">
-          <template v-slot:[`item.actions`]="{ item }">
-            <v-container class="flex justify-center align-center">
-              <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
-              <v-icon small class="mr-2" :class="item.status == 'active' ? 'text-green' : 'text-red'" @click="toggleVisibility(item)">
-                {{ item.status == 'active' ? 'mdi-eye' : 'mdi-eye-off' }}
-              </v-icon>
-              <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
-            </v-container>
-          </template>
-        </v-data-table>
-        <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
-      </v-card-text>
-    </v-card>
-    <v-dialog v-model="dialog" max-width="1050px">
-      <v-card class="rounded-xl">
-        <v-card-title>{{ isEdit ? 'แก้ไขผลงานวิจัย' : 'สร้างผลงานวิจัย' }}</v-card-title>
-        <v-card-text>
-          <v-form ref="form" v-model="valid">
-            <v-text-field label="ชื่อผลงาน" variant="solo-filled" v-model="currentResearch.nameOnMedia" :rules="[rules.required]" required></v-text-field>
-            <v-combobox v-model="currentResearch.inventor" label="ผู้ประดิษฐ์" variant="solo-filled" chips multiple :rules="[rules.required]" required></v-combobox>
-            <v-autocomplete variant="solo-filled" flat label="สังกัด" v-model="currentResearch.major" :items="['สำนักวิชาศิลปศาสตร์','สำนักวิชาวิทยาศาสตร์','สำนักวิชาการจัดการ','สำนักวิชาเทคโนโลยีสารสนเทศ','สำนักวิชาอุตสาหกรรมเกษตร','สำนักวิชานิติศาสตร์','สำนักวิชาวิทยาศาสตร์เครื่องสำอาง','สำนักวิชาวิทยาศาสตร์สุขภาพ','สำนักวิชาพยาบาลศาสตร์','สำนักวิชาเวชศาสตร์ชะลอวัยและฟื้นฟูสุขภาพ','สำนักวิชาแพทยศาสตร์','สำนักวิชาทันตแพทยศาสตร์','สำนักวิชานวัตกรรมสังคม','สำนักวิชาจีนวิทยา','สำนักวิชาการแพทย์บูรณาการ','อื่นๆ']" :rules="[rules.required]" required></v-autocomplete>
-            <v-autocomplete variant="solo-filled" flat label="ทรัพย์สินทางปัญญา" v-model="currentResearch.intelProp" :items="['สิทธิบัตรการประดิษฐ์','อนุสิทธิบัตร','สิทธิบัตรออกแบบ','ลิขสิทธิ์','ลิขสิทธิ์-โปรแกรมคอมพิวเตอร์','ผลงานวิจัย','ต้นแบบ','อื่น ๆ']" :rules="[rules.required]" required></v-autocomplete>
-            <v-autocomplete variant="solo-filled" flat label="ประเภทอุตสาหกรรม" v-model="currentResearch.industryType" :items="['เครื่องสำอาง','การเกษตรและเทคโนโลยีชีวภาพ','การแปรรูปอาหาร','เชื้อเพลิงชีวภาพและเคมีชีวภาพ','การแพทย์ครบวงจร','สร้างสรรค์','อิเล็กทรอนิกส์อัจฉริยะ','หุ่นยนต์','ดิจิตอล','การท่องเที่ยวกลุ่มรายได้ดีและการท่องเที่ยวเชิงสุขภาพ','การบินและระบบขนส่ง','ยานยนต์สมัยใหม่']" :rules="[rules.required]" required></v-autocomplete>
-            <v-autocomplete variant="solo-filled" flat label="ความพร้อมของเทคโนโลยี" v-model="currentResearch.techReadiness" :items="['ระดับการทดลอง','ระดับต้นแบบ','ระดับถ่ายทอด']" :rules="[rules.required]" required></v-autocomplete>
-            <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.description" :rules="[rules.required]" required></v-textarea>
-            <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.highlight"></v-textarea>
-            <v-combobox v-model="currentResearch.coop" label="ความร่วมมือที่เสาะหา" chips multiple variant="solo-filled" :rules="[rules.required]" required></v-combobox>
-            <v-text-field label="ปีงบประมาณ" variant="solo-filled" v-model="currentResearch.budgetYear" :rules="[rules.required]" required></v-text-field>
-            <v-combobox label="Keyword" variant="solo-filled" chips multiple v-model="currentResearch.keyword"></v-combobox>
-            <v-container class="flex">
-              <v-checkbox v-model="currentResearch.ipType" label="Portfolio" value="portfolio" :rules="[rules.required]" required></v-checkbox>
-              <v-checkbox v-model="currentResearch.ipType" label="Prototype" value="prototype" :rules="[rules.required]" required></v-checkbox>
-            </v-container>
-            <p class="ml-10 text-red-500">อัพโหลดปกรูปภาพขนาด 800 X 530 </p>
-            <v-file-input label="Upload Images" multiple @change="handleFileUpload" variant="solo-filled" accept="image/*" prepend-icon="mdi-camera"></v-file-input>
-            <v-file-input label="Upload PDF" @change="handlePdfUpload" variant="solo-filled" accept="application/pdf" prepend-icon="mdi-file-pdf-box"></v-file-input>
-            <v-container class="flex">
-              <v-card v-for="(img, index) in currentResearch.filePath" :key="index" class="mx-2" style="position: relative;">
-                <template v-if="typeof img === 'string' && img.toLowerCase().endsWith('.pdf')">
-                  <v-icon size="100" color="red">mdi-file-pdf-box</v-icon>
-                  <v-card-text class="text-center">{{ img.split('/').pop() }}</v-card-text>
+          <v-card class="rounded-3xl pa-2 mb-2 bg-gray-200">
+            <v-card-title class="d-flex align-center my-2">
+              <v-icon icon="mdi-clipboard-edit"></v-icon> &nbsp; จัดการผลงานวิจัย
+              <v-spacer></v-spacer>
+              <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify"
+                variant="solo-filled" flat hide-details single-line clearable @click:clear="clearSearch"
+                @input="searchResearch"></v-text-field>
+            </v-card-title>
+            <v-card-text>
+              <v-data-table :headers="headers" :items="researches.result" class="elevation-1">
+                <template v-slot:[`item.actions`]="{ item }">
+                  <v-container class="flex justify-center align-center">
+                    <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
+                    <v-icon small class="mr-2" :class="item.status == 'active' ? 'text-green' : 'text-red'"
+                      @click="toggleVisibility(item)">
+                      {{ item.status == 'active' ? 'mdi-eye' : 'mdi-eye-off' }}
+                    </v-icon>
+                    <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+                  </v-container>
                 </template>
-                <template v-else>
-                  <v-img :src="`${baseUrl}/${img}`" v-model="currentResearch.filePath" height="250px" width="300px" cover></v-img>
-                </template>
-                <v-btn v-if="isEdit" @click="markForDeletion(index)" :class="{ 'marked-for-deletion': markedForDeletion.includes(index) }" :icon="markedForDeletion.includes(index) ? 'mdi-check' : 'mdi-delete'" style="position: absolute; top: 5px; right: 5px;">
-                </v-btn>
-              </v-card>
-            </v-container>
-          </v-form>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="red darken-1" variant="tonal" class="" text @click="dialog = false">ยกเลิก</v-btn>
-          <v-btn color="green darken-1" variant="tonal" text @click="validateForm">{{ isEdit ? 'บันทึก' : 'สร้าง' }}</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-container>
+              </v-data-table>
+              <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
+            </v-card-text>
+          </v-card>
+          <v-dialog v-model="dialog" max-width="1050px">
+            <v-card class="rounded-xl">
+              <v-card-title>{{ isEdit ? 'แก้ไขผลงานวิจัย' : 'สร้างผลงานวิจัย' }}</v-card-title>
+              <v-card-text>
+                <v-form ref="form" v-model="valid">
+                  <v-text-field label="ชื่อผลงาน" variant="solo-filled" v-model="currentResearch.nameOnMedia"
+                    :rules="[rules.required]" required></v-text-field>
+                  <v-combobox v-model="currentResearch.inventor" label="ผู้ประดิษฐ์" variant="solo-filled" chips
+                    multiple :rules="[rules.required]" required></v-combobox>
+                  <v-autocomplete variant="solo-filled" flat label="สังกัด" v-model="currentResearch.major"
+                    :items="['สำนักวิชาศิลปศาสตร์', 'สำนักวิชาวิทยาศาสตร์', 'สำนักวิชาการจัดการ', 'สำนักวิชาเทคโนโลยีสารสนเทศ', 'สำนักวิชาอุตสาหกรรมเกษตร', 'สำนักวิชานิติศาสตร์', 'สำนักวิชาวิทยาศาสตร์เครื่องสำอาง', 'สำนักวิชาวิทยาศาสตร์สุขภาพ', 'สำนักวิชาพยาบาลศาสตร์', 'สำนักวิชาเวชศาสตร์ชะลอวัยและฟื้นฟูสุขภาพ', 'สำนักวิชาแพทยศาสตร์', 'สำนักวิชาทันตแพทยศาสตร์', 'สำนักวิชานวัตกรรมสังคม', 'สำนักวิชาจีนวิทยา', 'สำนักวิชาการแพทย์บูรณาการ', 'อื่นๆ']"
+                    :rules="[rules.required]" required></v-autocomplete>
+                  <v-autocomplete variant="solo-filled" flat label="ทรัพย์สินทางปัญญา"
+                    v-model="currentResearch.intelProp"
+                    :items="['สิทธิบัตรการประดิษฐ์', 'อนุสิทธิบัตร', 'สิทธิบัตรออกแบบ', 'ลิขสิทธิ์', 'ลิขสิทธิ์-โปรแกรมคอมพิวเตอร์', 'ผลงานวิจัย', 'ต้นแบบ', 'อื่น ๆ']"
+                    :rules="[rules.required]" required></v-autocomplete>
+                  <v-autocomplete variant="solo-filled" flat label="ประเภทอุตสาหกรรม"
+                    v-model="currentResearch.industryType"
+                    :items="['เครื่องสำอาง', 'การเกษตรและเทคโนโลยีชีวภาพ', 'การแปรรูปอาหาร', 'เชื้อเพลิงชีวภาพและเคมีชีวภาพ', 'การแพทย์ครบวงจร', 'สร้างสรรค์', 'อิเล็กทรอนิกส์อัจฉริยะ', 'หุ่นยนต์', 'ดิจิตอล', 'การท่องเที่ยวกลุ่มรายได้ดีและการท่องเที่ยวเชิงสุขภาพ', 'การบินและระบบขนส่ง', 'ยานยนต์สมัยใหม่']"
+                    :rules="[rules.required]" required></v-autocomplete>
+                  <v-autocomplete variant="solo-filled" flat label="ความพร้อมของเทคโนโลยี"
+                    v-model="currentResearch.techReadiness" :items="['ระดับการทดลอง', 'ระดับต้นแบบ', 'ระดับถ่ายทอด']"
+                    :rules="[rules.required]" required></v-autocomplete>
+                  <v-textarea label="เนื้อหา" variant="solo-filled" v-model="currentResearch.description"
+                    :rules="[rules.required]" required></v-textarea>
+                  <v-textarea label="จุดเด่น" variant="solo-filled" v-model="currentResearch.highlight"></v-textarea>
+                  <v-combobox v-model="currentResearch.coop" label="ความร่วมมือที่เสาะหา" chips multiple
+                    variant="solo-filled" :rules="[rules.required]" required></v-combobox>
+                  <v-text-field label="ปีงบประมาณ" variant="solo-filled" v-model="currentResearch.budgetYear"
+                    :rules="[rules.required]" required></v-text-field>
+                  <v-combobox label="Keyword" variant="solo-filled" chips multiple
+                    v-model="currentResearch.keyword"></v-combobox>
+                  <v-container class="flex">
+                    <v-checkbox v-model="currentResearch.ipType" label="Portfolio" value="portfolio"
+                      :rules="[rules.required]" required></v-checkbox>
+                    <v-checkbox v-model="currentResearch.ipType" label="Prototype" value="prototype"
+                      :rules="[rules.required]" required></v-checkbox>
+                  </v-container>
+                  <p class="ml-10 text-red-500">อัพโหลดปกรูปภาพขนาด 800 X 530 </p>
+                  <v-file-input label="Upload Images" multiple @change="handleFileUpload" variant="solo-filled"
+                    accept="image/*" prepend-icon="mdi-camera"></v-file-input>
+                  <v-file-input label="Upload PDF" @change="handlePdfUpload" variant="solo-filled"
+                    accept="application/pdf" prepend-icon="mdi-file-pdf-box"></v-file-input>
+                  <v-container fluid>
+                    <v-row>
+                      <v-col v-for="(img, index) in currentResearch.filePath" :key="index" cols="12" sm="6" md="6"
+                        lg="6">
+                        <v-card class="mx-auto" max-width="400" style="position: relative;">
+                          <template v-if="typeof img === 'string' && img.toLowerCase().endsWith('.pdf')">
+                            <v-icon size="100" color="red">mdi-file-pdf-box</v-icon>
+                            <v-card-text class="text-center">{{ img.split('/').pop() }}</v-card-text>
+                          </template>
+                          <template v-else>
+                            <v-img :src="`${baseUrl}/${img}`" v-model="currentResearch.filePath" height="250"
+                              cover></v-img>
+                          </template>
+                          <v-btn v-if="isEdit" @click="markForDeletion(index)"
+                            :class="{ 'marked-for-deletion': markedForDeletion.includes(index) }"
+                            :icon="markedForDeletion.includes(index) ? 'mdi-check' : 'mdi-delete'"
+                            style="position: absolute; top: 5px; right: 5px;"></v-btn>
+                        </v-card>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-form>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="red darken-1" variant="tonal" class="" text @click="dialog = false">ยกเลิก</v-btn>
+                <v-btn color="green darken-1" variant="tonal" text @click="validateForm">{{ isEdit ? 'บันทึก' : 'สร้าง'
+                  }}</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-container>
       </staff-layout>
 
       <!-- Dialog delete research -->
       <v-dialog v-model="dialogDelete" max-width="800px">
         <v-card class="rounded-xl pa-4">
-          <v-card-title class="text-h5 text-center text-black">คุณแน่ใจหรือว่าต้องการลบ<br> <p class="text-red-500">{{currentResearch.nameOnMedia}} ?</p> </v-card-title>
+          <v-card-title class="text-h5 text-center text-black">คุณแน่ใจหรือว่าต้องการลบ<br>
+            <p class="text-red-500">{{ currentResearch.nameOnMedia }} ?</p>
+          </v-card-title>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="'blue-grey-darken-1" variant="outlined" class="hover:bg-gray-500"
@@ -102,7 +136,7 @@
 </template>
 
 <script>
-import {api, url} from "../../axios";
+import { api, url } from "../../axios";
 import StaffLayout from "@/layouts/staff.vue";
 export default {
   name: "staff-ResearchManagement-page",
@@ -299,13 +333,13 @@ export default {
           } catch (error) {
             console.log(error);
             if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-            this.snackbar.message = "Error " + error;
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
-            setTimeout(function () {
-            window.location.reload()
-          }, 1000);
-          }
+              this.snackbar.message = "Error " + error;
+              this.snackbar.color = "error"; // Set error color
+              this.snackbar.show = true;
+              setTimeout(function () {
+                window.location.reload()
+              }, 1000);
+            }
             if (!error.response) {
               this.snackbar.message = "Error Editing research: " + error;
             } else {
@@ -331,13 +365,13 @@ export default {
       } catch (error) {
         console.log(error);
         if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-            this.snackbar.message = "Error " + error;
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
-            setTimeout(function () {
+          this.snackbar.message = "Error " + error;
+          this.snackbar.color = "error"; // Set error color
+          this.snackbar.show = true;
+          setTimeout(function () {
             window.location.reload()
           }, 1000);
-          }
+        }
         if (!error.response) {
           this.snackbar.message = "Error adding research: " + error;
         } else {
@@ -380,13 +414,13 @@ export default {
       } catch (error) {
         console.log("Error deleting research: " + error);
         if (error.response.data.description.code == 40107 || error.response.data.description.code == 40102) {
-            this.snackbar.message = "Error " + error;
-            this.snackbar.color = "error"; // Set error color
-            this.snackbar.show = true;
-            setTimeout(function () {
+          this.snackbar.message = "Error " + error;
+          this.snackbar.color = "error"; // Set error color
+          this.snackbar.show = true;
+          setTimeout(function () {
             window.location.reload()
           }, 1000);
-          }
+        }
         if (!error.response) {
           this.snackbar.message = "Error deleting research: " + error;
         } else {
