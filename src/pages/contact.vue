@@ -20,10 +20,12 @@
 
             <div class="frame frame-default frame-type-text frame-layout-0">
               <p class="font-noto-sans-thai py-2 lg:text-2xl sm:text-xl" style="font-weight: 500; font-size: 18px">
-                <span>ฝ่ายจัดการทรัพย์สินทางปัญญา มหาวิทยาลัยแม่ฟ้าหลวง<br />
+                <span>ส่วนจัดการทรัพย์สินทางปัญญาและนวัตกรรม (MFii)<br />
+                  มหาวิทยาลัยแม่ฟ้าหลวง<br />
                   333 ม.1 ต.ท่าสุด อ.เมือง จ.เชียงราย 57100<br />
-                  โทรศัพท์ 0 5391 7014 หรือ 0 5391 7182<br />
-                  อีเมล: mfii@mfu.ac.th</span>
+                  โทรศัพท์: 0 5391 7182 หรือ 0 5391 7014<br />
+                  อีเมล: ip.mfii@mfu.ac.th
+                </span>
               </p>
             </div>
           </v-col>
@@ -121,7 +123,7 @@ export default {
       if (await this.validateForm()) {
         this.form.messageReply.user = this.user._id;
         try {
-          const response = await api.post('/user/mesRequest', this.form, {
+          await api.post('/user/mesRequest', this.form, {
             headers: {
               Authorization: localStorage.getItem("token"),
             },

@@ -28,13 +28,16 @@
         <v-col cols="6" md="4">
           <h4 class="footer-heading">ติดต่อเรา</h4>
           <p style="color: #fff">
-            ส่วนจัดการทรัพย์สินทางปัญญาและนวัตกรรม มหาวิทยาลัยแม่ฟ้าหลวง
-            <br />333 ม.1 ต.ท่าสุด อ.เมือง <br />จังหวัดเชียงราย 57100
+            ฝ่ายจัดการทรัพย์สินทางปัญญา (IP)<br />
+            ส่วนจัดการทรัพย์สินทางปัญญาและนวัตกรรม (MFii) <br />
+            มหาวิทยาลัยแม่ฟ้าหลวง <br />
+            <br />333 ม.1 ต.ท่าสุด อ.เมือง จังหวัดเชียงราย 57100
             <br />โทรศัพท์: 0 5391 7182 หรือ 0 5391 7014
             <br />อีเมล: ip.mfii@mfu.ac.th
           </p>
+          <br/>
           <div class="clear-fix"></div>
-          <h4 class="footer-heading">ติดตาม</h4>
+          <h4 class="footer-heading">ติดตาม MFii Connect</h4>
           <ul class="mfu-social flex space-x-4">
             <li class="group rounded-full bg-white">
               <a
@@ -82,6 +85,11 @@
             ><br />
             <a href="https://research.mfu.ac.th" style="color: #fff" class="hover:underline"
               >ส่วนบริหารงานวิจัย</a
+            >
+            ><br />
+            <a href="https://ip-mfii.mfu.ac.th" style="color: #fff" class="hover:underline"
+              >ส่วนจัดการทรัพย์สินทางปัญญาและนวัตกรรม 
+              </a
             >
           </p>
           <div class="clear-fix"></div>
