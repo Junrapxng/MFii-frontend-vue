@@ -69,7 +69,7 @@
         </v-row>
       </v-container>
 
-      <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
+      <v-snackbar v-model="snackbar.show" :timeout="snackbarTimeout" :color="snackbar.color" vertical>
         <div v-if="snackbar.Errcode === 40102 || snackbar.Errcode === 40107" class="text-subtitle-1 pb-2">โปรด <a style="text-decoration: underline;" 
           href="/register">สมัครสมาชิก</a> หรือ <a style="text-decoration: underline;" href="/login"> เข้าสู่ระบบ </a>
         </div>
@@ -204,6 +204,16 @@ export default {
       }
     }
   },
+
+  computed: {
+  snackbarTimeout() {
+    if (this.snackbar.Errcode === 40102 || this.snackbar.Errcode === 40107) {
+      return -1; // Timeout -1 for specific conditions
+    } else {
+      return 6000; // Default timeout in milliseconds (6 seconds)
+    }
+  }
+},
 
   created() {
     this.getUser()
