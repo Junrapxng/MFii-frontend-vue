@@ -1,14 +1,13 @@
 <template>
   <v-app>
     <NavBar />
-    <v-main>
-
+    <v-main class="pt-0">
       <!-- News And Video YouTube -->
-      <NewsAndVideo></NewsAndVideo>
+      <News/>
 
       <!-- Newer research research ใหม่-->
       <v-container>
-        <p class="text-3xl font-semibold mb-3">เพิ่มล่าสุด</p>
+        <p class="text-3xl font-semibold mb-3">ผลงานแนะนำ</p>
         <v-container class="flex justify-center items-center bg-gray-100 rounded">
           <v-row v-if="newinfo" class="flex flex-wrap justify-center">
             <v-col v-for="(item, index) in newinfo.slice(0, 4)" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
@@ -65,7 +64,7 @@
         <v-container class="flex justify-center items-center bg-gray-100 rounded">
           <v-row v-if="paginatedItems" class="flex flex-wrap justify-center">
             <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
-              <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
+              <router-link  :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="researchCard hover:shadow-lg transition-shadow rounded-xl">
                   <v-img :src="`${baseUrl}/${item.filePath[0]}`" cover height="200px">
                     <template v-slot:placeholder>
@@ -107,7 +106,7 @@
         <!-- Pagination -->
         <v-pagination v-model="currentPage" :length="totalPages" class="pt-6" @input="paginate"></v-pagination>
       </v-container>
-
+            <ytVideos/>
       <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
         <div class="text-subtitle-1 pb-2"></div>
         <p>{{ snackbar.message }}</p>
@@ -124,13 +123,15 @@
 </template>
 
 <script>
-import NewsAndVideo from "@/components/NewsAndVideo.vue";
+import News from "@/components/News.vue";
+import ytVideos from "@/components/ytvideos.vue";
 import { defineComponent, ref } from "vue";
 import { api, url } from "../axios";
 export default defineComponent({
   name: "index-page",
   components: {
-    NewsAndVideo
+    News,
+    ytVideos
   },
   data() {
     return {
@@ -146,7 +147,7 @@ export default defineComponent({
       newinfo: [],
       loading: true,
       currentPage: 1,
-      itemsPerPage: 4,
+      itemsPerPage: 8,
       sessionId: null,
       count: {},
       baseUrl: url,

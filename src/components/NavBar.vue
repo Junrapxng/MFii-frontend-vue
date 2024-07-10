@@ -94,7 +94,7 @@
 
   <v-container class="navcontainer">
     <!-- Header Menu Bar -->
-    <v-app-bar :elevation="2" app color="#D02630" class="font-noto-sans-thai mt-36">
+    <v-app-bar :elevation="2" app color="#D02630" class="font-noto-sans-thai mt-20">
       <v-app-bar-nav-icon @click="drawer = !drawer" class="navbar d-flex d-md-none"></v-app-bar-nav-icon>
 
       <v-spacer></v-spacer>
