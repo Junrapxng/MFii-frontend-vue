@@ -5,7 +5,7 @@
     <v-main>
       <v-alert v-if="responseMessage" type="error" icon="mdi-alert-circle-outline">{{
         responseMessage
-        }}</v-alert>
+      }}</v-alert>
       <v-container class="font-noto-sans-thai rounded-xl flex justify-center items-center bg-gray-100 mb-5">
         <v-card class="w-full max-w-2xl rounded-xl p-8">
           <v-card-title>
@@ -45,25 +45,20 @@
                     :rules="[(v) => !!v || 'กรุณากรอก นามสกุล']" required></v-text-field>
                 </v-col>
 
-                <div>
+                <!-- <div>
                   <p class="text-warning">
                     <v-icon color="warning">mdi-alert-circle-outline</v-icon>
                     ใช้ได้แค่ gmail, hotmail, mfu.ac.th, lamduan.mfu.ac.th
                   </p>
-                </div>
+                </div> -->
                 <v-col cols="12" md="6">
-
                   <v-text-field v-model="form.email" label="อีเมล" prepend-inner-icon="mdi-email-outline"
-                    variant="outlined" outlined color="#BA984C" :rules="[rules.required, rules.email]"></v-text-field>
+                    variant="outlined" outlined color="#BA984C" :rules="[rules.required, rules.email, rules.notEmpty]" required></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
                   <v-text-field v-model="form.phone" label="เบอร์โทรศัพท์" prepend-inner-icon="mdi-phone-outline"
-                    variant="outlined" outlined color="#BA984C" :rules="[
-                      (v) => !!v || 'กรุณากรอก เบอร์โทรศัพท์',
-                      (v) =>
-                        /^\d{10}$/.test(v) || 'กรุณากรอกเบอร์โทรศัพท์ 10 หลัก',
-                    ]" required></v-text-field>
+                    variant="outlined" outlined color="#BA984C" :rules="[rules.required, rules.phone, rules.notEmpty]" required></v-text-field>
                 </v-col>
 
                 <v-col cols="12">
@@ -112,18 +107,18 @@ export default {
       showPassword: false, // เพิ่มตรงนี้
       responseMessage: "",
       rules: {
-        required: value => !!value || 'กรุณากรอกอีเมล',
+        required: value => !!value || 'กรุณากรอกข้อมูล',
         email: value => {
-          const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(gmail\.com|hotmail\.com|outlook\.com|lamduan\.mfu\.ac\.th|mfu\.ac\.th)$/i;
+          const emailPattern = /.+@.+\..+/;
 
           if (!emailPattern.test(value)) {
             return 'โปรดกรอกอีเมลให้ถูกต้อง';
           }
-
           // Return true or undefined if the email is valid
           return true;
-        }
-
+        },
+        phone: value => /^\d{9,10}$/.test(value) || 'หมายเลขโทรศัพท์ต้องเป็นตัวเลข 9 หรือ 10 หลัก',
+        notEmpty: value => (value && value.trim().length > 0) || 'ช่องนี้ไม่สามารถเว้นว่างได้'
       }
     };
   },

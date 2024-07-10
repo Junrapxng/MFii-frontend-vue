@@ -3,34 +3,34 @@
   <v-app>
     <NavBar></NavBar>
     <main>
-      <v-container class="pa-4 my-15">
+      <v-container class="font-noto-sans-thai pa-4 my-15">
         <v-row justify="center">
           <v-col cols="12" md="8" lg="6">
             <v-card>
               <v-card-title class="headline primary white--text">
-                Edit Profile
+                แก้ไขข้อมูลส่วนตัว
               </v-card-title>
               <v-card-text>
                 <v-form @submit.prevent="saveProfile" ref="form">
                   <v-row>
                     <v-col cols="12">
-                      <v-text-field v-model="user.firstName" label="First Name" prepend-inner-icon="mdi-account"
+                      <v-text-field v-model="user.firstName" label="ชื่อ" prepend-inner-icon="mdi-account"
                         :rules="[rules.required, rules.notEmpty]" required></v-text-field>
-                      <v-text-field v-model="user.lastName" label="Last Name" prepend-inner-icon="mdi-account"
+                      <v-text-field v-model="user.lastName" label="นามสกุล" prepend-inner-icon="mdi-account"
                         :rules="[rules.required, rules.notEmpty]" required></v-text-field>
                     </v-col>
-                    <div>
+                    <!-- <div>
                       <p class="text-warning">
                         <v-icon color="warning">mdi-alert-circle-outline</v-icon>
                         ใช้ได้แค่ gmail, hotmail, mfu.ac.th, lamduan.mfu.ac.th
                       </p>
-                    </div>
+                    </div> -->
                     <v-col cols="12">
-                      <v-text-field v-model="user.email" label="Email" prepend-inner-icon="mdi-email"
+                      <v-text-field v-model="user.email" label="อีเมล" prepend-inner-icon="mdi-email"
                         :rules="[rules.required, rules.email, rules.notEmpty]" required></v-text-field>
                     </v-col>
                     <v-col cols="12">
-                      <v-text-field v-model="user.phoneNumber" label="Phone" prepend-inner-icon="mdi-phone"
+                      <v-text-field v-model="user.phoneNumber" label="เบอร์โทรศัพท์" prepend-inner-icon="mdi-phone"
                         :rules="[rules.required, rules.phone, rules.notEmpty]"></v-text-field>
                     </v-col>
                     <v-col cols="12" class="text-center">
@@ -82,19 +82,18 @@ export default {
         picture: ''
       },
       rules: {
-        required: value => !!value || 'This field is required.',
+        required: value => !!value || 'กรุณากรอกข้อมูล',
         email: value => {
-          const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(gmail\.com|hotmail\.com|outlook\.com|lamduan\.mfu\.ac\.th|mfu\.ac\.th)$/i;
+          const emailPattern = /.+@.+\..+/;
 
           if (!emailPattern.test(value)) {
             return 'โปรดกรอกอีเมลให้ถูกต้อง';
           }
-
           // Return true or undefined if the email is valid
           return true;
         },
-        phone: value => /^\d{10}$/.test(value) || 'Phone must be 10 digits.',
-        notEmpty: value => (value && value.trim().length > 0) || 'This field cannot be empty.'
+        phone: value => /^\d{9,10}$/.test(value) || 'หมายเลขโทรศัพท์ต้องเป็นตัวเลข 9 หรือ 10 หลัก',
+        notEmpty: value => (value && value.trim().length > 0) || 'ช่องนี้ไม่สามารถเว้นว่างได้'
       }
     }
   },
