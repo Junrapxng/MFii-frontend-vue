@@ -265,13 +265,19 @@ async saveResearch() {
     formData.append('description', this.currentResearch.description);
     formData.append('intelProp', this.currentResearch.intelProp);
     formData.append('industryType', this.currentResearch.industryType);
-    formData.append('highlight', (typeof this.currentResearch.highlight === 'string') ? this.currentResearch.highlight.split(',') : []);
+    console.log('Current highlight:', this.currentResearch.highlight);
     formData.append('techReadiness', this.currentResearch.techReadiness);
     formData.append('coop', this.currentResearch.coop);
     formData.append('link', this.currentResearch.link);
     formData.append('status', this.currentResearch.status);
     formData.append('ipType', this.currentResearch.ipType);
     formData.append('keyword', this.currentResearch.keyword);
+
+    // Split highlights and append each one individually
+    const highlights = this.currentResearch.highlight.split(',');
+      highlights.forEach((highlight, index) => {
+      formData.append(`highlight[${index}]`, highlight);
+    });
 
     if (this.currentResearch.img) {
       this.currentResearch.img.forEach((file, index) => {
@@ -293,7 +299,7 @@ async saveResearch() {
           description: this.currentResearch.description,
           intelProp: this.currentResearch.intelProp,
           industryType: this.currentResearch.industryType,
-          highlight: (typeof this.currentResearch.highlight === 'string') ? this.currentResearch.highlight.split(',') : [],
+          highlight: highlights,
           techReadiness: this.currentResearch.techReadiness,
           coop: this.currentResearch.coop,
           link: this.currentResearch.link,
