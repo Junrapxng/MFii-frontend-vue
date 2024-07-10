@@ -226,7 +226,7 @@ export default {
 
         // Check if formData has any files or links before making the request
         if (formData.has('images[0]') || formData.has('linkVideo') || formData.has('linkImage')) {
-          const response = await api.post('/staff/addNews', formData, {
+          await api.post('/staff/addNews', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
               Authorization: localStorage.getItem("token"),
@@ -347,7 +347,7 @@ export default {
     },
     async deleteImage() {
       try {
-        const response = await api.delete(`/staff/deleteNews/news/${this.deleteImgId}`, {
+        await api.delete(`/staff/deleteNews/news/${this.deleteImgId}`, {
           headers: {
             Authorization: localStorage.getItem("token"),
           }
