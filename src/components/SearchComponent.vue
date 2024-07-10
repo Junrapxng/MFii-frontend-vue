@@ -28,7 +28,7 @@ export default {
       pages: [
         { name: "หน้าหลัก", path: "/" },
         { name: "ยกระดับงานวิจัยและนวัตกรรม", path: "/services/ups" },
-        { name: "ขั้นตอนการขออนุญาติใช้สิทธิ", path: "/services/lap" },
+        { name: "ขั้นตอนการขออนุญาตใช้สิทธิ", path: "/services/lap" },
         { name: "อบรมและให้คำปรึกษา", path: "/services/ipa" },
         { name: "ยื่นขอรับความคุ้มครอง", path: "/services/ipp" },
         { name: "ผลงานพร้อมถ่ายทอด", path: "/tt/all-categories" },

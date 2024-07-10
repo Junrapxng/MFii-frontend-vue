@@ -299,7 +299,7 @@ export default {
           title: "บริการของเรา",
           subItems: [
             { title: "ยกระดับงานวิจัยและนวัตกรรม ", route: "/services/ups" },
-            { title: "ขั้นตอนการขออนุญาติใช้สิทธิ", route: "/services/lap" },
+            { title: "ขั้นตอนการขออนุญาตใช้สิทธิ", route: "/services/lap" },
             { title: "อบรมและให้คำปรึกษา ", route: "/services/ipa" },
             { title: "ยื่นขอรับความคุ้มครอง  ", route: "/services/ipp" },
           ],
