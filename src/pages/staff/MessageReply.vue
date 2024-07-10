@@ -28,8 +28,9 @@
           <!-- header ====================================================================================== -->
           <v-dialog v-model="isDialogOpen" max-width="800px" class="font-noto-sans-thai">
             <v-card v-for="selected in selectedMessage" :key="selected._id" class="rounded-xl">
-              <v-card-title class="headline text-lg-h5 font-semibold">เทคโนโลยีที่สนใจ: {{ selected.interestTech
-                }}</v-card-title>
+              <v-card-title class="headline text-2xl font-semibold" style="white-space: pre-line;">
+                เทคโนโลยีที่สนใจ: <span class="text-xl">{{ selected.interestTech }}</span>
+              </v-card-title>
               <v-card-subtitle>
                 กิจการ : {{ selected.businessName }}
               </v-card-subtitle>
@@ -40,7 +41,10 @@
                 ขอบเขตการใช้งาน : {{ selected.usesScope }}
               </v-card-subtitle>
               <v-card-subtitle>
-                ผู้ส่ง : {{ selected.firstName }} {{ selected.lastName }} อีเมล: {{ selected.email }}
+                ผู้ส่ง : {{ selected.firstName }} {{ selected.lastName }}
+              </v-card-subtitle>
+              <v-card-subtitle>
+                อีเมล: {{ selected.email }}
               </v-card-subtitle>
               <v-card-text>
 
