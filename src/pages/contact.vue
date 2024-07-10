@@ -39,7 +39,13 @@
             <v-container
               class="font-noto-sans-thai rounded-xl flex justify-center items-center min-h-fit min-w-full bg-gray-100">
               <v-card class="w-full max-w-full rounded-xl ">
-                <v-card-text>
+                <v-container v-if="user._id == null" class="flex justify-center">
+                  <h1> คุณยังไม่ได้เข้าสู่ระบบ โปรด <a style="text-decoration: underline; color: red;"
+                      href="/register">สมัครสมาชิก</a>
+                    หรือ <a style="text-decoration: underline;  color: red;" href="/login">เข้าสู่ระบบ</a>
+                    เพื่อกรอกแบบฟอร์มขอข้อมูล</h1>
+                </v-container>
+                <v-card-text v-else>
                   <v-form ref="form" @submit.prevent="sendRequest">
                     <v-row>
                       <v-col cols="12" md="12" lg="12">
@@ -70,8 +76,9 @@
       </v-container>
 
       <v-snackbar v-model="snackbar.show" :timeout="snackbarTimeout" :color="snackbar.color" vertical>
-        <div v-if="snackbar.Errcode === 40102 || snackbar.Errcode === 40107" class="text-subtitle-1 pb-2">โปรด <a style="text-decoration: underline;" 
-          href="/register">สมัครสมาชิก</a> หรือ <a style="text-decoration: underline;" href="/login"> เข้าสู่ระบบ </a>
+        <div v-if="snackbar.Errcode === 40102 || snackbar.Errcode === 40107" class="text-subtitle-1 pb-2">โปรด <a
+            style="text-decoration: underline;" href="/register">สมัครสมาชิก</a> หรือ <a
+            style="text-decoration: underline;" href="/login"> เข้าสู่ระบบ </a>
         </div>
         <p>{{ snackbar.message }}</p>
         <template v-slot:actions>
@@ -206,16 +213,16 @@ export default {
   },
 
   computed: {
-  snackbarTimeout() {
-    if (this.snackbar.Errcode === 40102 || this.snackbar.Errcode === 40107) {
-      return -1; // Timeout -1 for specific conditions
-    } else {
-      return 6000; // Default timeout in milliseconds (6 seconds)
+    snackbarTimeout() {
+      if (this.snackbar.Errcode === 40102 || this.snackbar.Errcode === 40107) {
+        return -1; // Timeout -1 for specific conditions
+      } else {
+        return 6000; // Default timeout in milliseconds (6 seconds)
+      }
     }
-  }
-},
+  },
 
-  created() {
+  mounted() {
     this.getUser()
   },
 };
