@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <NavBar />
-    <v-main class="pt-0">
+    <v-main>
       <!-- News And Video YouTube -->
       <News/>
 
