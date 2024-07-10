@@ -248,6 +248,7 @@
       <v-spacer></v-spacer>
     </v-app-bar>
 
+    <!-- Use v-navigation-drawer in phone responsive -->
     <v-navigation-drawer v-model="drawer" temporary class="d-md-none font-noto-sans-thai">
       <v-list>
         <template v-for="item in menuItems" :key="item.title">
@@ -262,13 +263,48 @@
                   <v-list-item v-bind="props" :title="subItem.title"></v-list-item>
                 </template>
 
-                <v-list-item v-for="nestedItem in subItem.subItems" :key="nestedItem.title" :title="nestedItem.title"
-                  :to="nestedItem.route" link></v-list-item>
+                <template v-for="nestedItem in subItem.subItems" :key="nestedItem.title">
+                  <v-list-group v-if="nestedItem.subItems && nestedItem.subItems.length" :value="nestedItem.title">
+                    <template v-slot:activator="{ props }">
+                      <v-list-item v-bind="props" :title="nestedItem.title"></v-list-item>
+                    </template>
+
+                    <v-list-item v-for="subNestedItem in nestedItem.subItems" :key="subNestedItem.title"
+                      :title="subNestedItem.title"
+                      :to="!subNestedItem.external ? subNestedItem.route : undefined"
+                      :href="subNestedItem.external ? subNestedItem.route : undefined"
+                      :target="subNestedItem.external ? '_blank' : undefined"
+                      link>
+                    </v-list-item>
+                  </v-list-group>
+
+                  <v-list-item v-else
+                    :title="nestedItem.title"
+                    :to="!nestedItem.external ? nestedItem.route : undefined"
+                    :href="nestedItem.external ? nestedItem.route : undefined"
+                    :target="nestedItem.external ? '_blank' : undefined"
+                    link>
+                  </v-list-item>
+                </template>
               </v-list-group>
-              <v-list-item v-else :title="subItem.title" :to="subItem.route" link></v-list-item>
+
+              <v-list-item v-else
+                :title="subItem.title"
+                :to="!subItem.external ? subItem.route : undefined"
+                :href="subItem.external ? subItem.route : undefined"
+                :target="subItem.external ? '_blank' : undefined"
+                link>
+              </v-list-item>
             </template>
           </v-list-group>
-          <v-list-item v-else :title="item.title" :to="item.route" link></v-list-item>
+
+          <v-list-item v-else
+            :title="item.title"
+            :to="!item.external ? item.route : undefined"
+            :href="item.external ? item.route : undefined"
+            :target="item.external ? '_blank' : undefined"
+            link>
+          </v-list-item>
         </template>
       </v-list>
     </v-navigation-drawer>
