@@ -6,36 +6,47 @@
       <v-container class="font-noto-sans-thai pa-4 my-15">
         <v-row justify="center">
           <v-col cols="12" md="8" lg="6">
-            <v-card>
+            <v-card class="rounded-xl bg-gray-300 px-2 py-2">
               <v-card-title class="headline primary white--text">
                 แก้ไขข้อมูลส่วนตัว
               </v-card-title>
               <v-card-text>
                 <v-form @submit.prevent="saveProfile" ref="form">
                   <v-row>
-                    <v-col cols="12">
-                      <v-text-field v-model="user.firstName" label="ชื่อ" prepend-inner-icon="mdi-account"
-                        :rules="[rules.required, rules.notEmpty]" required></v-text-field>
-                      <v-text-field v-model="user.lastName" label="นามสกุล" prepend-inner-icon="mdi-account"
-                        :rules="[rules.required, rules.notEmpty]" required></v-text-field>
+                    <v-col cols="12" md="6">
+                      <v-text-field variant="solo-filled" v-model="user.firstName" label="ชื่อ"
+                        prepend-inner-icon="mdi-account" :rules="[rules.required, rules.notEmpty]"
+                        required></v-text-field>
                     </v-col>
-                    <!-- <div>
-                      <p class="text-warning">
-                        <v-icon color="warning">mdi-alert-circle-outline</v-icon>
-                        ใช้ได้แค่ gmail, hotmail, mfu.ac.th, lamduan.mfu.ac.th
-                      </p>
-                    </div> -->
-                    <v-col cols="12">
-                      <v-text-field v-model="user.email" label="อีเมล" prepend-inner-icon="mdi-email"
-                        :rules="[rules.required, rules.email, rules.notEmpty]" required></v-text-field>
+
+                    <v-col cols="12" md="6">
+                      <v-text-field variant="solo-filled" v-model="user.lastName" label="นามสกุล"
+                        prepend-inner-icon="mdi-account" :rules="[rules.required, rules.notEmpty]"
+                        required></v-text-field>
                     </v-col>
-                    <v-col cols="12">
-                      <v-text-field v-model="user.phoneNumber" label="เบอร์โทรศัพท์" prepend-inner-icon="mdi-phone"
+
+                    <v-col cols="12" md="6">
+                      <v-text-field variant="solo-filled" v-model="user.email" label="อีเมล"
+                        prepend-inner-icon="mdi-email" :rules="[rules.required, rules.email, rules.notEmpty]"
+                        required></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6">
+                      <v-text-field variant="solo-filled" v-model="user.phoneNumber" label="เบอร์โทรศัพท์"
+                        prepend-inner-icon="mdi-phone"
                         :rules="[rules.required, rules.phone, rules.notEmpty]"></v-text-field>
                     </v-col>
+
+                    <v-col cols="12">
+                      <v-autocomplete variant="solo-filled" label="ประเภทธุรกิจ" v-model="user.businessType"
+                        :items="['บุคคลธรรมดา', 'นิติบุคคล']" :rules="[rules.required]" required></v-autocomplete>
+
+                      <v-text-field variant="solo-filled" v-model="user.businessName" label="ชื่อกิจการ"
+                         :rules="[rules.required, rules.notEmpty]"
+                        required></v-text-field>
+                    </v-col>
+                    
                     <v-col cols="12" class="text-center">
-                      <v-btn type="submit" color="primary" class="mr-2">Save</v-btn>
-                      <!-- <v-btn type="button" color="grey" @click="resetForm">Cancel</v-btn> -->
+                      <v-btn type="submit" color="success rounded-xl w-full" class="mr-2">บันทึก</v-btn>
                     </v-col>
                   </v-row>
                 </v-form>
@@ -132,8 +143,8 @@ export default {
               errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
               errorCode = errorDesc.code;
               setTimeout(function () {
-            window.location.reload();
-          }, 1000);
+                window.location.reload();
+              }, 1000);
             } else {
               errorMessage = errorDesc?.description || error.response.data.message || "Server error";
               errorCode = error.response.status;
