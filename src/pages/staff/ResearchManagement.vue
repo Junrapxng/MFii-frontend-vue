@@ -67,9 +67,11 @@
                   </v-container>
                   <p class="ml-10 text-red-500">อัพโหลดปกรูปภาพขนาด 800 X 530 </p>
                   <v-file-input label="Upload Images" multiple @change="handleFileUpload" variant="solo-filled"
-                    accept="image/*" prepend-icon="mdi-camera"></v-file-input>
+                    accept="image/*" prepend-icon="mdi-camera" @click:clear="clearFileInputs"
+                    :rules="[fileSizeRule]"></v-file-input>
                   <v-file-input label="Upload PDF" @change="handlePdfUpload" variant="solo-filled"
-                    accept="application/pdf" prepend-icon="mdi-file-pdf-box"></v-file-input>
+                    accept="application/pdf" prepend-icon="mdi-file-pdf-box" @click:clear="clearFileInputs"
+                    :rules="[fileSizeRule]"></v-file-input>
                   <v-container fluid>
                     <v-row>
                       <v-col v-for="(img, index) in currentResearch.filePath" :key="index" cols="12" sm="6" md="6"
@@ -238,167 +240,178 @@ export default {
       this.markedForDeletion = [];
     },
     validateForm() {
-  this.$refs.form.validate();
-  if (this.valid) {
-    this.saveResearch();
-  }
-},
+      this.$refs.form.validate();
+      if (this.checkFileSizes()) {
+        if (this.valid) {
+          this.saveResearch();
+        }
+      }
+    },
 
-handleFileUpload(event) {
-  this.currentResearch.img = Array.from(event.target.files);
-},
+    handleFileUpload(event) {
+      this.currentResearch.img = Array.from(event.target.files);
+    },
 
-handlePdfUpload(event) {
-  this.currentResearch.pdfPath = event.target.files[0];
-},
+    handlePdfUpload(event) {
+      this.currentResearch.pdfPath = event.target.files[0];
+    },
 
-async saveResearch() {
-  if (!this.valid) {
-    return;
-  }
-  try {
-    const formData = new FormData();
-    formData.append('budgetYear', this.currentResearch.budgetYear);
-    formData.append('nameOnMedia', this.currentResearch.nameOnMedia);
-    formData.append('inventor', this.currentResearch.inventor);
-    formData.append('major', this.currentResearch.major);
-    formData.append('description', this.currentResearch.description);
-    formData.append('intelProp', this.currentResearch.intelProp);
-    formData.append('industryType', this.currentResearch.industryType);
-    console.log('Current highlight:', this.currentResearch.highlight);
-    formData.append('techReadiness', this.currentResearch.techReadiness);
-    formData.append('coop', this.currentResearch.coop);
-    formData.append('link', this.currentResearch.link);
-    formData.append('status', this.currentResearch.status);
-    formData.append('ipType', this.currentResearch.ipType);
-    formData.append('keyword', this.currentResearch.keyword);
+    clearFileInputs() {
+      this.currentResearch.img = null;
+      this.currentResearch.pdfPath = null;
+    },
 
-    // Split highlights and append each one individually
-    const highlightString = Array.isArray(this.currentResearch.highlight) 
-      ? this.currentResearch.highlight.join(',') 
-      : this.currentResearch.highlight;
-    const highlights = highlightString.split(',').map(item => item.trim());
-    highlights.forEach((highlight, index) => {
-      formData.append(`highlight[${index}]`, highlight);
-    });
+    async saveResearch() {
+      if (!this.valid) {
+        return;
+      }
+      if (!this.checkFileSizes()) {
+        return;
+      }
 
-    if (this.currentResearch.img) {
-      this.currentResearch.img.forEach((file, index) => {
-        formData.append(`file${index + 1}`, file);
-      });
-    }
-
-    if (this.currentResearch.pdfPath) {
-      formData.append('pdf', this.currentResearch.pdfPath);
-    }
-
-    if (this.isEdit) {
       try {
-        await api.patch(`/staff/updateResearchData/${this.currentResearch._id}`, {
-          budgetYear: this.currentResearch.budgetYear,
-          nameOnMedia: this.currentResearch.nameOnMedia,
-          inventor: this.currentResearch.inventor,
-          major: this.currentResearch.major,
-          description: this.currentResearch.description,
-          intelProp: this.currentResearch.intelProp,
-          industryType: this.currentResearch.industryType,
-          highlight: highlights,
-          techReadiness: this.currentResearch.techReadiness,
-          coop: this.currentResearch.coop,
-          link: this.currentResearch.link,
-          status: this.currentResearch.status,
-          ipType: this.currentResearch.ipType,
-          keyword: this.currentResearch.keyword,
-        }, {
-          headers: {
-            Authorization: localStorage.getItem('token'),
-          },
+        const formData = new FormData();
+        formData.append('budgetYear', this.currentResearch.budgetYear);
+        formData.append('nameOnMedia', this.currentResearch.nameOnMedia);
+        formData.append('inventor', this.currentResearch.inventor);
+        formData.append('major', this.currentResearch.major);
+        formData.append('description', this.currentResearch.description);
+        formData.append('intelProp', this.currentResearch.intelProp);
+        formData.append('industryType', this.currentResearch.industryType);
+        console.log('Current highlight:', this.currentResearch.highlight);
+        formData.append('techReadiness', this.currentResearch.techReadiness);
+        formData.append('coop', this.currentResearch.coop);
+        formData.append('link', this.currentResearch.link);
+        formData.append('status', this.currentResearch.status);
+        formData.append('ipType', this.currentResearch.ipType);
+        formData.append('keyword', this.currentResearch.keyword);
+
+        // Split highlights and append each one individually
+        const highlightString = Array.isArray(this.currentResearch.highlight)
+          ? this.currentResearch.highlight.join(',')
+          : this.currentResearch.highlight;
+        const highlights = highlightString.split(',').map(item => item.trim());
+        highlights.forEach((highlight, index) => {
+          formData.append(`highlight[${index}]`, highlight);
         });
 
-        if (this.markedForDeletion.length > 0) {
-          const deleteRequests = this.markedForDeletion.map(index => {
-            const img = this.currentResearch.filePath[index];
-            return api.patch(`/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
-              filePath: img
+        if (this.currentResearch.img) {
+          this.currentResearch.img.forEach((file, index) => {
+            formData.append(`file${index + 1}`, file);
+          });
+        }
+
+        if (this.currentResearch.pdfPath) {
+          formData.append('pdf', this.currentResearch.pdfPath);
+        }
+
+        if (this.isEdit) {
+          try {
+            await api.patch(`/staff/updateResearchData/${this.currentResearch._id}`, {
+              budgetYear: this.currentResearch.budgetYear,
+              nameOnMedia: this.currentResearch.nameOnMedia,
+              inventor: this.currentResearch.inventor,
+              major: this.currentResearch.major,
+              description: this.currentResearch.description,
+              intelProp: this.currentResearch.intelProp,
+              industryType: this.currentResearch.industryType,
+              highlight: highlights,
+              techReadiness: this.currentResearch.techReadiness,
+              coop: this.currentResearch.coop,
+              link: this.currentResearch.link,
+              status: this.currentResearch.status,
+              ipType: this.currentResearch.ipType,
+              keyword: this.currentResearch.keyword,
             }, {
               headers: {
                 Authorization: localStorage.getItem('token'),
               },
             });
-          });
-          await Promise.all(deleteRequests);
-        }
 
-        await api.patch(`/staff/addFileResearch/${this.currentResearch._id}`, formData, {
-          headers: {
-            Authorization: localStorage.getItem('token'),
-            'Content-Type': 'multipart/form-data'
-          },
-        });
-        this.snackbar.message = "Edit research successfully";
-        this.snackbar.color = "success";
+            if (this.markedForDeletion.length > 0) {
+              const deleteRequests = this.markedForDeletion.map(index => {
+                const img = this.currentResearch.filePath[index];
+                return api.patch(`/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
+                  filePath: img
+                }, {
+                  headers: {
+                    Authorization: localStorage.getItem('token'),
+                  },
+                });
+              });
+              await Promise.all(deleteRequests);
+            }
+
+            await api.patch(`/staff/addFileResearch/${this.currentResearch._id}`, formData, {
+              headers: {
+                Authorization: localStorage.getItem('token'),
+                'Content-Type': 'multipart/form-data'
+              },
+            });
+            this.snackbar.message = "Edit research successfully";
+            this.snackbar.color = "success";
+          } catch (error) {
+            this.handleError(error);
+          }
+
+        } else {
+          await api.post('/staff/addResearch', formData, {
+            headers: {
+              Authorization: localStorage.getItem('token'),
+              'Content-Type': 'multipart/form-data'
+            },
+          });
+          this.snackbar.message = "เพิ่มงานวิจัยเรียบร้อยแล้ว";
+          this.snackbar.color = "success";
+        }
+        this.snackbar.show = true;
+        this.fetchResearches();
+
       } catch (error) {
         this.handleError(error);
       }
+      this.dialog = false;
+      this.resetCurrentResearch();
+    },
 
-    } else {
-      await api.post('/staff/addResearch', formData, {
-        headers: {
-          Authorization: localStorage.getItem('token'),
-          'Content-Type': 'multipart/form-data'
-        },
-      });
-      this.snackbar.message = "เพิ่มงานวิจัยเรียบร้อยแล้ว";
-      this.snackbar.color = "success";
-    }
-    this.snackbar.show = true;
-    this.fetchResearches();
+    handleError(error) {
+      let errorMessage = "An unexpected error occurred";
+      let errorCode = "Unknown";
+      let errorDetails = "";
 
-  } catch (error) {
-    this.handleError(error);
-  }
-  this.dialog = false;
-  this.resetCurrentResearch();
-},
+      if (error.response) {
+        const errorDesc = error.response.data.description;
+        if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+          errorMessage = errorDesc.description;
+          errorCode = errorDesc.code;
+          setTimeout(() => {
+            window.location.reload();
+          }, 1000);
+        } else {
+          errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+          errorCode = error.response.status;
+        }
+      } else if (error.request) {
+        errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+      } else if (error.code === 'ERR_NETWORK') {
+        errorMessage = "Network Error";
+        errorCode = error.code;
+      } else {
+        errorMessage = error.message;
+      }
 
-handleError(error) {
-  let errorMessage = "An unexpected error occurred";
-  let errorCode = "Unknown";
-  let errorDetails = "";
+      errorDetails = `${error.name}: ${error.message}`;
+      console.error(`Error : ${errorDetails}`, error);
 
-  if (error.response) {
-    const errorDesc = error.response.data.description;
-    if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
-      errorMessage = errorDesc.description;
-      errorCode = errorDesc.code;
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
-    } else {
-      errorMessage = errorDesc?.description || error.response.data.message || "Server error";
-      errorCode = error.response.status;
-    }
-  } else if (error.request) {
-    errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
-  } else if (error.code === 'ERR_NETWORK') {
-    errorMessage = "Network Error";
-    errorCode = error.code;
-  } else {
-    errorMessage = error.message;
-  }
-
-  errorDetails = `${error.name}: ${error.message}`;
-  console.error(`Error : ${errorDetails}`, error);
-
-  this.snackbar = {
-    message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
-    color: "error",
-    Errcode: errorCode,
-    show: true
-  };
-    this.dialog = false;
-    this.resetCurrentResearch();
-  },
+      this.snackbar = {
+        message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+        color: "error",
+        Errcode: errorCode,
+        show: true
+      };
+      this.dialog = false;
+      this.resetCurrentResearch();
+    },
 
     // =====================================================================================================
 
@@ -427,45 +440,45 @@ handleError(error) {
 
       } catch (error) {
         let errorMessage = "An unexpected error occurred";
-          let errorCode = "Unknown";
-          let errorDetails = "";
-          if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            const errorDesc = error.response.data.description;
-            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
-              // Handle specific error codes
-              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
-              errorCode = errorDesc.code;
-              setTimeout(function () {
-            window.location.reload();
-          }, 1000);
-            } else {
-              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
-              errorCode = error.response.status;
-            }
-          } else if (error.request) {
-            // The request was made but no response was received
-            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
-          } else if (error.code === 'ERR_NETWORK') {
-            // Network error
-            errorMessage = "Network Error";
-            errorCode = error.code;
+        let errorCode = "Unknown";
+        let errorDetails = "";
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          const errorDesc = error.response.data.description;
+          if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+            // Handle specific error codes
+            errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+            errorCode = errorDesc.code;
+            setTimeout(function () {
+              window.location.reload();
+            }, 1000);
           } else {
-            // Something happened in setting up the request that triggered an Error
-            errorMessage = error.message;
+            errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+            errorCode = error.response.status;
           }
-          // Add more detailed error information
-          errorDetails = `${error.name}: ${error.message}`;
-          // Log the error
-          console.error(`Error : ${errorDetails}`, error);
+        } else if (error.request) {
+          // The request was made but no response was received
+          errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+        } else if (error.code === 'ERR_NETWORK') {
+          // Network error
+          errorMessage = "Network Error";
+          errorCode = error.code;
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          errorMessage = error.message;
+        }
+        // Add more detailed error information
+        errorDetails = `${error.name}: ${error.message}`;
+        // Log the error
+        console.error(`Error : ${errorDetails}`, error);
 
-          this.snackbar = {
-            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
-            color: "error",
-            Errcode: errorCode,
-            show: true
-          };
+        this.snackbar = {
+          message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+          color: "error",
+          Errcode: errorCode,
+          show: true
+        };
       }
     },
     markForDeletion(index) {
@@ -486,45 +499,45 @@ handleError(error) {
 
       } catch (error) {
         let errorMessage = "An unexpected error occurred";
-          let errorCode = "Unknown";
-          let errorDetails = "";
-          if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            const errorDesc = error.response.data.description;
-            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
-              // Handle specific error codes
-              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
-              errorCode = errorDesc.code;
-              setTimeout(function () {
-            window.location.reload();
-          }, 1000);
-            } else {
-              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
-              errorCode = error.response.status;
-            }
-          } else if (error.request) {
-            // The request was made but no response was received
-            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
-          } else if (error.code === 'ERR_NETWORK') {
-            // Network error
-            errorMessage = "Network Error";
-            errorCode = error.code;
+        let errorCode = "Unknown";
+        let errorDetails = "";
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          const errorDesc = error.response.data.description;
+          if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+            // Handle specific error codes
+            errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+            errorCode = errorDesc.code;
+            setTimeout(function () {
+              window.location.reload();
+            }, 1000);
           } else {
-            // Something happened in setting up the request that triggered an Error
-            errorMessage = error.message;
+            errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+            errorCode = error.response.status;
           }
-          // Add more detailed error information
-          errorDetails = `${error.name}: ${error.message}`;
-          // Log the error
-          console.error(`Error : ${errorDetails}`, error);
+        } else if (error.request) {
+          // The request was made but no response was received
+          errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+        } else if (error.code === 'ERR_NETWORK') {
+          // Network error
+          errorMessage = "Network Error";
+          errorCode = error.code;
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          errorMessage = error.message;
+        }
+        // Add more detailed error information
+        errorDetails = `${error.name}: ${error.message}`;
+        // Log the error
+        console.error(`Error : ${errorDetails}`, error);
 
-          this.snackbar = {
-            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
-            color: "error",
-            Errcode: errorCode,
-            show: true
-          };
+        this.snackbar = {
+          message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+          color: "error",
+          Errcode: errorCode,
+          show: true
+        };
       }
     },
 
@@ -543,7 +556,49 @@ handleError(error) {
       } else {
         this.fetchResearches();
       }
+    },
+
+
+    // Check if all files are within the size limit
+    checkFileSizes() {
+      const maxSizeImage = 2 * 1024 * 1024; // 2 MB
+      const maxSizePDF = 10 * 1024 * 1024; // 10 MB
+      if (this.currentResearch.img) {
+        for (const file of this.currentResearch.img) {
+          if (file.size > maxSizeImage) {
+            this.snackbar.message = `File ${file.name} is too large. Max size is 2MB.`;
+            this.snackbar.color = "error";
+            this.snackbar.show = true;
+            return false;
+          }
+        }
+      }
+      if (this.currentResearch.pdfPath && this.currentResearch.pdfPath.size > maxSizePDF) {
+        this.snackbar.message = `File ${this.currentResearch.pdfPath.name} is too large. Max size is 10MB.`;
+        this.snackbar.color = "error";
+        this.snackbar.show = true;
+        return false;
+      }
+      return true;
+    },
+
+    //File size validation
+    fileSizeRule(value) {
+      if (value && value.length) {
+        const maxSizeImage = 2 * 1024 * 1024; // 2 MB
+        const maxSizePDF = 10 * 1024 * 1024; // 10 MB
+
+        for (const file of value) {
+          if (file.type.includes('image') && file.size > maxSizeImage) {
+            return `Image file ${file.name} is too large. Max size is 2MB.`;
+          } else if (file.type.includes('pdf') && file.size > maxSizePDF) {
+            return `PDF file ${file.name} is too large. Max size is 10MB.`;
+          }
+        }
+      }
+      return true;
     }
+
   },
 
   watch: {
