@@ -58,7 +58,7 @@
                 </v-btn>
               </template>
 
-              <v-list>
+              <v-list class="font-noto-sans-thai">
                 <router-link v-if="userStore.user.resutl.role === 'staff'" to="/staff">
                   <v-list-item>
                     <v-list-item-title>Staff Page</v-list-item-title>
@@ -71,17 +71,17 @@
                 </router-link>
                 <router-link v-if="userStore.user.resutl.role === 'user'" to="/profile">
                   <v-list-item>
-                    <v-list-item-title>Edit Profile</v-list-item-title>
+                    <v-list-item-title>แก้ไขข้อมูลส่วนตัว</v-list-item-title>
                   </v-list-item>
                 </router-link>
 
                 <router-link v-if="userStore.user.resutl.role === 'user'" to="/message">
                   <v-list-item>
-                    <v-list-item-title>Message</v-list-item-title>
+                    <v-list-item-title>ข้อความ</v-list-item-title>
                   </v-list-item>
                 </router-link>
                 <v-list-item @click="logoutBtn">
-                  <v-list-item-title>Logout</v-list-item-title>
+                  <v-list-item-title>ออกระบบ</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -217,7 +217,7 @@
             </v-btn>
           </template>
 
-          <v-list>
+          <v-list class="font-noto-sans-thai">
             <router-link v-if="userStore.user.resutl.role === 'staff'" to="/staff">
               <v-list-item>
                 <v-list-item-title>Staff Page</v-list-item-title>
@@ -230,17 +230,17 @@
             </router-link>
             <router-link v-if="userStore.user.resutl.role === 'user'" to="/profile">
               <v-list-item>
-                <v-list-item-title>Edit Profile</v-list-item-title>
+                <v-list-item-title>แก้ไขข้อมูลส่วนตัว</v-list-item-title>
               </v-list-item>
             </router-link>
 
             <router-link v-if="userStore.user.resutl.role === 'user'" to="/message">
               <v-list-item>
-                <v-list-item-title>Message</v-list-item-title>
+                <v-list-item-title>ข้อความ</v-list-item-title>
               </v-list-item>
             </router-link>
             <v-list-item @click="logoutBtn">
-              <v-list-item-title>Logout</v-list-item-title>
+              <v-list-item-title>ออกระบบ</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
