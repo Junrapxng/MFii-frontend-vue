@@ -274,8 +274,11 @@ async saveResearch() {
     formData.append('keyword', this.currentResearch.keyword);
 
     // Split highlights and append each one individually
-    const highlights = this.currentResearch.highlight.split(',');
-      highlights.forEach((highlight, index) => {
+    const highlightString = Array.isArray(this.currentResearch.highlight) 
+      ? this.currentResearch.highlight.join(',') 
+      : this.currentResearch.highlight;
+    const highlights = highlightString.split(',').map(item => item.trim());
+    highlights.forEach((highlight, index) => {
       formData.append(`highlight[${index}]`, highlight);
     });
 
