@@ -39,11 +39,16 @@
             <v-container
               class="font-noto-sans-thai rounded-xl flex justify-center items-center min-h-fit min-w-full bg-gray-100">
               <v-card class="w-full max-w-full rounded-xl ">
+                
                 <v-container v-if="user._id == null" class="flex justify-center">
                   <h1> คุณยังไม่ได้เข้าสู่ระบบ โปรด <a style="text-decoration: underline; color: red;"
                       href="/register">สมัครสมาชิก</a>
                     หรือ <a style="text-decoration: underline;  color: red;" href="/login">เข้าสู่ระบบ</a>
                     เพื่อกรอกแบบฟอร์มขอข้อมูล</h1>
+                </v-container>
+
+                <v-container v-else-if="user.role != 'user'" class="flex justify-center">
+                  <h1 style="color: red;">คุณไม่มีสิทธิใช้งานบริการนี้</h1>
                 </v-container>
                 <v-card-text v-else>
                   <v-form ref="form" @submit.prevent="sendRequest">
