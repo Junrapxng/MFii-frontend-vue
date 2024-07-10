@@ -67,6 +67,8 @@ export default {
         { name: "โครงสร้างองค์กร", path: "https://mfii.mfu.ac.th/mfii-about/mfii-structure.html", external: true },
         { name: "บุคลากร", path: "https://mfii.mfu.ac.th/mfii-ip-staff.html", external: true },
         { name: "ติดต่อเรา", path: "/about-us/contact" },
+        { name: "สมัครสมาชิก", path: "/register" },
+        { name: "เข้าสู่ระบบ", path: "/login" },
             ],
         };
     },
