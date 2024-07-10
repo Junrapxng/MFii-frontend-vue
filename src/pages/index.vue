@@ -47,7 +47,7 @@
             </v-col>
             <!-- <h1 v-if="loading">Loading...</h1> -->
             <div v-if="!loading">
-              <h1 v-if="newinfo.length <= 0">No data available</h1>
+              <h1 v-if="newinfo.length <= 0">ไม่พบข้อมูล</h1>
             </div>
           </v-row>
         </v-container>
