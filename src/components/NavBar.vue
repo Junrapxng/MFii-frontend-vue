@@ -30,9 +30,9 @@
 
           <div>
             <!-- Search Navbar -->
-            <search-component class="btn-search"></search-component>
-            <router-view></router-view>
-
+            <!-- <search-component class="btn-search"></search-component>
+            <router-view></router-view> -->
+            <searchNav/>
             <!-- if user not loggedin -->
             <v-container v-if="userStore.error || userStore.loading" class="regandlog">
               <v-btn class="reg  bg-black text-white rounded-xl border w-32 h-14 btn-nav mr-1"
@@ -313,13 +313,15 @@
 </template>
 <script>
 import { useUserStore } from "@/stores/user";
-import SearchComponent from '../components/SearchComponent.vue';
+// import SearchComponent from '../components/SearchComponent.vue';
+import searchNav from '../components/searchNav.vue'
 import { ref } from 'vue';
 import { useDisplay } from 'vuetify'
 export default {
   name: "NavBar",
   components: {
-    SearchComponent
+    // SearchComponent
+    searchNav,
   },
   data() {
     return {
