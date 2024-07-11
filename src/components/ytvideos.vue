@@ -1,7 +1,7 @@
 <template>
      <!-- Video YouTube -->
-     <div class="txt flex justify-center">
-      <h1 class="text-2xl font-bold mb-3">Success Case</h1>
+     <div class="txt flex justify-center m-10">
+      <h1 class="text-4xl font-bold">Success Case</h1>
     </div>
     <v-container fluid class="youtubeContainer">
       <v-carousel v-if="filteredVideos.length > 0" :key="carouselKey" class="myCarousel" hide-delimiter-background

@@ -9,6 +9,7 @@
     .profileIcon{
       margin: auto;
       padding-right: 35%;
+      padding-top: 0px;
     }
   
 
@@ -16,16 +17,23 @@
       display: none;
     }
 
+    .regandlog{
+      padding-top: 0px;
+    }
       @media (max-width: 1800px) {
         .profileIcon{
           margin: auto;
-          padding-right: 0%;
+          /* padding-right: 0%; */
+          padding: 0px;
+        }
+        .v-app-bar {
+          margin-top: 9%;
         }
       }
 
     @media (max-width:1600px) {
       .v-app-bar {
-        margin-top: 12%;
+        margin-top: 10%;
       }
   
       .name{
@@ -36,7 +44,7 @@
 
   @media (max-width:1500px) {
     .v-app-bar {
-      margin-top: 13%;
+      margin-top: 11%;
     }
   }
   
@@ -49,7 +57,7 @@
     margin-top: 10px;
    }
    .v-app-bar {
-    margin-top: 14.5%;
+    margin-top: 13%;
   }
   }
   
@@ -74,7 +82,7 @@
     }
   
     .v-app-bar {
-      margin-top: 17%;
+      margin-top: 13%;
     }
   }
   @media (max-width:1117px) {

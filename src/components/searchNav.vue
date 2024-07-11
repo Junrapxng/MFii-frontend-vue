@@ -2,7 +2,7 @@
    <div class="search-nav-container">
         <v-text-field v-model="search" density="comfortable" placeholder="Search" prepend-inner-icon="mdi-magnify"
             style="max-width: 300px" variant="solo" clearable @click:clear="clearSearch"
-            @keyup.enter="fetchResearchData" hide-details rounded class="pb-6" min-width="200"
+            @input="fetchResearchData" hide-details rounded class="pb-6" min-width="100"
             ref="searchField"></v-text-field>
         <v-menu v-model="showMenu" :close-on-content-click="false" :nudge-width="300" :offset-y="true"
             :offset-overflow="true" max-width="300" min-width="200" max-height="400" :attach="$refs.searchField" class="mt-15">
@@ -112,12 +112,15 @@ export default {
                             this.snackbar.color = "error";
                             this.snackbar.show = true;
                         }
+                        console.log("Search success");
                     } else {
                         this.error = new Error("API response is not OK");
+                        
                     }
                     this.loading = false;
                 })
                 .catch((error) => {
+                    console.log("Searched");
                     console.log(error);
                     this.loading = false;
                     this.apiResults = []; // Clear API results on error
