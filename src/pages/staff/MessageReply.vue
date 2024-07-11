@@ -49,31 +49,31 @@
               <v-card-text>
 
                 <!-- Chat box ====================================================================================== -->
-                <div class="chatbox">
-                  <v-list class="">
-                    <v-list-item v-for="reply in selected.messageReply"
-                      :class="reply.user === user._id ? 'd-flex justify-end' : 'd-flex justify-start'" :key="reply.id">
-                      <v-list-item-content>
-                        <!-- ชื่อผู้ส่ง -->
-                        <v-list-item-subtitle v-if="reply.user !== user._id" class="black--text">
-                          {{ selected.firstName }} {{ selected.lastName }}
-                        </v-list-item-subtitle>
-                        <v-list-item-subtitle v-else class="blue--text text-right align-self-start">
-                          Staff
-                        </v-list-item-subtitle>
-                        <!-- <v-list-item-subtitle>
-                          ส่งเมื่อ {{ reply.date }}
-                        </v-list-item-subtitle> -->
-                        <!-- แสดงข้อความ -->
-                        <v-list-item-title :class="[
-                          reply.user === user._id ? 'text-right chat-bubble chat-bubble--user' : 'text-left chat-bubble chat-bubble--other',
-                        ]">
-                          {{ reply.messages }}
-                        </v-list-item-title>
-                      </v-list-item-content>
-                    </v-list-item>
-                  </v-list>
-                </div>
+                  <div class="chatbox">
+                    <v-list class="">
+                      <v-list-item v-for="reply in selected.messageReply"
+                        :class=" reply.user.role === 'admin' || reply.user.role === 'staff'  ? 'd-flex justify-end' : 'd-flex justify-start'" :key="reply.id">
+                        <v-list-item-content>
+                          <!-- ชื่อผู้ส่ง -->
+                          <v-list-item-subtitle v-if="reply.user.role === 'user'" class="black--text">
+                          User:  {{ selected.firstName }}
+                          </v-list-item-subtitle>
+                          <v-list-item-subtitle v-if="reply.user.role === 'admin'|| reply.user.role === 'staff'" class="blue--text text-right align-self-start">
+                            {{ reply.user.role }} : {{ reply.user.firstName }}
+                          </v-list-item-subtitle>
+                          <v-list-item-subtitle>
+                            ส่งเมื่อ {{ formatDateTime(reply.date) }}
+                          </v-list-item-subtitle>
+                          <!-- แสดงข้อความ -->
+                          <v-list-item-title :class="[
+                            reply.user.role === 'admin' || reply.user.role === 'staff'  ? 'text-right chat-bubble chat-bubble--user' : 'text-left chat-bubble chat-bubble--other',
+                          ]">
+                            {{ reply.messages }}
+                          </v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                  </div>
                 <v-textarea label="Your Reply" v-model="replyText" @keyup.enter="sendReply" outlined></v-textarea>
               </v-card-text>
               <v-card-actions>
@@ -166,6 +166,29 @@ export default {
 
   },
   methods: {
+    formatDateTime(isoDate) {
+  // Parse ISO date string into Date object
+  const date = new Date(isoDate);
+// console.log(date)
+  // Format options for the date
+  const options = {
+    year: '2-digit',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Asia/Bangkok'
+  };
+
+//   // Create a formatter for the Bangkok time zone
+  const formatter = new Intl.DateTimeFormat('en-GB', options);
+// console.log(formatter.format(date));
+  // Format the date using the formatter
+  return formatter.format(date);
+},
+
+
+
     async openReplyDialog(id) {
       try {
         const response = await api.get('/mesDetail/' + id, {
@@ -174,7 +197,7 @@ export default {
           },
         })
         this.selectedMessage = response.data.result;
-        // console.log(this.selectedMessage);
+        console.log(this.selectedMessage);
         this.replyText = ''; // Clear previous reply text
         this.isDialogOpen = true;
       } catch (error) {
@@ -243,8 +266,9 @@ export default {
         // Add the new reply to the selected message's messageReply array
         this.selectedMessage[0].messageReply.push({
           messages: message,
-          user: this.user._id,
-          id: Date.now() // Generate a unique id for the new reply
+          user: {firstName: this.user.firstName,role: this.user.role},
+          id: Date.now(), // Generate a unique id for the new reply
+          date: Date.now()
         });
         // Clear the reply text
         this.replyText = '';
