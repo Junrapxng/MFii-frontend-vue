@@ -41,12 +41,6 @@
                       ]" required></v-text-field>
                     </v-col>
 
-                <div>
-                  <p class="text-warning">
-                    <v-icon color="warning">mdi-alert-circle-outline</v-icon>
-                    ใช้ได้แค่ gmail, hotmail, mfu.ac.th, lamduan.mfu.ac.th
-                  </p>
-                </div>
                     <v-col cols="12" md="12" sm="12">
                       <v-text-field variant="solo-filled" flat v-model="editedItem.email" label="Email" :rules="[rules.required, rules.email]"></v-text-field>
                       <v-text-field v-if="this.editedIndex === -1" v-model="editedItem.password" label="Password"
@@ -160,7 +154,7 @@ export default {
     rules: {
         required: value => !!value || 'กรุณากรอกอีเมล',
         email: value => {
-          const emailPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@(gmail\.com|hotmail\.com|outlook\.com|lamduan\.mfu\.ac\.th|mfu\.ac\.th)$/i;
+          const emailPattern = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+(com|co\.th|ac\.th|net|in.th|mfu\.ac\.th|)$/;
 
           if (!emailPattern.test(value)) {
             return 'โปรดกรอกอีเมลให้ถูกต้อง';
@@ -168,7 +162,7 @@ export default {
 
           // Return true or undefined if the email is valid
           return true;
-        }
+        },
 
       },
     search: "",
