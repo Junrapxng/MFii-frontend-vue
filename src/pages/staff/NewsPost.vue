@@ -12,21 +12,21 @@
               <v-container class="imageUpload">
                 <div>
                   <div class="titleNews">
-                  <v-chip class=" ma-2 pa-5 text-10" elevation="2" style="border-radius: 50px; font-size: 1.2rem;">
-                    อัพโหลดรูปภาพข่าวสาร
-                  </v-chip>
-                </div>
-                <v-container class="imageUpload flex">
-                  <v-btn color="blue" @click="openDialog('images')"
-                    prepend-icon="mdi-file-image">อัพโหลดไฟล์รูปภาพ</v-btn>
-                 <div class="mx-4 flex align-center">
-                  <h1>หรือ</h1>
-                 </div>
-                  <v-btn color="light-blue lighten-5" class="black--text" @click="openDialog('linkImage')"
-                    prepend-icon="mdi-web">
-                    อัพโหลดลิงค์รูปภาพ
-                  </v-btn>
-                </v-container>
+                    <v-chip class=" ma-2 pa-5 text-10" elevation="2" style="border-radius: 50px; font-size: 1.2rem;">
+                      อัพโหลดรูปภาพข่าวสาร
+                    </v-chip>
+                  </div>
+                  <v-container class="imageUpload flex">
+                    <v-btn color="blue" @click="openDialog('images')"
+                      prepend-icon="mdi-file-image">อัพโหลดไฟล์รูปภาพ</v-btn>
+                    <div class="mx-4 flex align-center">
+                      <h1>หรือ</h1>
+                    </div>
+                    <v-btn color="light-blue lighten-5" class="black--text" @click="openDialog('linkImage')"
+                      prepend-icon="mdi-web">
+                      อัพโหลดลิงค์รูปภาพ
+                    </v-btn>
+                  </v-container>
                 </div>
               </v-container>
 
@@ -37,15 +37,15 @@
               <v-container class="youtubeContainer flex align-center">
                 <div>
                   <div>
-                  <v-chip class="ma-2 pa-5 text-h10" elevation="2" style="border-radius: 50px;font-size: 1.2rem;">
-                    อัพโหลดลิงค์(Youtube) Success case
-                  </v-chip>
-                </div>
-                <v-container class="youtubeBtn d-flex">
-                  <v-btn color="red" class="white--text" @click="openDialog('linkVideo')" prepend-icon="mdi-youtube">
-                    อัพโหลดลิงค์ youtube
-                  </v-btn>
-                </v-container>
+                    <v-chip class="ma-2 pa-5 text-h10" elevation="2" style="border-radius: 50px;font-size: 1.2rem;">
+                      อัพโหลดลิงค์(Youtube) Success case
+                    </v-chip>
+                  </div>
+                  <v-container class="youtubeBtn d-flex">
+                    <v-btn color="red" class="white--text" @click="openDialog('linkVideo')" prepend-icon="mdi-youtube">
+                      อัพโหลดลิงค์ youtube
+                    </v-btn>
+                  </v-container>
                 </div>
               </v-container>
             </v-container>
@@ -54,8 +54,14 @@
               <v-card>
                 <v-card-text>
                   <v-form @submit.prevent="addNews">
-                    <p class="ml-14 text-red-500 mb-2" v-if="activeField === 'linkImage' || activeField === 'images'">
+                    <p class="ml-10 text-red-500 mb-2" v-if="activeField === 'linkImage' || activeField === 'images'">
                       อัพโหลดรูปภาพขนาด 2048 X 799 </p>
+                    <div>
+                      <p class="text-warning text-sm font-italic ml-10">
+                        <v-icon color="warning">mdi-alert-circle-outline</v-icon>
+                        อัพโหลดไฟล์รูปภาพไม่เกิน 2 MB
+                      </p>
+                    </div>
                     <v-text-field v-if="activeField === 'linkVideo'" v-model="news.linkVideo" label="URL video"
                       clearable prepend-icon="mdi-youtube" variant="solo-filled"></v-text-field>
                     <v-text-field v-if="activeField === 'linkImage'" v-model="news.linkImage" label="URL Images"
@@ -87,9 +93,19 @@
                     <p v-else>No media available</p>
                     <!-- Centered delete button -->
                     <v-container class="d-flex justify-center">
-                      <v-btn @click="confirmDelete(img._id, index)" color="error" icon>
-                        <v-icon>mdi-delete</v-icon>
-                      </v-btn>
+                      <div v-if="img.filePath.length > 0 || img.linkImage.length > 0">
+                        <v-btn @click="confirmEdit(img._id, index)" color="error" icon class="mx-2">
+                          <v-icon>mdi-pen</v-icon>
+                        </v-btn>
+                        <v-btn @click="confirmDelete(img._id, index)" color="error" icon class="mx-2">
+                          <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                      </div>
+                      <div v-else>
+                        <v-btn @click="confirmDelete(img._id, index)" color="error" icon>
+                          <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                      </div>
                     </v-container>
                   </v-card>
                 </v-col>
@@ -246,45 +262,45 @@ export default {
         }
       } catch (error) {
         let errorMessage = "An unexpected error occurred";
-          let errorCode = "Unknown";
-          let errorDetails = "";
-          if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            const errorDesc = error.response.data.description;
-            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
-              // Handle specific error codes
-              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
-              errorCode = errorDesc.code;
-              setTimeout(function () {
-            window.location.reload();
-          }, 1000);
-            } else {
-              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
-              errorCode = error.response.status;
-            }
-          } else if (error.request) {
-            // The request was made but no response was received
-            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
-          } else if (error.code === 'ERR_NETWORK') {
-            // Network error
-            errorMessage = "Network Error";
-            errorCode = error.code;
+        let errorCode = "Unknown";
+        let errorDetails = "";
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          const errorDesc = error.response.data.description;
+          if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+            // Handle specific error codes
+            errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+            errorCode = errorDesc.code;
+            setTimeout(function () {
+              window.location.reload();
+            }, 1000);
           } else {
-            // Something happened in setting up the request that triggered an Error
-            errorMessage = error.message;
+            errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+            errorCode = error.response.status;
           }
-          // Add more detailed error information
-          errorDetails = `${error.name}: ${error.message}`;
-          // Log the error
-          console.error(`Error : ${errorDetails}`, error);
+        } else if (error.request) {
+          // The request was made but no response was received
+          errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+        } else if (error.code === 'ERR_NETWORK') {
+          // Network error
+          errorMessage = "Network Error";
+          errorCode = error.code;
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          errorMessage = error.message;
+        }
+        // Add more detailed error information
+        errorDetails = `${error.name}: ${error.message}`;
+        // Log the error
+        console.error(`Error : ${errorDetails}`, error);
 
-          this.snackbar = {
-            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
-            color: "error",
-            Errcode: errorCode,
-            show: true
-          };
+        this.snackbar = {
+          message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+          color: "error",
+          Errcode: errorCode,
+          show: true
+        };
       }
     },
 
@@ -295,45 +311,45 @@ export default {
         this.imgs = res.data.result;
       } catch (error) {
         let errorMessage = "An unexpected error occurred";
-          let errorCode = "Unknown";
-          let errorDetails = "";
-          if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            const errorDesc = error.response.data.description;
-            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
-              // Handle specific error codes
-              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
-              errorCode = errorDesc.code;
-              setTimeout(function () {
-            window.location.reload();
-          }, 1000);
-            } else {
-              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
-              errorCode = error.response.status;
-            }
-          } else if (error.request) {
-            // The request was made but no response was received
-            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
-          } else if (error.code === 'ERR_NETWORK') {
-            // Network error
-            errorMessage = "Network Error";
-            errorCode = error.code;
+        let errorCode = "Unknown";
+        let errorDetails = "";
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          const errorDesc = error.response.data.description;
+          if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+            // Handle specific error codes
+            errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+            errorCode = errorDesc.code;
+            setTimeout(function () {
+              window.location.reload();
+            }, 1000);
           } else {
-            // Something happened in setting up the request that triggered an Error
-            errorMessage = error.message;
+            errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+            errorCode = error.response.status;
           }
-          // Add more detailed error information
-          errorDetails = `${error.name}: ${error.message}`;
-          // Log the error
-          console.error(`Error : ${errorDetails}`, error);
+        } else if (error.request) {
+          // The request was made but no response was received
+          errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+        } else if (error.code === 'ERR_NETWORK') {
+          // Network error
+          errorMessage = "Network Error";
+          errorCode = error.code;
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          errorMessage = error.message;
+        }
+        // Add more detailed error information
+        errorDetails = `${error.name}: ${error.message}`;
+        // Log the error
+        console.error(`Error : ${errorDetails}`, error);
 
-          this.snackbar = {
-            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
-            color: "error",
-            Errcode: errorCode,
-            show: true
-          };
+        this.snackbar = {
+          message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+          color: "error",
+          Errcode: errorCode,
+          show: true
+        };
       }
     },
 
@@ -360,45 +376,45 @@ export default {
         this.snackbar.show = true;
       } catch (error) {
         let errorMessage = "An unexpected error occurred";
-          let errorCode = "Unknown";
-          let errorDetails = "";
-          if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            const errorDesc = error.response.data.description;
-            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
-              // Handle specific error codes
-              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
-              errorCode = errorDesc.code;
-              setTimeout(function () {
-            window.location.reload();
-          }, 1000);
-            } else {
-              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
-              errorCode = error.response.status;
-            }
-          } else if (error.request) {
-            // The request was made but no response was received
-            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
-          } else if (error.code === 'ERR_NETWORK') {
-            // Network error
-            errorMessage = "Network Error";
-            errorCode = error.code;
+        let errorCode = "Unknown";
+        let errorDetails = "";
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          const errorDesc = error.response.data.description;
+          if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+            // Handle specific error codes
+            errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+            errorCode = errorDesc.code;
+            setTimeout(function () {
+              window.location.reload();
+            }, 1000);
           } else {
-            // Something happened in setting up the request that triggered an Error
-            errorMessage = error.message;
+            errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+            errorCode = error.response.status;
           }
-          // Add more detailed error information
-          errorDetails = `${error.name}: ${error.message}`;
-          // Log the error
-          console.error(`Error : ${errorDetails}`, error);
+        } else if (error.request) {
+          // The request was made but no response was received
+          errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+        } else if (error.code === 'ERR_NETWORK') {
+          // Network error
+          errorMessage = "Network Error";
+          errorCode = error.code;
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          errorMessage = error.message;
+        }
+        // Add more detailed error information
+        errorDetails = `${error.name}: ${error.message}`;
+        // Log the error
+        console.error(`Error : ${errorDetails}`, error);
 
-          this.snackbar = {
-            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
-            color: "error",
-            Errcode: errorCode,
-            show: true
-          };
+        this.snackbar = {
+          message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+          color: "error",
+          Errcode: errorCode,
+          show: true
+        };
       }
     },
 
@@ -439,9 +455,10 @@ export default {
 <style scoped>
 /* Your scoped styles here */
 
-.youtubeContainer{
+.youtubeContainer {
   justify-content: end;
 }
+
 @media (max-width: 1295px) {
   .containerPost {
     display: flex;
@@ -452,7 +469,8 @@ export default {
     /* Centers items vertically in a column layout */
     height: 100%;
   }
-  .imageUpload{
+
+  .imageUpload {
     display: flex;
     align-items: center;
     /* Centers items horizontally in a column layout */
@@ -460,32 +478,35 @@ export default {
     /* Centers items vertically in a column layout */
     height: 100%;
   }
-  .youtubeContainer{
+
+  .youtubeContainer {
     display: flex;
     justify-content: center;
   }
-  .titleNews{
+
+  .titleNews {
     display: flex;
     align-items: center;
     /* Centers items horizontally in a column layout */
     justify-content: center;
     /* Centers items vertically in a column layout */
   }
-  .youtubeBtn{
+
+  .youtubeBtn {
     align-items: center;
     /* Centers items horizontally in a column layout */
     justify-content: center;
     /* Centers items vertically in a column layout */
   }
-  
+
 }
 
 @media (max-width: 465px) {
   .containerPost .v-btn {
-  font-size: 10px;
-  padding: 4px 8px;
-  min-width: 50px;
-  height: 28px;
-}
+    font-size: 10px;
+    padding: 4px 8px;
+    min-width: 50px;
+    height: 28px;
+  }
 }
 </style>

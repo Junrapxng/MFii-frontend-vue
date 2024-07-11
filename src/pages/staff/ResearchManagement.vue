@@ -66,9 +66,21 @@
                       :rules="[rules.required]" required></v-checkbox>
                   </v-container>
                   <p class="ml-10 text-red-500">อัพโหลดปกรูปภาพขนาด 800 X 530 </p>
+                  <div>
+                    <p class="text-warning text-sm font-italic  ml-10">
+                      <v-icon color="warning">mdi-alert-circle-outline</v-icon>
+                      อัพโหลดไฟล์รูปภาพไม่เกิน 2 MB
+                    </p>
+                  </div>
                   <v-file-input label="Upload Images" multiple @change="handleFileUpload" variant="solo-filled"
                     accept="image/*" prepend-icon="mdi-camera" @click:clear="clearFileInputs"
                     :rules="[fileSizeRule]"></v-file-input>
+                  <div>
+                    <p class="text-warning text-sm font-italic ml-10">
+                      <v-icon color="warning">mdi-alert-circle-outline</v-icon>
+                      อัพโหลดไฟล์ PDF ไม่เกิน 10 MB
+                    </p>
+                  </div>
                   <v-file-input label="Upload PDF" @change="handlePdfUpload" variant="solo-filled"
                     accept="application/pdf" prepend-icon="mdi-file-pdf-box" @click:clear="clearFileInputs"
                     :rules="[fileSizeRule]"></v-file-input>
