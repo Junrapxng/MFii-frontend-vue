@@ -26,42 +26,45 @@
         </v-card>
         <!-- ================================================================================ -->
         <!-- Message Reply -->
-        <v-dialog v-model="isDialogOpen" max-width="800px" class="font-noto-sans-thai">
-          <v-card v-for="selected in selectedMessage" :key="selected._id" class="rounded-xl">
-            <v-card-title class="headline">เทคโนโลยีที่คุณสนใจ: {{ selected.interestTech }}</v-card-title>
-            <v-card-subtitle class="headline">ชื่อกิจการของคุณ: {{ selected.businessName }} </v-card-subtitle>
-            <v-card-subtitle class="headline">ประเภทธุรกิจของคุณ: {{ selected.businessType }}</v-card-subtitle>
-            <v-card-subtitle class="headline">ขอบเขตการใช้งานของคุณ: {{ selected.usesScope }}</v-card-subtitle>
-            <v-card-text>
-
-
-              <div class="chatbox">
-                    <v-list class="">
-                      <v-list-item v-for="reply in selected.messageReply"
-                        :class=" reply.user.role === 'user'  ? 'd-flex justify-end' : 'd-flex justify-start'" :key="reply.id">
-                        <v-list-item-content>
-                          <!-- ชื่อผู้ส่ง -->
-                          <v-list-item-subtitle v-if="reply.user.role === 'user'"  class="black--text text-right">
-                          User:  {{ selected.firstName }}
-                          </v-list-item-subtitle>
-                          <v-list-item-subtitle v-if="reply.user.role === 'admin'|| reply.user.role === 'staff'" class="blue--text text-left align-self-start">
-                            {{ reply.user.role }} : {{ reply.user.firstName }}
-                          </v-list-item-subtitle>
-                          <v-list-item-subtitle>
-                            ส่งเมื่อ {{ formatDateTime(reply.date) }}
-                          </v-list-item-subtitle>
-                          <!-- แสดงข้อความ -->
-                          <v-list-item-title :class="[
-                            reply.user.role === 'user' ? 'text-right chat-bubble chat-bubble--user' : 'text-left chat-bubble chat-bubble--other',
-                          ]">
-                            {{ reply.messages }}
-                          </v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </v-list>
-                  </div>
-
-              <v-textarea label="Your Reply" v-model="replyText" @keyup.enter="sendReply" outlined></v-textarea>
+        <v-dialog v-model="isDialogOpen" max-width="1000px" class="font-noto-sans-thai">
+          <v-card v-for="selected in selectedMessage" :key="selected._id" class="rounded-xl d-flex flex-column">
+            <v-card-title class="headline text-2xl font-semibold" style="white-space: pre-line;">
+              เทคโนโลยีที่สนใจ: <span class="text-xl">{{ selected.interestTech }}</span>
+            </v-card-title>
+            <v-card-subtitle>กิจการ : {{ selected.businessName }}</v-card-subtitle>
+            <v-card-subtitle>ประเภทกิจการ : {{ selected.businessType }}</v-card-subtitle>
+            <v-card-subtitle>ขอบเขตการใช้งาน : {{ selected.usesScope }}</v-card-subtitle>
+            <v-card-subtitle>ผู้ส่ง : {{ selected.firstName }} {{ selected.lastName }}</v-card-subtitle>
+            <v-card-subtitle>อีเมล: {{ selected.email }}</v-card-subtitle>
+            <v-card-text class="flex-grow-1 d-flex flex-column" style="max-height: 550px; overflow: hidden;">
+              <!-- Chat box -->
+              <div class="chatbox flex-grow-1" style="overflow-y: auto;" ref="chatbox">
+                <v-list>
+                  <v-list-item v-for="reply in sortMessages(selected.messageReply)" :key="reply.id">
+                    <!-- User name displayed outside the message bubble -->
+                    <div
+                      :class="['message-username', reply.user.role === 'user'? 'text-right' : 'text-left']">
+                      <p
+                        :class="[reply.user.role === 'user' ? 'text-gray text-xs' : 'text-gray text-xs']">
+                        [{{ reply.user.role }}] {{ reply.user.firstName }}
+                      </p>
+                    </div>
+                    <!-- Message bubble -->
+                    <div
+                      :class="['message-bubble', reply.user.role === 'user' ? 'current-user' : 'other-user', 'rounded-lg mt-1']">
+                      <div
+                        :class="['message-content', reply.user.role === 'user' ? 'text-right' : 'text-left']">
+                        {{ reply.messages }}
+                        <p
+                          :class="[reply.user.role === 'user' ? 'text-gray-200 text-xs mt-1' : 'text-gray-500 text-xs mt-1']">
+                          ส่งเมื่อ {{ formatDateTime(reply.date) }}
+                        </p>
+                      </div>
+                    </div>
+                  </v-list-item>
+                </v-list>
+              </div>
+              <v-text-field label="Your Reply" variant="solo-filled" v-model="replyText" @keyup.enter="sendReply" outlined rounded dense></v-text-field>
             </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
@@ -84,8 +87,6 @@
           </template>
         </v-snackbar>
       </div>
-
-
     </v-main>
     <Footer></Footer>
   </v-app>
@@ -172,6 +173,9 @@ export default {
     }
   },
   methods: {
+    sortMessages(messages) {
+      return messages.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+    },
 
     formatDateTime(isoDate) {
       // Parse ISO date string into Date object
@@ -278,9 +282,9 @@ export default {
         // Add the new reply to the selected message's messageReply array
         this.selectedMessage[0].messageReply.push({
           messages: message,
-          user: {firstName: this.user.firstName,role: this.user.role},
+          user: { firstName: this.user.firstName, role: this.user.role },
           id: Date.now(), // Generate a unique id for the new reply
-          date: Date.now()  
+          date: Date.now()
         });
         // Clear the reply text
         this.replyText = "";
@@ -397,24 +401,5 @@ export default {
 </script>
 
 <style scoped>
-.list-item-border {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.text-left {
-  text-align: left;
-}
-
-.chatbox {
-  overflow: auto;
-}
-
-.black-text {
-  color: black;
-}
+@import '../../styles/messageReply.css'
 </style>

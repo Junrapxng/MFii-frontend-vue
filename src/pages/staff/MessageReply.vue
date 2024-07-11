@@ -26,55 +26,43 @@
 
           <!-- Message Reply  -->
           <!-- header ====================================================================================== -->
-          <v-dialog v-model="isDialogOpen" max-width="800px" class="font-noto-sans-thai">
-            <v-card v-for="selected in selectedMessage" :key="selected._id" class="rounded-xl">
+          <v-dialog v-model="isDialogOpen" max-width="1000px" class="font-noto-sans-thai" >
+            <v-card v-for="selected in selectedMessage" :key="selected._id" class="rounded-xl d-flex flex-column">
               <v-card-title class="headline text-2xl font-semibold" style="white-space: pre-line;">
                 เทคโนโลยีที่สนใจ: <span class="text-xl">{{ selected.interestTech }}</span>
               </v-card-title>
-              <v-card-subtitle>
-                กิจการ : {{ selected.businessName }}
-              </v-card-subtitle>
-              <v-card-subtitle>
-                ประเภทกิจการ : {{ selected.businessType }}
-              </v-card-subtitle>
-              <v-card-subtitle>
-                ขอบเขตการใช้งาน : {{ selected.usesScope }}
-              </v-card-subtitle>
-              <v-card-subtitle>
-                ผู้ส่ง : {{ selected.firstName }} {{ selected.lastName }}
-              </v-card-subtitle>
-              <v-card-subtitle>
-                อีเมล: {{ selected.email }}
-              </v-card-subtitle>
-              <v-card-text>
-
-                <!-- Chat box ====================================================================================== -->
-                  <div class="chatbox">
-                    <v-list class="">
-                      <v-list-item v-for="reply in selected.messageReply"
-                        :class=" reply.user.role === 'admin' || reply.user.role === 'staff'  ? 'd-flex justify-end' : 'd-flex justify-start'" :key="reply.id">
-                        <v-list-item-content>
-                          <!-- ชื่อผู้ส่ง -->
-                          <v-list-item-subtitle v-if="reply.user.role === 'user'" class="black--text">
-                          User:  {{ selected.firstName }}
-                          </v-list-item-subtitle>
-                          <v-list-item-subtitle v-if="reply.user.role === 'admin'|| reply.user.role === 'staff'" class="blue--text text-right align-self-start">
-                            {{ reply.user.role }} : {{ reply.user.firstName }}
-                          </v-list-item-subtitle>
-                          <v-list-item-subtitle>
+              <v-card-subtitle>กิจการ : {{ selected.businessName }}</v-card-subtitle>
+              <v-card-subtitle>ประเภทกิจการ : {{ selected.businessType }}</v-card-subtitle>
+              <v-card-subtitle>ขอบเขตการใช้งาน : {{ selected.usesScope }}</v-card-subtitle>
+              <v-card-subtitle>ผู้ส่ง : {{ selected.firstName }} {{ selected.lastName }}</v-card-subtitle>
+              <v-card-subtitle>อีเมล: {{ selected.email }}</v-card-subtitle>
+              <v-card-text class="flex-grow-1 d-flex flex-column" style="max-height: 550px; overflow: hidden;">
+                <!-- Chat box -->
+                <div class="chatbox flex-grow-1" style="overflow-y: auto;" ref="chatbox">
+                  <v-list>
+                    <v-list-item v-for="reply in sortMessages(selected.messageReply)" :key="reply.id">
+                      <!-- User name displayed outside the message bubble -->
+                      <div :class="['message-username', reply.user.role === 'admin' || reply.user.role === 'staff' ? 'text-right' : 'text-left']">
+                        <p :class="[reply.user.role === 'admin' || reply.user.role === 'staff' ? 'text-gray text-xs' : 'text-gray text-xs']">
+                         [{{reply.user.role}}] {{ reply.user.firstName }}
+                        </p>
+                      </div>
+                      <!-- Message bubble -->
+                      <div
+                        :class="['message-bubble', reply.user.role === 'admin' || reply.user.role === 'staff' ? 'current-user' : 'other-user', 'rounded-lg mt-1']">
+                        <div
+                          :class="['message-content', reply.user.role === 'admin' || reply.user.role === 'staff' ? 'text-right' : 'text-left']">
+                          {{ reply.messages }}
+                          <p
+                            :class="[reply.user.role === 'admin' || reply.user.role === 'staff' ? 'text-gray-200 text-xs mt-1' : 'text-gray-500 text-xs mt-1']">
                             ส่งเมื่อ {{ formatDateTime(reply.date) }}
-                          </v-list-item-subtitle>
-                          <!-- แสดงข้อความ -->
-                          <v-list-item-title :class="[
-                            reply.user.role === 'admin' || reply.user.role === 'staff'  ? 'text-right chat-bubble chat-bubble--user' : 'text-left chat-bubble chat-bubble--other',
-                          ]">
-                            {{ reply.messages }}
-                          </v-list-item-title>
-                        </v-list-item-content>
-                      </v-list-item>
-                    </v-list>
-                  </div>
-                <v-textarea label="Your Reply" v-model="replyText" @keyup.enter="sendReply" outlined></v-textarea>
+                          </p>
+                        </div>
+                      </div>
+                    </v-list-item>
+                  </v-list>
+                </div>
+                <v-text-field label="Your Reply" variant="solo-filled" v-model="replyText" @keyup.enter="sendReply" outlined rounded dense></v-text-field>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
@@ -85,8 +73,8 @@
             </v-card>
           </v-dialog>
         </v-container>
-      </staff-layout>
 
+      </staff-layout>
       <div class="text-center">
         <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
           <div class="text-subtitle-1 pb-2"></div>
@@ -130,6 +118,7 @@ export default {
   },
   data() {
     return {
+
       snackbar: {
         show: false,
         message: "",
@@ -137,6 +126,7 @@ export default {
       },
       isDialogOpen: false,
       selectedMessage: {},
+
       replyText: '',
       messages: [],
       user: {
@@ -166,26 +156,30 @@ export default {
 
   },
   methods: {
+    
+    sortMessages(messages) {
+      return messages.slice().sort((a, b) => new Date(a.date) - new Date(b.date));
+    },
+ 
     formatDateTime(isoDate) {
-  // Parse ISO date string into Date object
-  const date = new Date(isoDate);
-// console.log(date)
-  // Format options for the date
-  const options = {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Asia/Bangkok'
-  };
-
-//   // Create a formatter for the Bangkok time zone
-  const formatter = new Intl.DateTimeFormat('en-GB', options);
-// console.log(formatter.format(date));
-  // Format the date using the formatter
-  return formatter.format(date);
-},
+      // Parse ISO date string into Date object
+      const date = new Date(isoDate);
+      // console.log(date)
+      // Format options for the date
+      const options = {
+        year: '2-digit',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        timeZone: 'Asia/Bangkok'
+      };
+      //   // Create a formatter for the Bangkok time zone
+      const formatter = new Intl.DateTimeFormat('en-GB', options);
+      // console.log(formatter.format(date));
+      // Format the date using the formatter
+      return formatter.format(date);
+    },
 
 
 
@@ -202,45 +196,45 @@ export default {
         this.isDialogOpen = true;
       } catch (error) {
         let errorMessage = "An unexpected error occurred";
-          let errorCode = "Unknown";
-          let errorDetails = "";
-          if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            const errorDesc = error.response.data.description;
-            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
-              // Handle specific error codes
-              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
-              errorCode = errorDesc.code;
-              setTimeout(function () {
-            window.location.reload();
-          }, 1000);
-            } else {
-              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
-              errorCode = error.response.status;
-            }
-          } else if (error.request) {
-            // The request was made but no response was received
-            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
-          } else if (error.code === 'ERR_NETWORK') {
-            // Network error
-            errorMessage = "Network Error";
-            errorCode = error.code;
+        let errorCode = "Unknown";
+        let errorDetails = "";
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          const errorDesc = error.response.data.description;
+          if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+            // Handle specific error codes
+            errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+            errorCode = errorDesc.code;
+            setTimeout(function () {
+              window.location.reload();
+            }, 1000);
           } else {
-            // Something happened in setting up the request that triggered an Error
-            errorMessage = error.message;
+            errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+            errorCode = error.response.status;
           }
-          // Add more detailed error information
-          errorDetails = `${error.name}: ${error.message}`;
-          // Log the error
-          console.error(`Error : ${errorDetails}`, error);
+        } else if (error.request) {
+          // The request was made but no response was received
+          errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+        } else if (error.code === 'ERR_NETWORK') {
+          // Network error
+          errorMessage = "Network Error";
+          errorCode = error.code;
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          errorMessage = error.message;
+        }
+        // Add more detailed error information
+        errorDetails = `${error.name}: ${error.message}`;
+        // Log the error
+        console.error(`Error : ${errorDetails}`, error);
 
-          this.snackbar = {
-            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
-            color: "error",
-            Errcode: errorCode,
-            show: true
-          };
+        this.snackbar = {
+          message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+          color: "error",
+          Errcode: errorCode,
+          show: true
+        };
       }
     },
     // Reply by enter
@@ -266,7 +260,7 @@ export default {
         // Add the new reply to the selected message's messageReply array
         this.selectedMessage[0].messageReply.push({
           messages: message,
-          user: {firstName: this.user.firstName,role: this.user.role},
+          user: { firstName: this.user.firstName, role: this.user.role },
           id: Date.now(), // Generate a unique id for the new reply
           date: Date.now()
         });
@@ -275,45 +269,45 @@ export default {
         // console.log(this.selectedMessage);
       } catch (error) {
         let errorMessage = "An unexpected error occurred";
-          let errorCode = "Unknown";
-          let errorDetails = "";
-          if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            const errorDesc = error.response.data.description;
-            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
-              // Handle specific error codes
-              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
-              errorCode = errorDesc.code;
-              setTimeout(function () {
-            window.location.reload();
-          }, 1000);
-            } else {
-              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
-              errorCode = error.response.status;
-            }
-          } else if (error.request) {
-            // The request was made but no response was received
-            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
-          } else if (error.code === 'ERR_NETWORK') {
-            // Network error
-            errorMessage = "Network Error";
-            errorCode = error.code;
+        let errorCode = "Unknown";
+        let errorDetails = "";
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          const errorDesc = error.response.data.description;
+          if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+            // Handle specific error codes
+            errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+            errorCode = errorDesc.code;
+            setTimeout(function () {
+              window.location.reload();
+            }, 1000);
           } else {
-            // Something happened in setting up the request that triggered an Error
-            errorMessage = error.message;
+            errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+            errorCode = error.response.status;
           }
-          // Add more detailed error information
-          errorDetails = `${error.name}: ${error.message}`;
-          // Log the error
-          console.error(`Error : ${errorDetails}`, error);
+        } else if (error.request) {
+          // The request was made but no response was received
+          errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+        } else if (error.code === 'ERR_NETWORK') {
+          // Network error
+          errorMessage = "Network Error";
+          errorCode = error.code;
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          errorMessage = error.message;
+        }
+        // Add more detailed error information
+        errorDetails = `${error.name}: ${error.message}`;
+        // Log the error
+        console.error(`Error : ${errorDetails}`, error);
 
-          this.snackbar = {
-            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
-            color: "error",
-            Errcode: errorCode,
-            show: true
-          };
+        this.snackbar = {
+          message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+          color: "error",
+          Errcode: errorCode,
+          show: true
+        };
       }
     },
 
@@ -328,45 +322,45 @@ export default {
         // console.log(this.messages);
       } catch (error) {
         let errorMessage = "An unexpected error occurred";
-          let errorCode = "Unknown";
-          let errorDetails = "";
-          if (error.response) {
-            // The request was made and the server responded with a status code
-            // that falls out of the range of 2xx
-            const errorDesc = error.response.data.description;
-            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
-              // Handle specific error codes
-              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
-              errorCode = errorDesc.code;
-              setTimeout(function () {
-            window.location.reload();
-          }, 1000);
-            } else {
-              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
-              errorCode = error.response.status;
-            }
-          } else if (error.request) {
-            // The request was made but no response was received
-            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
-          } else if (error.code === 'ERR_NETWORK') {
-            // Network error
-            errorMessage = "Network Error";
-            errorCode = error.code;
+        let errorCode = "Unknown";
+        let errorDetails = "";
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          const errorDesc = error.response.data.description;
+          if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+            // Handle specific error codes
+            errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+            errorCode = errorDesc.code;
+            setTimeout(function () {
+              window.location.reload();
+            }, 1000);
           } else {
-            // Something happened in setting up the request that triggered an Error
-            errorMessage = error.message;
+            errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+            errorCode = error.response.status;
           }
-          // Add more detailed error information
-          errorDetails = `${error.name}: ${error.message}`;
-          // Log the error
-          console.error(`Error : ${errorDetails}`, error);
+        } else if (error.request) {
+          // The request was made but no response was received
+          errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+        } else if (error.code === 'ERR_NETWORK') {
+          // Network error
+          errorMessage = "Network Error";
+          errorCode = error.code;
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          errorMessage = error.message;
+        }
+        // Add more detailed error information
+        errorDetails = `${error.name}: ${error.message}`;
+        // Log the error
+        console.error(`Error : ${errorDetails}`, error);
 
-          this.snackbar = {
-            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
-            color: "error",
-            Errcode: errorCode,
-            show: true
-          };
+        this.snackbar = {
+          message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+          color: "error",
+          Errcode: errorCode,
+          show: true
+        };
       }
 
     },
@@ -411,8 +405,8 @@ export default {
               errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
               errorCode = errorDesc.code;
               setTimeout(function () {
-            window.location.reload();
-          }, 1000);
+                window.location.reload();
+              }, 1000);
             } else {
               errorMessage = errorDesc?.description || error.response.data.message || "Server error";
               errorCode = error.response.status;
@@ -444,28 +438,11 @@ export default {
       }
     },
   },
+ 
+
 };
 </script>
 
 <style scoped>
-.list-item-border {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.text-left {
-  text-align: left
-}
-
-.chatbox {
-  overflow: auto;
-}
-
-.black-text {
-  color: black;
-}
+@import '../../styles/messageReply.css';
 </style>
