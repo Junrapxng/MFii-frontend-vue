@@ -65,7 +65,7 @@
                     <v-checkbox v-model="currentResearch.ipType" label="Prototype" value="prototype"
                       :rules="[rules.required]" required></v-checkbox>
                   </v-container>
-                  <p class="ml-10 text-red-500">อัพโหลดปกรูปภาพขนาด 800 X 530 </p>
+                  <p class="ml-10 text-red-500">อัพโหลดปกรูปภาพขนาดไม่เกิน 800 X 530 </p>
                   <div>
                     <p class="text-warning text-sm font-italic  ml-10">
                       <v-icon color="warning">mdi-alert-circle-outline</v-icon>
