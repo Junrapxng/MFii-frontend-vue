@@ -141,6 +141,8 @@ export default {
 
 
   methods: {
+
+
     async validateForm() {
       const { valid } = await this.$refs.form.validate()
       return valid
@@ -155,17 +157,19 @@ export default {
               Authorization: localStorage.getItem("token"),
             },
           });
-          this.snackbar.message = "Requested Success!";
+          this.snackbar.message = "ขอข้อมูลเพิ่มเติม สำเร็จ! กำลังนำท่านไปยังหน้าข้อความ";
           this.snackbar.color = "success";
           this.snackbar.show = true;
           setTimeout(() => {
-            window.location.reload();
-          }, 1000); // Reloads the page after 2 seconds
+            this.$router.push('/message');
+            // window.location.reload();
+          }, 2700);
         } catch (error) {
           let errorMessage = "An unexpected error occurred";
           let errorCode = "Unknown";
           let errorDetails = "";
           if (error.response) {
+
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
             const errorDesc = error.response.data.description;
