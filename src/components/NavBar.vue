@@ -32,7 +32,7 @@
             <!-- Search Navbar -->
             <!-- <search-component class="btn-search"></search-component>
             <router-view></router-view> -->
-            <searchNav/>
+            <searchNav />
             <!-- if user not loggedin -->
             <v-container v-if="userStore.error || userStore.loading" class="regandlog">
               <v-btn class="reg  bg-black text-white rounded-xl border w-32 h-14 btn-nav mr-1"
@@ -59,14 +59,15 @@
               </template>
 
               <v-list class="font-noto-sans-thai">
-                <router-link v-if="userStore.user.resutl.role === 'staff'" to="/staff">
-                  <v-list-item>
-                    <v-list-item-title>Staff Page</v-list-item-title>
-                  </v-list-item>
-                </router-link>
                 <router-link v-if="userStore.user.resutl.role === 'admin'" to="/admin">
                   <v-list-item>
                     <v-list-item-title>Admin Page</v-list-item-title>
+                  </v-list-item>
+                </router-link>
+                <router-link v-if="userStore.user.resutl.role === 'staff' || userStore.user.resutl.role === 'admin'"
+                  to="/staff">
+                  <v-list-item>
+                    <v-list-item-title>Staff Page</v-list-item-title>
                   </v-list-item>
                 </router-link>
                 <router-link v-if="userStore.user.resutl.role === 'user'" to="/profile">
@@ -270,40 +271,29 @@
                     </template>
 
                     <v-list-item v-for="subNestedItem in nestedItem.subItems" :key="subNestedItem.title"
-                      :title="subNestedItem.title"
-                      :to="!subNestedItem.external ? subNestedItem.route : undefined"
+                      :title="subNestedItem.title" :to="!subNestedItem.external ? subNestedItem.route : undefined"
                       :href="subNestedItem.external ? subNestedItem.route : undefined"
-                      :target="subNestedItem.external ? '_blank' : undefined"
-                      link>
+                      :target="subNestedItem.external ? '_blank' : undefined" link>
                     </v-list-item>
                   </v-list-group>
 
-                  <v-list-item v-else
-                    :title="nestedItem.title"
+                  <v-list-item v-else :title="nestedItem.title"
                     :to="!nestedItem.external ? nestedItem.route : undefined"
                     :href="nestedItem.external ? nestedItem.route : undefined"
-                    :target="nestedItem.external ? '_blank' : undefined"
-                    link>
+                    :target="nestedItem.external ? '_blank' : undefined" link>
                   </v-list-item>
                 </template>
               </v-list-group>
 
-              <v-list-item v-else
-                :title="subItem.title"
-                :to="!subItem.external ? subItem.route : undefined"
-                :href="subItem.external ? subItem.route : undefined"
-                :target="subItem.external ? '_blank' : undefined"
+              <v-list-item v-else :title="subItem.title" :to="!subItem.external ? subItem.route : undefined"
+                :href="subItem.external ? subItem.route : undefined" :target="subItem.external ? '_blank' : undefined"
                 link>
               </v-list-item>
             </template>
           </v-list-group>
 
-          <v-list-item v-else
-            :title="item.title"
-            :to="!item.external ? item.route : undefined"
-            :href="item.external ? item.route : undefined"
-            :target="item.external ? '_blank' : undefined"
-            link>
+          <v-list-item v-else :title="item.title" :to="!item.external ? item.route : undefined"
+            :href="item.external ? item.route : undefined" :target="item.external ? '_blank' : undefined" link>
           </v-list-item>
         </template>
       </v-list>
