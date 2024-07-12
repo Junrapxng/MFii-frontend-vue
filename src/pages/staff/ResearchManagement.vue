@@ -290,7 +290,6 @@ export default {
         formData.append('description', this.currentResearch.description);
         formData.append('intelProp', this.currentResearch.intelProp);
         formData.append('industryType', this.currentResearch.industryType);
-        console.log('Current highlight:', this.currentResearch.highlight);
         formData.append('techReadiness', this.currentResearch.techReadiness);
         formData.append('coop', this.currentResearch.coop);
         formData.append('link', this.currentResearch.link);
@@ -345,27 +344,23 @@ export default {
                 'Content-Type': 'multipart/form-data'
               },
             });
-           
+
             if (this.markedForDeletion.length > 0) {
-              const deleteRequests = this.markedForDeletion.map(index => {
-                const img = this.currentResearch.filePath[index];
-                return api.patch(`/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
-                  filePath: img
-                }, {
-                  headers: {
-                    Authorization: localStorage.getItem('token'),
-                  },
-                });
+              const filePathsToDelete = this.markedForDeletion.map(index => this.currentResearch.filePath[index]);
+              await api.patch(`/staff/deleteFileResearch/research/${this.currentResearch._id}`, {
+                filePath: filePathsToDelete
+              }, {
+                headers: {
+                  Authorization: localStorage.getItem('token'),
+                },
               });
-              await Promise.all(deleteRequests);
             }
+
             this.snackbar.message = "Edit research successfully";
             this.snackbar.color = "success";
           } catch (error) {
             this.handleError(error);
           }
-
-
         } else {
           await api.post('/staff/addResearch', formData, {
             headers: {
