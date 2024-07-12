@@ -5,7 +5,7 @@
       hide-delimiter-background height="370" :value="0">
       <v-carousel-item v-for="(path, index) in filteredImages" :key="index">
         <template v-if="path.linkImage && path.linkImage.length">
-          <a v-for="(link, linkIndex) in path.linkImage" :key="`link-${linkIndex}`" :href="'https://www.google.com'"
+          <a v-for="(link, linkIndex) in path.linkImage" :key="`link-${linkIndex}`" :href="path.linkPage"
             target="_blank">
             <v-img class="carousel__item mx-auto" height="370" lazy-src="" :src="link" contain>
               <template v-slot:placeholder>
@@ -17,7 +17,7 @@
           </a>
         </template>
         <template v-else-if="path.filePath && path.filePath.length">
-          <a v-for="(file, fileIndex) in path.filePath" :key="`file-${fileIndex}`" :href="'https://www.google.com'"
+          <a v-for="(file, fileIndex) in path.filePath" :key="`file-${fileIndex}`" :href="path.linkPage"
             target="_blank">
             <v-img class="carousel__item mx-auto" height="370" lazy-src="" :src="`${baseUrl}/${file}`" contain>
               <template v-slot:placeholder>
