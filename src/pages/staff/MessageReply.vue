@@ -8,7 +8,7 @@
             <v-card-title>ข้อความและการตอบกลับ</v-card-title>
             <v-card-text>
               <v-list class="rounded-lg">
-                <v-list-item v-for="message in messages" :key="message.id" class="list-item-border my-2">
+                <v-list-item v-for="message in filteredMessages" :key="message.id" class="list-item-border my-2">
                   <v-list-item-content>
                     <v-list-item-title>เทคโนโลยีที่สนใจ: {{ message.interestTech }}</v-list-item-title>
                     <v-list-item-subtitle>ชื่อกิจการ: {{ message.businessName }}</v-list-item-subtitle>
@@ -44,8 +44,12 @@
                       <!-- User name displayed outside the message bubble -->
                       <div :class="['message-username', reply.user.role === 'admin' || reply.user.role === 'staff' ? 'text-right' : 'text-left']">
                         <p :class="[reply.user.role === 'admin' || reply.user.role === 'staff' ? 'text-gray text-xs' : 'text-gray text-xs']">
-                         [{{reply.user.role}}] {{ reply.user.firstName }}
+                         {{reply.user.role}}: {{ reply.user.firstName }}
                         </p>
+                        <p
+                            :class="[reply.user.role === 'admin' || reply.user.role === 'staff' ? 'text-gray-600 text-xs mt-1' : 'text-gray-600 text-xs mt-1']">
+                            ส่งเมื่อ {{ formatDateTime(reply.date) }}
+                          </p>
                       </div>
                       <!-- Message bubble -->
                       <div
@@ -53,10 +57,7 @@
                         <div
                           :class="['message-content', reply.user.role === 'admin' || reply.user.role === 'staff' ? 'text-right' : 'text-left']">
                           {{ reply.messages }}
-                          <p
-                            :class="[reply.user.role === 'admin' || reply.user.role === 'staff' ? 'text-gray-200 text-xs mt-1' : 'text-gray-500 text-xs mt-1']">
-                            ส่งเมื่อ {{ formatDateTime(reply.date) }}
-                          </p>
+                        
                         </div>
                       </div>
                     </v-list-item>
@@ -438,6 +439,12 @@ export default {
       }
     },
   },
+  computed:{
+    filteredMessages() {
+      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
+      return this.messages.reverse();
+    }
+  }
  
 
 };

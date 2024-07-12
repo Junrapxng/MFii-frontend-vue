@@ -46,8 +46,12 @@
                       :class="['message-username', reply.user.role === 'user'? 'text-right' : 'text-left']">
                       <p
                         :class="[reply.user.role === 'user' ? 'text-gray text-xs' : 'text-gray text-xs']">
-                        [{{ reply.user.role }}] {{ reply.user.firstName }}
+                        {{ reply.user.role }}: {{ reply.user.firstName }}
                       </p>
+                      <p
+                          :class="[reply.user.role === 'user' ? 'text-gray-600 text-xs mt-1' : 'text-gray-600 text-xs mt-1']">
+                          ส่งเมื่อ {{ formatDateTime(reply.date) }}
+                        </p>
                     </div>
                     <!-- Message bubble -->
                     <div
@@ -55,10 +59,7 @@
                       <div
                         :class="['message-content', reply.user.role === 'user' ? 'text-right' : 'text-left']">
                         {{ reply.messages }}
-                        <p
-                          :class="[reply.user.role === 'user' ? 'text-gray-200 text-xs mt-1' : 'text-gray-500 text-xs mt-1']">
-                          ส่งเมื่อ {{ formatDateTime(reply.date) }}
-                        </p>
+                       
                       </div>
                     </div>
                   </v-list-item>
@@ -341,6 +342,7 @@ export default {
           },
         });
         this.messages = response.data.result;
+        
       } catch (error) {
         let errorMessage = "An unexpected error occurred";
         let errorCode = "Unknown";
@@ -392,10 +394,10 @@ export default {
   // filter message only user
   computed: {
     filteredMessages() {
-      return this.messages.filter(
-        (message) => message.email === this.user.email
-      );
-    },
+  return this.messages
+    .filter((message) => message.email === this.user.email)
+    .reverse();
+}
   },
 };
 </script>
