@@ -5,7 +5,7 @@
     <v-main>
       <v-alert v-if="responseMessage" type="error" icon="mdi-alert-circle-outline">{{
         responseMessage
-      }}</v-alert>
+        }}</v-alert>
       <v-container class="font-noto-sans-thai rounded-xl flex justify-center items-center bg-gray-100 mb-5">
         <v-card class="w-full max-w-2xl rounded-xl p-8">
           <v-card-title>
@@ -53,12 +53,14 @@
                 </div> -->
                 <v-col cols="12" md="6">
                   <v-text-field v-model="form.email" label="อีเมล" prepend-inner-icon="mdi-email-outline"
-                    variant="outlined" outlined color="#BA984C" :rules="[rules.required, rules.email, rules.notEmpty]" required></v-text-field>
+                    variant="outlined" outlined color="#BA984C" :rules="[rules.required, rules.email, rules.notEmpty]"
+                    required></v-text-field>
                 </v-col>
 
                 <v-col cols="12" md="6">
                   <v-text-field v-model="form.phone" label="เบอร์โทรศัพท์" prepend-inner-icon="mdi-phone-outline"
-                    variant="outlined" outlined color="#BA984C" :rules="[rules.required, rules.phone, rules.notEmpty]" required></v-text-field>
+                    variant="outlined" outlined color="#BA984C" :rules="[rules.required, rules.phone, rules.notEmpty]"
+                    required></v-text-field>
                 </v-col>
 
                 <v-col cols="12">
@@ -109,14 +111,16 @@ export default {
       rules: {
         required: value => !!value || 'กรุณากรอกข้อมูล',
         email: value => {
-          const emailPattern = /.+@.+\..+/;
+          const emailPattern = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+(com|co\.th|ac\.th|net|in\.th|mfu\.ac\.th|org|edu|gov|co\.[a-zA-Z]{2}|uk|de|fr|jp|cn|us|au|info|biz|io|me|tv|ca|nl|it|br|ru|es)$/;
 
           if (!emailPattern.test(value)) {
             return 'โปรดกรอกอีเมลให้ถูกต้อง';
           }
+
           // Return true or undefined if the email is valid
           return true;
         },
+
         phone: value => /^\d{9,10}$/.test(value) || 'หมายเลขโทรศัพท์ต้องเป็นตัวเลข 9 หรือ 10 หลัก',
         notEmpty: value => (value && value.trim().length > 0) || 'ช่องนี้ไม่สามารถเว้นว่างได้'
       }

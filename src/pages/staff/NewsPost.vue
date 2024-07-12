@@ -55,7 +55,7 @@
                 <v-card-text>
                   <v-form @submit.prevent="addNews">
                     <p class="ml-10 text-red-500 mb-2" v-if="activeField === 'linkImage' || activeField === 'images'">
-                      อัพโหลดรูปภาพขนาด 2048 X 799 </p>
+                      อัพโหลดรูปภาพขนาดไม่เกิน 2048 X 799 </p>
                     <div v-if="activeField === 'images'">
                       <p class="text-warning text-sm font-italic ml-10">
                         <v-icon color="warning">mdi-alert-circle-outline</v-icon>

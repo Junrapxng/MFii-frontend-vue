@@ -65,7 +65,7 @@
                     <v-checkbox v-model="currentResearch.ipType" label="Prototype" value="prototype"
                       :rules="[rules.required]" required></v-checkbox>
                   </v-container>
-                  <p class="ml-10 text-red-500">อัพโหลดปกรูปภาพขนาด 800 X 530 </p>
+                  <p class="ml-10 text-red-500">อัพโหลดปกรูปภาพขนาดไม่เกิน 800 X 530 </p>
                   <div>
                     <p class="text-warning text-sm font-italic  ml-10">
                       <v-icon color="warning">mdi-alert-circle-outline</v-icon>
@@ -339,7 +339,13 @@ export default {
                 Authorization: localStorage.getItem('token'),
               },
             });
-
+            await api.patch(`/staff/addFileResearch/${this.currentResearch._id}`, formData, {
+              headers: {
+                Authorization: localStorage.getItem('token'),
+                'Content-Type': 'multipart/form-data'
+              },
+            });
+           
             if (this.markedForDeletion.length > 0) {
               const deleteRequests = this.markedForDeletion.map(index => {
                 const img = this.currentResearch.filePath[index];
@@ -353,18 +359,12 @@ export default {
               });
               await Promise.all(deleteRequests);
             }
-
-            await api.patch(`/staff/addFileResearch/${this.currentResearch._id}`, formData, {
-              headers: {
-                Authorization: localStorage.getItem('token'),
-                'Content-Type': 'multipart/form-data'
-              },
-            });
             this.snackbar.message = "Edit research successfully";
             this.snackbar.color = "success";
           } catch (error) {
             this.handleError(error);
           }
+
 
         } else {
           await api.post('/staff/addResearch', formData, {

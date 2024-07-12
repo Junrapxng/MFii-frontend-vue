@@ -39,12 +39,27 @@
             <v-container
               class="font-noto-sans-thai rounded-xl flex justify-center items-center min-h-fit min-w-full bg-gray-100">
               <v-card class="w-full max-w-full rounded-xl ">
-                
-                <v-container v-if="user._id == null" class="flex justify-center">
-                  <h1> คุณยังไม่ได้เข้าสู่ระบบ โปรด <a style="text-decoration: underline; color: red;"
-                      href="/register">สมัครสมาชิก</a>
-                    หรือ <a style="text-decoration: underline;  color: red;" href="/login">เข้าสู่ระบบ</a>
-                    เพื่อกรอกแบบฟอร์มขอข้อมูล</h1>
+
+                <v-container v-if="user._id == null" class="flex justify-center align-center " style="height: 50vh;">
+                  <v-container class="justify-center align-center">
+                    <div class="justify-center align-center flex">
+                      <h1 style="font-size: 1.1rem;"> คุณยังไม่ได้เข้าสู่ระบบ โปรด <b>สมัครสมาชิก</b>
+                        หรือ <b>เข้าสู่ระบบ</b>
+                        เพื่อกรอกแบบฟอร์มขอข้อมูล</h1>
+
+                    </div>
+                    <div class="flex flex-col items-center space-y-4 mt-10 align-center justify-center">
+                      <v-btn :to="{ path: '/register' }"
+                        class=" flex align-center justify-center bg-red-500 text-white text-xl py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:bg-red-600 hover:scale-105">
+                        สมัครสมาชิก
+                      </v-btn>
+                      <span class="text-lg">หรือ</span>
+                      <v-btn :to="{ path: '/login' }"
+                        class="flex align-center justify-center bg-red-500 text-white text-xl py-3 px-6 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:bg-red-600 hover:scale-105">
+                        เข้าสู่ระบบ
+                      </v-btn>
+                    </div>
+                  </v-container>
                 </v-container>
 
                 <v-container v-else-if="user.role != 'user'" class="flex justify-center">
@@ -126,6 +141,8 @@ export default {
 
 
   methods: {
+
+
     async validateForm() {
       const { valid } = await this.$refs.form.validate()
       return valid
@@ -140,17 +157,19 @@ export default {
               Authorization: localStorage.getItem("token"),
             },
           });
-          this.snackbar.message = "Requested Success!";
+          this.snackbar.message = "ขอข้อมูลเพิ่มเติม สำเร็จ! กำลังนำท่านไปยังหน้าข้อความ";
           this.snackbar.color = "success";
           this.snackbar.show = true;
           setTimeout(() => {
-            window.location.reload();
-          }, 1000); // Reloads the page after 2 seconds
+            this.$router.push('/message');
+            // window.location.reload();
+          }, 2700);
         } catch (error) {
           let errorMessage = "An unexpected error occurred";
           let errorCode = "Unknown";
           let errorDetails = "";
           if (error.response) {
+
             // The request was made and the server responded with a status code
             // that falls out of the range of 2xx
             const errorDesc = error.response.data.description;
