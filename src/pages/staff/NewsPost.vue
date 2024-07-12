@@ -11,12 +11,12 @@
               <!-- news images -->
               <v-container class="imageUpload">
                 <div>
-                  <div class="titleNews">
+                  <div class="titleNews flex justify-center">
                     <v-chip class=" ma-2 pa-5 text-10" elevation="2" style="border-radius: 50px; font-size: 1.2rem;">
                       อัพโหลดรูปภาพข่าวสาร
                     </v-chip>
                   </div>
-                  <v-container class="imageUpload flex">
+                  <v-container class="imageUpload flex justify-center">
                     <v-btn color="blue" @click="openDialog('images')"
                       prepend-icon="mdi-file-image">อัพโหลดไฟล์รูปภาพ</v-btn>
                     <div class="mx-4 flex align-center">
@@ -41,7 +41,7 @@
                       อัพโหลดลิงค์(Youtube) Success case
                     </v-chip>
                   </div>
-                  <v-container class="youtubeBtn d-flex">
+                  <v-container class="youtubeBtn d-flex justify-center">
                     <v-btn color="red" class="white--text" @click="openDialog('linkVideo')" prepend-icon="mdi-youtube">
                       อัพโหลดลิงค์ youtube
                     </v-btn>
@@ -51,11 +51,11 @@
             </v-container>
 
             <v-dialog v-model="dialogNewpost" max-width="500px">
-              <v-card>
+              <v-card class="rounded-xl py-2 px-2">
                 <v-card-text>
                   <v-form @submit.prevent="addNews">
                     <p class="ml-10 text-red-500 mb-2" v-if="activeField === 'linkImage' || activeField === 'images'">
-                      อัพโหลดรูปภาพขนาดไม่เกิน 2048 X 799 </p>
+                      อัพโหลดรูปภาพขนาดไม่เกิน 2048 X 800 </p>
                     <div v-if="activeField === 'images'">
                       <p class="text-warning text-sm font-italic ml-10">
                         <v-icon color="warning">mdi-alert-circle-outline</v-icon>
@@ -74,8 +74,8 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="primary" @click="dialogNewpost = false">Cancel</v-btn>
-                  <v-btn color="primary" type="submit" @click="addNews">บันทึก</v-btn>
+                  <v-btn color="red darken-1" variant="tonal" @click="dialogNewpost = false">Cancel</v-btn>
+                  <v-btn color="green darken-1" variant="tonal" type="submit" @click="addNews">บันทึก</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
@@ -95,7 +95,7 @@
                     <p v-else>No media available</p>
                     <!-- Centered delete button -->
                     <v-container class="d-flex justify-center">
-                      <div v-if="img.filePath.length > 0 || img.linkImage.length > 0">
+                      <!-- <div v-if="img.filePath.length > 0 || img.linkImage.length > 0">
                         <v-btn @click="confirmEdit(img._id, index)" color="error" icon class="mx-2">
                           <v-icon>mdi-pen</v-icon>
                         </v-btn>
@@ -107,7 +107,12 @@
                         <v-btn @click="confirmDelete(img._id, index)" color="error" icon>
                           <v-icon>mdi-delete</v-icon>
                         </v-btn>
-                      </div>
+                      </div> -->
+                      <div>
+                        <v-btn @click="confirmDelete(img._id, index)" color="error" icon>
+                          <v-icon>mdi-delete</v-icon>
+                        </v-btn>
+                      </div> 
                     </v-container>
                   </v-card>
                 </v-col>
