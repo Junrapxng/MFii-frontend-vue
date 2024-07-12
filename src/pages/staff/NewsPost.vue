@@ -65,10 +65,12 @@
                     <v-text-field v-if="activeField === 'linkVideo'" v-model="news.linkVideo" label="URL video"
                       clearable prepend-icon="mdi-youtube" variant="solo-filled"></v-text-field>
                     <v-text-field v-if="activeField === 'linkImage'" v-model="news.linkImage" label="URL Images"
-                      clearable prepend-icon="mdi-web" variant="solo-filled"></v-text-field>
+                      clearable prepend-icon="mdi-web" variant="solo-filled"></v-text-field>                    
                     <v-file-input v-if="activeField === 'images'" v-model="news.images" label="Upload Images" chips
                       show-size variant="solo-filled" accept="image/*" :rules="[fileSizeRule]"></v-file-input>
-                  </v-form>
+                    </v-form>
+                    <v-text-field v-if="activeField === 'images' || activeField === 'linkImage'" v-model="news.linkPage" label="URL PAGE"
+                      clearable prepend-icon="mdi-web" variant="solo-filled"></v-text-field>
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
@@ -191,6 +193,7 @@ export default {
       news: {
         linkVideo: [],
         linkImage: [],
+        linkPage: "",
         images: [],
       },
       imgs: [], // Array to hold the fetched images
@@ -240,8 +243,12 @@ export default {
           formData.append('linkImage', this.news.linkImage);
         }
 
+        if (this.news.linkPage.length > 0) {
+          formData.append('linkPage', this.news.linkPage);
+        }
+
         // Check if formData has any files or links before making the request
-        if (formData.has('images[0]') || formData.has('linkVideo') || formData.has('linkImage')) {
+        if (formData.has('images[0]') || formData.has('linkVideo') || formData.has('linkImage') || formData.has('linkPage')) {
           await api.post('/staff/addNews', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
@@ -251,6 +258,7 @@ export default {
 
           this.fetchImg(); // Reload images after upload
           this.news.images = [];
+          this.news.linkPage = '';
           this.news.linkVideo = '';
           this.news.linkImage = '';
           this.snackbar.message = "News and images uploaded successfully!";
