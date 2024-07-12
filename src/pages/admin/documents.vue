@@ -46,7 +46,7 @@ export default {
     },
       selectedOption: ref(null),
       options: [
-        { name: 'รายงาน การเข้าถึงผลงาน/วิจัย', value: 'productAccess' },
+        { name: 'รายงาน การเข้าถึงผลงาน/วิจัย', value: 'researchAccess' },
         { name: 'รายงาน การเข้าถึงเว็บไซต์รายวัน', value: 'dailyAccess' },
         { name: 'รายงาน การเข้าถึงเว็บไซต์รายเดือน', value: 'monthlyAccess' },
         { name: 'รายงาน การเข้าถึงเว็บไซต์รายปี', value: 'yearlyAccess' },
