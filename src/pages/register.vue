@@ -111,7 +111,7 @@ export default {
       rules: {
         required: value => !!value || 'กรุณากรอกข้อมูล',
         email: value => {
-          const emailPattern = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+(com|co\.th|ac\.th|net|in.th|mfu\.ac\.th|)$/;
+          const emailPattern = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+(com|co\.th|ac\.th|net|in\.th|mfu\.ac\.th|org|edu|gov|co\.[a-zA-Z]{2}|uk|de|fr|jp|cn|us|au|info|biz|io|me|tv|ca|nl|it|br|ru|es)$/;
 
           if (!emailPattern.test(value)) {
             return 'โปรดกรอกอีเมลให้ถูกต้อง';
