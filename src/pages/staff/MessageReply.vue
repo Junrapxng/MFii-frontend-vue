@@ -439,12 +439,12 @@ export default {
       }
     },
   },
-  computed:{
-    filteredMessages() {
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      return this.messages.reverse();
-    }
+  computed: {
+  filteredMessages() {
+    return [...this.messages].reverse();
   }
+}
+
  
 
 };
