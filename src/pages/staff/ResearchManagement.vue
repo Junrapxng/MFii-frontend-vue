@@ -7,9 +7,10 @@
             <v-card-title class="d-flex align-center my-2">
               <v-icon icon="mdi-clipboard-edit"></v-icon> &nbsp; จัดการผลงานวิจัย
               <v-spacer></v-spacer>
-              <v-text-field v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify"
+              <v-text-field class="px-5" v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify"
                 variant="solo-filled" flat hide-details single-line clearable @click:clear="clearSearch"
                 @input="searchResearch"></v-text-field>
+                <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
             </v-card-title>
             <v-card-text>
               <v-data-table :headers="headers" :items="researches.result" class="elevation-1">
@@ -24,7 +25,7 @@
                   </v-container>
                 </template>
               </v-data-table>
-              <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
+         
             </v-card-text>
           </v-card>
           <v-dialog v-model="dialog" max-width="1050px">
