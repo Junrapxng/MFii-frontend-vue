@@ -7,10 +7,10 @@
             <v-card-title class="d-flex align-center my-2">
               <v-icon icon="mdi-clipboard-edit"></v-icon> &nbsp; จัดการผลงานวิจัย
               <v-spacer></v-spacer>
-              <v-text-field class="px-5" v-model="search" density="compact" label="Search" prepend-inner-icon="mdi-magnify"
-                variant="solo-filled" flat hide-details single-line clearable @click:clear="clearSearch"
-                @input="searchResearch"></v-text-field>
-                <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
+              <v-text-field class="px-5" v-model="search" density="compact" label="Search"
+                prepend-inner-icon="mdi-magnify" variant="solo-filled" flat hide-details single-line clearable
+                @click:clear="clearSearch" @input="searchResearch"></v-text-field>
+              <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
             </v-card-title>
             <v-card-text>
               <v-data-table :headers="headers" :items="researches.result" class="elevation-1">
@@ -25,7 +25,7 @@
                   </v-container>
                 </template>
               </v-data-table>
-         
+
             </v-card-text>
           </v-card>
           <v-dialog v-model="dialog" max-width="1050px">
@@ -95,8 +95,8 @@
                             <v-card-text class="text-center">{{ img.split('/').pop() }}</v-card-text>
                           </template>
                           <template v-else>
-                            <v-img :src="`${baseUrl}/${img}`" v-model="currentResearch.filePath" height="250"
-                              cover></v-img>
+                            <v-img :src="`${baseUrl}/${img}`" v-model="currentResearch.filePath" height="250" cover>
+                            </v-img>
                           </template>
                           <v-btn v-if="isEdit" @click="markForDeletion(index)"
                             :class="{ 'marked-for-deletion': markedForDeletion.includes(index) }"
@@ -115,8 +115,14 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
+          <!-- loading indicator -->
+          <div v-if="isUploading" class="loading-overlay">
+            <v-progress-circular indeterminate color="primary"></v-progress-circular>
+            <span class="loading-text">Saving research...</span>
+          </div>
         </v-container>
       </staff-layout>
+
 
       <!-- Dialog delete research -->
       <v-dialog v-model="dialogDelete" max-width="800px">
@@ -160,6 +166,7 @@ export default {
   },
   data() {
     return {
+      isUploading: false,
       markedForDeletion: [],
       search: "",
       baseUrl: "",
@@ -204,6 +211,7 @@ export default {
 
 
   methods: {
+
     createResearch() {
       this.resetCurrentResearch();
       this.isEdit = false;
@@ -281,7 +289,7 @@ export default {
       if (!this.checkFileSizes()) {
         return;
       }
-
+      this.isUploading = true
       try {
         const formData = new FormData();
         formData.append('budgetYear', this.currentResearch.budgetYear);
@@ -377,9 +385,12 @@ export default {
 
       } catch (error) {
         this.handleError(error);
+      } finally {
+        this.isUploading = false;
+        this.dialog = false;
+        this.resetCurrentResearch();
       }
-      this.dialog = false;
-      this.resetCurrentResearch();
+
     },
 
     handleError(error) {
@@ -395,6 +406,7 @@ export default {
           setTimeout(() => {
             window.location.reload();
           }, 1000);
+
         } else {
           errorMessage = errorDesc?.description || error.response.data.message || "Server error";
           errorCode = error.response.status;
@@ -630,5 +642,24 @@ export default {
 <style scoped>
 .marked-for-deletion {
   border: 3px solid red;
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.loading-text {
+  color: white;
+  margin-top: 16px;
 }
 </style>
