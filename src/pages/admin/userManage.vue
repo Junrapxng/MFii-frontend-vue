@@ -62,11 +62,11 @@
               <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300" @click="close">
-                  Cancel
+                  ยกเลิก
                 </v-btn>
                 <v-btn color="green-darken-1" variant="outlined" class="hover:bg-green-200" type="submit"
                   >
-                  Save
+                  บันทึก
                 </v-btn>
               </v-card-actions>
             </v-card>
