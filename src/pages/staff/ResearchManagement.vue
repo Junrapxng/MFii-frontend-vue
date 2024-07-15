@@ -75,7 +75,7 @@
                   </div>
                   <v-file-input label="Upload Images" multiple @change="handleFileUpload" variant="solo-filled"
                     accept="image/*" prepend-icon="mdi-camera" @click:clear="clearFileInputs"
-                    :rules="[fileSizeRule]"></v-file-input>
+                    :rules="[fileSizeRule]" chips></v-file-input>
                   <div>
                     <p class="text-warning text-sm font-italic ml-10">
                       <v-icon color="warning">mdi-alert-circle-outline</v-icon>
@@ -84,7 +84,7 @@
                   </div>
                   <v-file-input label="Upload PDF" @change="handlePdfUpload" variant="solo-filled"
                     accept="application/pdf" prepend-icon="mdi-file-pdf-box" @click:clear="clearFileInputs"
-                    :rules="[fileSizeRule]"></v-file-input>
+                    :rules="[fileSizeRule]" chips></v-file-input>
                   <v-container fluid>
                     <v-row>
                       <v-col v-for="(img, index) in currentResearch.filePath" :key="index" cols="12" sm="6" md="6"
