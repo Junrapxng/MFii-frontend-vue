@@ -33,16 +33,11 @@
                         label="First Name" :rules="[(v) => !!v || 'กรุณากรอก ชื่อจริง']" required></v-text-field>
                       <v-text-field variant="solo-filled" flat v-model="editedItem.lastName"
                         label="Last Name" :rules="[(v) => !!v || 'กรุณากรอก นามสกุล']" required></v-text-field>
-                      <v-text-field variant="solo-filled" flat v-model="editedItem.phoneNumber" label="Phone" :rules="[
-                        (v) => !!v || 'กรุณากรอก เบอร์โทรศัพท์',
-                        (v) =>
-                          /^\d{10}$/.test(v) ||
-                          'กรุณากรอกเบอร์โทรศัพท์ 10 หลัก',
-                      ]" required></v-text-field>
+                      <v-text-field variant="solo-filled" flat v-model="editedItem.phoneNumber" label="Phone" :rules="[rules.requiredPhone, rules.phone, rules.notEmpty]" required></v-text-field>
                     </v-col>
 
                     <v-col cols="12" md="12" sm="12">
-                      <v-text-field variant="solo-filled" flat v-model="editedItem.email" label="Email" :rules="[rules.required, rules.email]"></v-text-field>
+                      <v-text-field variant="solo-filled" flat v-model="editedItem.email" label="Email" :rules="[rules.requiredEmail, rules.email]"></v-text-field>
                       <v-text-field v-if="this.editedIndex === -1" v-model="editedItem.password" label="Password"
                         variant="solo-filled" flat :rules="[
                           (v) => !!v || 'กรุณากรอก รหัสผ่าน',
@@ -151,7 +146,8 @@ export default {
   },
   data: () => ({
     rules: {
-        required: value => !!value || 'กรุณากรอกอีเมล',
+        requiredEmail: value => !!value || 'กรุณากรอก อีเมล',
+        requiredPhone: value => !!value || 'กรุณากรอก เบอร์โทรศัพท์',
         email: value => {
           const emailPattern = /^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\.)+(com|co\.th|ac\.th|net|in\.th|mfu\.ac\.th|org|edu|gov|co\.[a-zA-Z]{2}|uk|de|fr|jp|cn|us|au|info|biz|io|me|tv|ca|nl|it|br|ru|es)$/;
 
@@ -163,7 +159,8 @@ export default {
           // Return true or undefined if the email is valid
           return true;
         },
-
+        phone: value => /^\d{9,10}$/.test(value) || 'หมายเลขโทรศัพท์ต้องเป็นตัวเลข 9 หรือ 10 หลัก',
+        notEmpty: value => (value && value.trim().length > 0) || 'ช่องนี้ไม่สามารถเว้นว่างได้'
       },
     search: "",
     users: [],
