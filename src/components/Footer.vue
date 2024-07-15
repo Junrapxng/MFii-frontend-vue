@@ -86,7 +86,7 @@
             <a href="https://research.mfu.ac.th" style="color: #fff" class="hover:underline"
               >ส่วนบริหารงานวิจัย</a
             >
-            ><br />
+            <br />
             <a href="https://ip-mfii.mfu.ac.th" style="color: #fff" class="hover:underline"
               >ส่วนจัดการทรัพย์สินทางปัญญาและนวัตกรรม 
               </a
