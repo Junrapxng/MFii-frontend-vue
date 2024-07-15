@@ -45,13 +45,20 @@
               <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="3">
                 <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                   <v-card class="hover:shadow-lg transition-shadow rounded-xl">
-                    <v-img :src="`${baseUrl}/${item.filePath[0]}`" cover height="200px">
-                      <template v-slot:placeholder>
-                        <div class="d-flex align-center justify-center fill-height">
-                          Loading...
-                        </div>
-                      </template>
-                    </v-img>
+                    <v-img  v-if="item.filePath[0].toLowerCase().endsWith('.pdf')" :src="`${baseUrl}/${item.filePath[1]}`" cover height="200px">
+                    <template v-slot:placeholder>
+                      <div class="flex items-center justify-center h-full">
+                        Loading...
+                      </div>
+                    </template>
+                  </v-img>
+                  <v-img v-else :src="`${baseUrl}/${item.filePath[0]}`" cover height="200px">
+                    <template v-slot:placeholder>
+                      <div class="flex items-center justify-center h-full">
+                        Loading...
+                      </div>
+                    </template>
+                  </v-img>
                     <v-card-title class="text-lg">{{ item.nameOnMedia }}</v-card-title>
                     <v-card-subtitle class="text-sm">{{ item.industryType }}</v-card-subtitle>
                     <v-card-actions>
