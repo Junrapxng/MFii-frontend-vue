@@ -90,13 +90,12 @@
       <!-- confirm delete -->
       <v-dialog v-model="confirmDialog" max-width="600px">
         <v-card class="rounded-xl pa-4">
-          <v-card-title class="text-h5 text-center text-red-500">Are you sure you want to delete this
-            Message?</v-card-title>
+          <v-card-title class="text-h5 text-center text-red-500">คุณแน่ใจว่าต้องการลบข้อความนี้หรือไม่?</v-card-title>
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="'blue-grey-darken-1" variant="outlined" class="hover:bg-gray-500"
-              @click="closeDelete">Cancel</v-btn>
-            <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300" @click="confirmDelete">OK</v-btn>
+              @click="closeDelete">ยกเลิก</v-btn>
+            <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300" @click="confirmDelete">ตกลง</v-btn>
             <v-spacer></v-spacer>
           </v-card-actions>
         </v-card>

@@ -133,8 +133,8 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <v-btn color="'blue-grey-darken-1" variant="outlined" class="hover:bg-gray-500"
-              @click="closeDelete">Cancel</v-btn>
-            <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300" @click="deleteResearch">OK</v-btn>
+              @click="closeDelete">ยกเลิก</v-btn>
+            <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300" @click="deleteResearch">ตกลง</v-btn>
             <v-spacer></v-spacer>
           </v-card-actions>
         </v-card>

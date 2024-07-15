@@ -74,7 +74,7 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="red darken-1" variant="tonal" @click="dialogNewpost = false">Cancel</v-btn>
+                  <v-btn color="red darken-1" variant="tonal" @click="dialogNewpost = false">ยกเลิก</v-btn>
                   <v-btn color="green darken-1" variant="tonal" type="submit" @click="addNews">บันทึก</v-btn>
                 </v-card-actions>
               </v-card>
@@ -147,14 +147,14 @@
 
         <!-- Confirmation dialog -->
         <v-dialog v-model="dialog" max-width="400">
-          <v-card>
-            <v-card-title class="headline">Confirm Delete</v-card-title>
+          <v-card class="rounded-xl py-2 px-2">
+            <v-card-title class="headline text-red-800 text-2xl">ยืนยันการลบ</v-card-title>
             <v-card-text>
-              Are you sure you want to delete this image?
+              คุณแน่ใจหรือไม่ว่าต้องการลบรูปภาพนี้?
             </v-card-text>
             <v-card-actions>
-              <v-btn color="error" text @click="cancelDelete">Cancel</v-btn>
-              <v-btn color="error" @click="deleteImage">Delete</v-btn>
+              <v-btn color="red darken-1" variant="tonal" text @click="cancelDelete">ยกเลิก</v-btn>
+              <v-btn color="green darken-1" variant="tonal" @click="deleteImage">ยืนยัน</v-btn>
             </v-card-actions>
           </v-card>
         </v-dialog>
