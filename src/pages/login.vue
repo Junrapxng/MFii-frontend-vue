@@ -47,7 +47,7 @@
                 <p>
                   <a class="px-2 hover:underline" style="color: #ba984c" href="/register">สมัครสมาชิก</a>
                 </p>
-                <p class="text-gray-500">ท่านยังไม่สมัครสมาชิก</p>
+                <p class="text-gray-500">หากท่านยังไม่สมัครสมาชิก</p>
               </div>
             </v-form>
           </v-card-text>

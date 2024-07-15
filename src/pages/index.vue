@@ -13,7 +13,14 @@
             <v-col v-for="(item, index) in newinfo.slice(0, 4)" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
               <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="newResearchCard hover:shadow-lg transition-shadow rounded-xl">
-                  <v-img :src="`${baseUrl}/${item.filePath[0]}`" cover height="200px">
+                  <v-img  v-if="item.filePath[0].toLowerCase().endsWith('.pdf')" :src="`${baseUrl}/${item.filePath[1]}`" cover height="200px">
+                    <template v-slot:placeholder>
+                      <div class="flex items-center justify-center h-full">
+                        Loading...
+                      </div>
+                    </template>
+                  </v-img>
+                  <v-img v-else :src="`${baseUrl}/${item.filePath[0]}`" cover height="200px">
                     <template v-slot:placeholder>
                       <div class="flex items-center justify-center h-full">
                         Loading...
@@ -45,7 +52,7 @@
                 </v-card>
               </router-link>
             </v-col>
-            <!-- <h1 v-if="loading">Loading...</h1> -->
+            <h1 v-if="loading">Loading...</h1>
             <div v-if="!loading">
               <h1 v-if="newinfo.length <= 0">ไม่พบข้อมูล</h1>
             </div>
@@ -66,7 +73,14 @@
             <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
               <router-link  :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="researchCard hover:shadow-lg transition-shadow rounded-xl">
-                  <v-img :src="`${baseUrl}/${item.filePath[0]}`" cover height="200px">
+                  <v-img  v-if="item.filePath[0].toLowerCase().endsWith('.pdf')" :src="`${baseUrl}/${item.filePath[1]}`" cover height="200px">
+                    <template v-slot:placeholder>
+                      <div class="flex items-center justify-center h-full">
+                        Loading...
+                      </div>
+                    </template>
+                  </v-img>
+                  <v-img v-else :src="`${baseUrl}/${item.filePath[0]}`" cover height="200px">
                     <template v-slot:placeholder>
                       <div class="flex items-center justify-center h-full">
                         Loading...
