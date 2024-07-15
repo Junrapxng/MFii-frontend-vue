@@ -13,7 +13,7 @@
               <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
             </v-card-title>
             <v-card-text>
-              <v-data-table :headers="headers" :items="researches.result" class="elevation-1">
+              <v-data-table :headers="headers" :items="researchesRevert" :items-per-page="10" class="elevation-1">
                 <template v-slot:[`item.actions`]="{ item }">
                   <v-container class="flex justify-center align-center">
                     <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
@@ -185,6 +185,7 @@ export default {
         { title: 'Actions', align: 'center', value: 'actions', sortable: false }
       ],
       researches: [],
+      researchesRevert: [],
       currentResearch: {
         budgetYear: '',
         nameOnMedia: '',
@@ -515,7 +516,8 @@ export default {
     async fetchResearches() {
       try {
         const response = await api.get('/getsResearch/all/all/all/all');
-        this.researches = response.data;
+        this.researches = response.data.result;
+        this.researchesRevert = [...response.data.result].reverse();
 
       } catch (error) {
         let errorMessage = "An unexpected error occurred";
