@@ -6,7 +6,7 @@
       <v-container class="font-noto-sans-thai text-gray-600">
         <!-- <h1 class="font-weight-medium text-3xl pb-4">ขั้นตอนการขออนุญาตใช้สิทธิ IP Licensing Process</h1> -->
 
-        <v-img :aspect-ratio="1" class="bg-white" src="../assets/licensing_process.png" max-height="700" contain></v-img>
+        <v-img :aspect-ratio="1" class="bg-white" src="../assets/licensing_process.jpg" max-height="700" contain></v-img>
 
       </v-container>
     </v-main>
