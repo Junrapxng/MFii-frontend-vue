@@ -9,7 +9,7 @@
           <v-card-text>
             <v-list class="rounded-xl bg-white">
               <v-container v-if="reversedMessages.length <= 0">
-                <h1> No Messages right now...</h1>
+                <h1>ไม่มีข้อความในขณะนี้...</h1>
               </v-container>
               <v-list-item v-else v-for="message in reversedMessages" :key="message.id" class="list-item-border my-2">
                 <v-list-item-content>
@@ -18,7 +18,8 @@
                   <v-list-item-subtitle>ขอบเขตการใช้งานของคุณ: {{ message.usesScope }} </v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action class="my-2">
-                  <v-btn @click="openReplyDialog(message._id)" class="bg-red-600 text-white">ตอบกลับ</v-btn>
+                  <v-btn @click="openReplyDialog(message._id)" class="bg-slate-800 text-white mr-2">ตอบกลับ</v-btn>
+                  <v-btn @click="deleteMessage(message._id)" color="error">ลบ</v-btn>
                 </v-list-item-action>
               </v-list-item>
             </v-list>
@@ -88,6 +89,20 @@
           </template>
         </v-snackbar>
       </div>
+
+         <!-- confirm delete -->
+         <v-dialog v-model="confirmDialog" max-width="600px">
+        <v-card class="rounded-xl pa-4">
+          <v-card-title class="text-h5 text-center text-red-500">คุณแน่ใจว่าต้องการลบข้อความนี้หรือไม่?</v-card-title>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="'blue-grey-darken-1" variant="outlined" class="hover:bg-gray-500"
+              @click="closeDelete">ยกเลิก</v-btn>
+            <v-btn color="red-darken-1" variant="outlined" class="hover:bg-red-300" @click="confirmDelete">ตกลง</v-btn>
+            <v-spacer></v-spacer>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-main>
     <Footer></Footer>
   </v-app>
@@ -115,6 +130,8 @@ export default {
         _id: "",
         email: "",
       },
+      confirmDialog: false,
+      messageToDelete: null,
     };
   },
 
@@ -389,6 +406,75 @@ export default {
 
     closeReplyDialog() {
       this.isDialogOpen = false;
+    },
+
+
+// Delete message ==================================================
+    closeDelete() {
+      this.confirmDialog = false;
+    },
+
+    async deleteMessage(id) {
+      this.messageToDelete = id;
+      this.confirmDialog = true;
+    },
+    async confirmDelete() {
+      this.confirmDialog = false;
+      if (this.messageToDelete) {
+        try {
+          await api.delete('/mesDelete/' + this.messageToDelete, {
+            headers: {
+              Authorization: localStorage.getItem("token"),
+            },
+          });
+          this.snackbar.message = "Deleted Successfully";
+          this.snackbar.color = "success";
+          this.snackbar.show = true;
+          this.fetchMessages();
+        } catch (error) {
+          let errorMessage = "An unexpected error occurred";
+          let errorCode = "Unknown";
+          let errorDetails = "";
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            const errorDesc = error.response.data.description;
+            if (errorDesc && (errorDesc.code === 40107 || errorDesc.code === 40102)) {
+              // Handle specific error codes
+              errorMessage = errorDesc.code === 40107 ? errorDesc.description : errorDesc.description;
+              errorCode = errorDesc.code;
+              setTimeout(function () {
+                window.location.reload();
+              }, 1000);
+            } else {
+              errorMessage = errorDesc?.description || error.response.data.message || "Server error";
+              errorCode = error.response.status;
+            }
+          } else if (error.request) {
+            // The request was made but no response was received
+            errorMessage = "ไม่มีการตอบกลับจากเซิฟเวอร์ หรือ เซิฟเวอร์ผิดผลาด";
+          } else if (error.code === 'ERR_NETWORK') {
+            // Network error
+            errorMessage = "Network Error";
+            errorCode = error.code;
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            errorMessage = error.message;
+          }
+          // Add more detailed error information
+          errorDetails = `${error.name}: ${error.message}`;
+          // Log the error
+          console.error(`Error : ${errorDetails}`, error);
+
+          this.snackbar = {
+            message: `Error: ${errorMessage}${errorCode !== "Unknown" ? ` (Code: ${errorCode})` : ''}`,
+            color: "error",
+            Errcode: errorCode,
+            show: true
+          };
+        }
+        this.messageToDelete = null;
+      }
     },
   },
   // filter message only user

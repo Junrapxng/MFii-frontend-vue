@@ -8,6 +8,9 @@
             <v-card-title>ข้อความและการตอบกลับ</v-card-title>
             <v-card-text>
               <v-list class="rounded-lg">
+                <v-container v-if="filteredMessages.length <= 0">
+                <h1>ไม่มีข้อความในขณะนี้...</h1>
+              </v-container>
                 <v-list-item v-for="message in filteredMessages" :key="message.id" class="list-item-border my-2">
                   <v-list-item-content>
                     <v-list-item-title>เทคโนโลยีที่สนใจ: {{ message.interestTech }}</v-list-item-title>
