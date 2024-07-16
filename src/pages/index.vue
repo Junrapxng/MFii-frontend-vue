@@ -267,6 +267,7 @@ export default defineComponent({
       const tech = "all";
       const descript = this.search.trim() || "all";
       this.loading = true;
+      this.currentPage = 1;
       api
         .get(`/getsResearch/${indust}/${prop}/${tech}/${descript}`, {
           withCredentials: true,

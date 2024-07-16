@@ -196,6 +196,7 @@ export default {
       const tech = this.Technology_type?.value || "all";
       const descript = this.search.trim() || "all";
       this.loading = true;
+      this.currentPage = 1;
       api
         .get(
           `/getsResearch/${indust}/${prop}/${tech}/${descript}`
