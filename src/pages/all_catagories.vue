@@ -166,10 +166,9 @@ export default {
     },
     // กรองรายการโดยใช้การค้นหาและหน้าที่กำหนด
     paginatedItems() {
-    const sortedItems = [...this.info].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    return sortedItems.slice(startIndex, endIndex);
+      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+      const endIndex = startIndex + this.itemsPerPage;
+      return this.info.slice(startIndex, endIndex);
   },
   },
   methods: {
