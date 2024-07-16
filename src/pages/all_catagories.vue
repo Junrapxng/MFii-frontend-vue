@@ -166,10 +166,11 @@ export default {
     },
     // กรองรายการโดยใช้การค้นหาและหน้าที่กำหนด
     paginatedItems() {
-      const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-      const endIndex = startIndex + this.itemsPerPage;
-      return this.info.slice(startIndex, endIndex);
-    },
+    const sortedItems = [...this.info].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+    const endIndex = startIndex + this.itemsPerPage;
+    return sortedItems.slice(startIndex, endIndex);
+  },
   },
   methods: {
     clearSearch() {
@@ -204,9 +205,10 @@ export default {
           if (response.status == 200) {
             // Filter out the data to get only those with status "active"
             const activeData = response.data.result.filter(
-              (item) => item.status === "active"
+              (item) => item.status === "active" 
             );
             if (activeData.length > 0) {
+              // activeData.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
               this.info = activeData;
             } else {
               this.info = [];
