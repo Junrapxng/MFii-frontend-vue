@@ -8,10 +8,10 @@
           <v-card-title>ข้อความและการตอบกลับ</v-card-title>
           <v-card-text>
             <v-list class="rounded-xl bg-white">
-              <v-container v-if="filteredMessages.length <= 0">
+              <v-container v-if="reversedMessages.length <= 0">
                 <h1> No Messages right now...</h1>
               </v-container>
-              <v-list-item v-else v-for="message in filteredMessages" :key="message.id" class="list-item-border my-2">
+              <v-list-item v-else v-for="message in reversedMessages" :key="message.id" class="list-item-border my-2">
                 <v-list-item-content>
                   <v-list-item-title>เทคโนโลยีที่คุณสนใจ: {{ message.interestTech }}</v-list-item-title>
                   <v-list-item-subtitle>ชื่อกิจการของคุณ: {{ message.businessName }} </v-list-item-subtitle>
@@ -393,11 +393,9 @@ export default {
   },
   // filter message only user
   computed: {
-    filteredMessages() {
-  return this.messages
-    .filter((message) => message.email === this.user.email)
-    .reverse();
-}
+    reversedMessages() {
+      return this.messages.slice().reverse();
+    }
   },
 };
 </script>

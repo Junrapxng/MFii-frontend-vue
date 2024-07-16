@@ -3,7 +3,7 @@
     <NavBar />
     <v-main>
       <!-- News And Video YouTube -->
-      <News/>
+      <News />
 
       <!-- Newer research research ใหม่-->
       <v-container>
@@ -13,7 +13,8 @@
             <v-col v-for="(item, index) in newinfo.slice(0, 4)" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
               <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="newResearchCard hover:shadow-lg transition-shadow rounded-xl">
-                  <v-img  v-if="item.filePath[0].toLowerCase().endsWith('.pdf')" :src="`${baseUrl}/${item.filePath[1]}`" cover height="200px">
+                  <v-img v-if="item.filePath[0].toLowerCase().endsWith('.pdf')" :src="`${baseUrl}/${item.filePath[1]}`"
+                    cover height="200px">
                     <template v-slot:placeholder>
                       <div class="flex items-center justify-center h-full">
                         Loading...
@@ -29,10 +30,10 @@
                   </v-img>
                   <v-card-title class="text-lg">{{
                     item.nameOnMedia
-                    }}</v-card-title>
+                  }}</v-card-title>
                   <v-card-subtitle class="text-sm">{{
                     item.industryType
-                    }}</v-card-subtitle>
+                  }}</v-card-subtitle>
                   <v-card-actions>
                     <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
                       ? 'purple'
@@ -71,9 +72,10 @@
         <v-container class="flex justify-center items-center bg-gray-100 rounded">
           <v-row v-if="paginatedItems" class="flex flex-wrap justify-center">
             <v-col v-for="(item, index) in paginatedItems" :key="index" cols="12" sm="6" md="6" lg="3" class="p-2">
-              <router-link  :to="{ name: 'Innovation', params: { id: item._id } }">
+              <router-link :to="{ name: 'Innovation', params: { id: item._id } }">
                 <v-card class="researchCard hover:shadow-lg transition-shadow rounded-xl">
-                  <v-img  v-if="item.filePath[0].toLowerCase().endsWith('.pdf')" :src="`${baseUrl}/${item.filePath[1]}`" cover height="200px">
+                  <v-img v-if="item.filePath[0].toLowerCase().endsWith('.pdf')" :src="`${baseUrl}/${item.filePath[1]}`"
+                    cover height="200px">
                     <template v-slot:placeholder>
                       <div class="flex items-center justify-center h-full">
                         Loading...
@@ -89,10 +91,10 @@
                   </v-img>
                   <v-card-title class="text-lg">{{
                     item.nameOnMedia
-                    }}</v-card-title>
+                  }}</v-card-title>
                   <v-card-subtitle class="text-sm">{{
                     item.industryType
-                    }}</v-card-subtitle>
+                  }}</v-card-subtitle>
                   <v-card-actions>
                     <v-chip outlined :color="item.techReadiness === 'ระดับการทดลอง'
                       ? 'purple'
@@ -120,7 +122,7 @@
         <!-- Pagination -->
         <v-pagination v-model="currentPage" :length="totalPages" class="pt-6" @input="paginate"></v-pagination>
       </v-container>
-            <ytVideos/>
+      <ytVideos />
       <v-snackbar v-model="snackbar.show" :color="snackbar.color" vertical>
         <div class="text-subtitle-1 pb-2"></div>
         <p>{{ snackbar.message }}</p>
@@ -180,7 +182,9 @@ export default defineComponent({
         );
         if (activeData.length > 0) {
           this.info = activeData;
-          this.newinfo = [...activeData].reverse();
+          this.newinfo = [...activeData].sort((a, b) =>
+            new Date(b.createdAt) - new Date(a.createdAt)
+          );
         } else {
           this.snackbar.message = "No active data found.";
           this.snackbar.color = "error";
