@@ -9,11 +9,11 @@
               <v-spacer></v-spacer>
               <v-text-field class="px-5" v-model="search" density="compact" label="Search"
                 prepend-inner-icon="mdi-magnify" variant="solo-filled" flat hide-details single-line clearable
-                @click:clear="clearSearch" @input="searchResearch"></v-text-field>
+                @click:clear="clearSearch"></v-text-field>
               <v-btn @click="createResearch" class="my-4 bg-slate-800 text-white">เพิ่มผลงานวิจัย</v-btn>
             </v-card-title>
             <v-card-text>
-              <v-data-table :headers="headers" :items="researchesRevert" :items-per-page="10" class="elevation-1">
+              <v-data-table v-model:search="search" :headers="headers" :items="researchesRevert" :items-per-page="10" class="elevation-1">
                 <template v-slot:[`item.actions`]="{ item }">
                   <v-container class="flex justify-center align-center">
                     <v-icon small class="mr-2" @click="editResearch(item)">mdi-pencil</v-icon>
@@ -567,19 +567,6 @@ export default {
       this.search = "";
       this.fetchResearches()
     },
-
-    searchResearch() {
-      const searchTerm = this.search.toLowerCase();
-      if (searchTerm) {
-        this.researches.result = this.researches.result.filter(item =>
-          item.nameOnMedia.toLowerCase().includes(searchTerm) ||
-          item.industryType.toLowerCase().includes(searchTerm)
-        );
-      } else {
-        this.fetchResearches();
-      }
-    },
-
 
     // Check if all files are within the size limit
     checkFileSizes() {
